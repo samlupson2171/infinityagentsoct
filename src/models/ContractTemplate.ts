@@ -84,7 +84,6 @@ const ContractTemplateSchema = new Schema<IContractTemplate>(
 
 // Indexes for performance
 ContractTemplateSchema.index({ version: 1 });
-ContractTemplateSchema.index({ isActive: 1 });
 ContractTemplateSchema.index({ effectiveDate: -1 });
 ContractTemplateSchema.index({ createdAt: -1 });
 

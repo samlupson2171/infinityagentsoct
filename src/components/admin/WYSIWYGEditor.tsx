@@ -1,9 +1,22 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
-import { Editor as TinyMCEEditor } from 'tinymce';
 import { createTinyMCEImageHandler } from '@/lib/image-upload-handler';
+
+// Dynamic import for TinyMCE to avoid build issues
+let Editor: any = null;
+let TinyMCEEditor: any = null;
+
+if (typeof window !== 'undefined') {
+  try {
+    const tinymce = require('@tinymce/tinymce-react');
+    const tinymceTypes = require('tinymce');
+    Editor = tinymce.Editor;
+    TinyMCEEditor = tinymceTypes.Editor;
+  } catch (error) {
+    console.warn('TinyMCE not available during build');
+  }
+}
 
 interface WYSIWYGEditorProps {
   value: string;
@@ -164,6 +177,22 @@ export default function WYSIWYGEditor({
     },
   };
 
+  // Handle build-time gracefully
+  if (typeof window === 'undefined' || !Editor) {
+    return (
+      <div className={`wysiwyg-editor ${className}`}>
+        <textarea
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          disabled={disabled}
+          className="w-full p-3 border border-gray-300 rounded-md resize-none"
+          style={{ height: `${height}px` }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className={`wysiwyg-editor ${className}`}>
       <Editor
@@ -174,7 +203,12 @@ export default function WYSIWYGEditor({
           const sanitizedContent = sanitizeContent(content);
           onChange(sanitizedContent);
         }}
-        init={editorConfig}
+        init={{
+          ...editorConfig,
+          // Prevent CSS file loading issues during build
+          content_css: false,
+          skin: false,
+        }}
         disabled={disabled}
       />
     </div>
