@@ -71,7 +71,18 @@ export default function ActivityCard({
   };
 
   const categoryData = getCategoryInfo(activity.category);
-  const availabilityCheck = checkActivityAvailability(activity);
+  
+  // Convert string dates to Date objects for availability check
+  const activityForCheck = {
+    ...activity,
+    availableFrom: new Date(activity.availableFrom),
+    availableTo: new Date(activity.availableTo),
+    createdAt: new Date(activity.createdAt),
+    updatedAt: new Date(activity.updatedAt),
+    _id: activity._id as any, // Type assertion for MongoDB ObjectId
+  };
+  
+  const availabilityCheck = checkActivityAvailability(activityForCheck as any);
   const available = availabilityCheck.isAvailable;
 
   return (
@@ -170,8 +181,8 @@ export default function ActivityCard({
 
         {/* Availability dates */}
         <div className="text-xs text-gray-500 mb-4">
-          Available: {activity.availableFrom.toLocaleDateString()} -{' '}
-          {activity.availableTo.toLocaleDateString()}
+          Available: {new Date(activity.availableFrom).toLocaleDateString()} -{' '}
+          {new Date(activity.availableTo).toLocaleDateString()}
         </div>
 
         {/* Action buttons */}

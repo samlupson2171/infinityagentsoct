@@ -29,11 +29,21 @@ export default function AvailabilityIndicator({
   showMessage = true,
   className = '',
 }: AvailabilityIndicatorProps) {
+  // Convert string dates to Date objects for availability check
+  const activityForCheck = {
+    ...activity,
+    availableFrom: new Date(activity.availableFrom),
+    availableTo: new Date(activity.availableTo),
+    createdAt: new Date(activity.createdAt),
+    updatedAt: new Date(activity.updatedAt),
+    _id: activity._id as any, // Type assertion for MongoDB ObjectId
+  };
+  
   const {
     status,
     message,
     className: statusClassName,
-  } = getActivityAvailabilityStatus(activity);
+  } = getActivityAvailabilityStatus(activityForCheck as any);
 
   const getIcon = () => {
     switch (status) {

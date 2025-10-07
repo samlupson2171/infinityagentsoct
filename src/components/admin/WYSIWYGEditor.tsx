@@ -1,22 +1,8 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
+import TinyMCEWrapper from './TinyMCEWrapper';
 import { createTinyMCEImageHandler } from '@/lib/image-upload-handler';
-
-// Dynamic import for TinyMCE to avoid build issues
-let Editor: any = null;
-let TinyMCEEditor: any = null;
-
-if (typeof window !== 'undefined') {
-  try {
-    const tinymce = require('@tinymce/tinymce-react');
-    const tinymceTypes = require('tinymce');
-    Editor = tinymce.Editor;
-    TinyMCEEditor = tinymceTypes.Editor;
-  } catch (error) {
-    console.warn('TinyMCE not available during build');
-  }
-}
 
 interface WYSIWYGEditorProps {
   value: string;
@@ -37,181 +23,27 @@ export default function WYSIWYGEditor({
   height = 400,
   className = '',
 }: WYSIWYGEditorProps) {
-  const editorRef = useRef<TinyMCEEditor | null>(null);
-
-  // Handle image upload
-  const handleImageUpload = async (
-    blobInfo: any,
-    progress: (percent: number) => void
-  ): Promise<string> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        progress(0);
-
-        // Convert blob to file
-        const file = new File([blobInfo.blob()], blobInfo.filename(), {
-          type: blobInfo.blob().type,
-        });
-
-        progress(25);
-
-        // Use custom handler if provided, otherwise use default
-        let imageUrl: string;
-        if (onImageUpload) {
-          imageUrl = await onImageUpload(file);
-        } else {
-          // Use default TinyMCE image handler
-          const defaultHandler = createTinyMCEImageHandler();
-          imageUrl = await defaultHandler(file);
-        }
-
-        progress(100);
-        resolve(imageUrl);
-      } catch (error) {
-        console.error('Image upload error:', error);
-        reject(error instanceof Error ? error.message : 'Image upload failed');
-      }
-    });
+  // Handle image upload with default handler
+  const handleImageUpload = async (file: File): Promise<string> => {
+    if (onImageUpload) {
+      return onImageUpload(file);
+    } else {
+      // Use default TinyMCE image handler
+      const defaultHandler = createTinyMCEImageHandler();
+      return defaultHandler(file);
+    }
   };
-
-  // TinyMCE configuration
-  const editorConfig = {
-    height,
-    menubar: false,
-    plugins: [
-      'advlist',
-      'autolink',
-      'lists',
-      'link',
-      'image',
-      'charmap',
-      'preview',
-      'anchor',
-      'searchreplace',
-      'visualblocks',
-      'code',
-      'fullscreen',
-      'insertdatetime',
-      'media',
-      'table',
-      'help',
-      'wordcount',
-      'paste',
-    ],
-    toolbar: [
-      'undo redo | blocks | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify',
-      'bullist numlist outdent indent | removeformat | link image media table | code fullscreen help',
-    ].join(' | '),
-    content_style: `
-      body { 
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
-        font-size: 14px; 
-        line-height: 1.6;
-        color: #333;
-      }
-      img {
-        max-width: 100%;
-        height: auto;
-      }
-      table {
-        border-collapse: collapse;
-        width: 100%;
-      }
-      table td, table th {
-        border: 1px solid #ddd;
-        padding: 8px;
-      }
-      table th {
-        background-color: #f2f2f2;
-        font-weight: bold;
-      }
-    `,
-    placeholder,
-    paste_data_images: true,
-    images_upload_handler: handleImageUpload,
-    automatic_uploads: true,
-    file_picker_types: 'image',
-    image_advtab: true,
-    image_caption: true,
-    image_description: false,
-    image_dimensions: false,
-    image_title: true,
-    link_default_target: '_blank',
-    link_assume_external_targets: true,
-    target_list: [
-      { title: 'Same window', value: '' },
-      { title: 'New window', value: '_blank' },
-    ],
-    block_formats:
-      'Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6; Preformatted=pre',
-    fontsize_formats: '8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt',
-    setup: (editor: TinyMCEEditor) => {
-      editorRef.current = editor;
-
-      // Add custom validation
-      editor.on('BeforeSetContent', (e) => {
-        // Basic XSS prevention - remove script tags
-        if (e.content) {
-          e.content = e.content.replace(
-            /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-            ''
-          );
-        }
-      });
-
-      // Handle paste events
-      editor.on('PastePreProcess', (e) => {
-        // Clean up pasted content
-        if (e.content) {
-          // Remove potentially dangerous attributes
-          e.content = e.content.replace(/on\w+="[^"]*"/gi, '');
-          e.content = e.content.replace(/javascript:/gi, '');
-        }
-      });
-    },
-    init_instance_callback: (editor: TinyMCEEditor) => {
-      // Set initial content
-      if (value && value !== editor.getContent()) {
-        editor.setContent(value);
-      }
-    },
-  };
-
-  // Handle build-time gracefully
-  if (typeof window === 'undefined' || !Editor) {
-    return (
-      <div className={`wysiwyg-editor ${className}`}>
-        <textarea
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          disabled={disabled}
-          className="w-full p-3 border border-gray-300 rounded-md resize-none"
-          style={{ height: `${height}px` }}
-        />
-      </div>
-    );
-  }
 
   return (
-    <div className={`wysiwyg-editor ${className}`}>
-      <Editor
-        apiKey="no-api-key" // Using TinyMCE without API key for local development
-        value={value}
-        onEditorChange={(content) => {
-          // Sanitize content before passing to parent
-          const sanitizedContent = sanitizeContent(content);
-          onChange(sanitizedContent);
-        }}
-        init={{
-          ...editorConfig,
-          // Prevent CSS file loading issues during build
-          content_css: false,
-          skin: false,
-        }}
-        disabled={disabled}
-      />
-    </div>
+    <TinyMCEWrapper
+      value={value}
+      onChange={onChange}
+      onImageUpload={handleImageUpload}
+      placeholder={placeholder}
+      disabled={disabled}
+      height={height}
+      className={className}
+    />
   );
 }
 

@@ -14,6 +14,14 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  // Handle build-time gracefully
+  if (process.env.NODE_ENV === 'production' && !process.env.MONGODB_URI) {
+    return NextResponse.json(
+      { success: false, error: 'Service temporarily unavailable' },
+      { status: 503 }
+    );
+  }
+
   let auditContext;
 
   try {
