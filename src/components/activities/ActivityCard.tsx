@@ -33,7 +33,17 @@ interface IActivity {
   };
 }
 import { AvailabilityStatus } from './AvailabilityIndicator';
-import { checkActivityAvailability } from '@/lib/availability-utils';
+
+// Simple availability check without importing the full utility
+const checkSimpleAvailability = (activity: IActivity): boolean => {
+  if (!activity.isActive) return false;
+  
+  const now = new Date();
+  const availableFrom = new Date(activity.availableFrom);
+  const availableTo = new Date(activity.availableTo);
+  
+  return now >= availableFrom && now <= availableTo;
+};
 
 interface ActivityCardProps {
   activity: IActivity;
@@ -71,19 +81,7 @@ export default function ActivityCard({
   };
 
   const categoryData = getCategoryInfo(activity.category);
-  
-  // Convert string dates to Date objects for availability check
-  const activityForCheck = {
-    ...activity,
-    availableFrom: new Date(activity.availableFrom),
-    availableTo: new Date(activity.availableTo),
-    createdAt: new Date(activity.createdAt),
-    updatedAt: new Date(activity.updatedAt),
-    _id: activity._id as any, // Type assertion for MongoDB ObjectId
-  };
-  
-  const availabilityCheck = checkActivityAvailability(activityForCheck as any);
-  const available = availabilityCheck.isAvailable;
+  const available = checkSimpleAvailability(activity);
 
   return (
     <div

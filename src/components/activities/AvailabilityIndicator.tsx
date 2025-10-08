@@ -16,7 +16,54 @@ interface IActivity {
   createdAt: string;
   updatedAt: string;
 }
-import { getActivityAvailabilityStatus } from '@/lib/availability-utils';
+// Simple availability status check without importing the full utility
+const getSimpleAvailabilityStatus = (activity: IActivity) => {
+  const now = new Date();
+  const availableFrom = new Date(activity.availableFrom);
+  const availableTo = new Date(activity.availableTo);
+
+  if (!activity.isActive) {
+    return {
+      status: 'inactive' as const,
+      message: 'Inactive',
+      className: 'bg-gray-100 text-gray-800',
+    };
+  }
+
+  if (now < availableFrom) {
+    return {
+      status: 'upcoming' as const,
+      message: `Available from ${availableFrom.toLocaleDateString()}`,
+      className: 'bg-blue-100 text-blue-800',
+    };
+  }
+
+  if (now > availableTo) {
+    return {
+      status: 'expired' as const,
+      message: `Expired on ${availableTo.toLocaleDateString()}`,
+      className: 'bg-red-100 text-red-800',
+    };
+  }
+
+  // Check if expiring soon (within 30 days)
+  const thirtyDaysFromNow = new Date();
+  thirtyDaysFromNow.setDate(now.getDate() + 30);
+  
+  if (availableTo <= thirtyDaysFromNow) {
+    return {
+      status: 'expiring-soon' as const,
+      message: `Expires ${availableTo.toLocaleDateString()}`,
+      className: 'bg-yellow-100 text-yellow-800',
+    };
+  }
+
+  return {
+    status: 'available' as const,
+    message: 'Available',
+    className: 'bg-green-100 text-green-800',
+  };
+};
 
 interface AvailabilityIndicatorProps {
   activity: IActivity;
@@ -29,21 +76,11 @@ export default function AvailabilityIndicator({
   showMessage = true,
   className = '',
 }: AvailabilityIndicatorProps) {
-  // Convert string dates to Date objects for availability check
-  const activityForCheck = {
-    ...activity,
-    availableFrom: new Date(activity.availableFrom),
-    availableTo: new Date(activity.availableTo),
-    createdAt: new Date(activity.createdAt),
-    updatedAt: new Date(activity.updatedAt),
-    _id: activity._id as any, // Type assertion for MongoDB ObjectId
-  };
-  
   const {
     status,
     message,
     className: statusClassName,
-  } = getActivityAvailabilityStatus(activityForCheck as any);
+  } = getSimpleAvailabilityStatus(activity);
 
   const getIcon = () => {
     switch (status) {
