@@ -1,23 +1,26 @@
 import mongoose from 'mongoose';
 import { StartupValidator } from './startup-validator';
 
-// Validate environment on module load (skip during build)
-// Skip validation during build process
-const validationResult = process.env.NODE_ENV === 'production' && !process.env.MONGODB_URI 
-  ? { isValid: false, errors: [], warnings: [] }
-  : (typeof window === 'undefined' && process.env.NODE_ENV === 'production') 
-    ? { isValid: true, errors: [], warnings: [] } // Skip during build
-    : StartupValidator.validateEnvironmentGraceful();
+// Skip validation during Vercel builds or CI
+const isVercelBuild = process.env.VERCEL === '1' || process.env.VERCEL_ENV !== undefined;
+const isCIBuild = process.env.CI === '1' || process.env.CI === 'true';
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
 
-// Check if database feature is available
-if (!StartupValidator.isFeatureAvailable('database')) {
+// Only validate in development or runtime (not during builds)
+const validationResult = (isVercelBuild || isCIBuild || isBuildPhase)
+  ? { isValid: true, errors: [], warnings: [] }
+  : StartupValidator.validateEnvironmentGraceful();
+
+// Check if database feature is available (skip during builds)
+if (!isVercelBuild && !isCIBuild && !isBuildPhase && !StartupValidator.isFeatureAvailable('database')) {
   console.error('❌ Database configuration is invalid. Please check your environment variables.');
   console.error('Run "node check-env.js" for detailed configuration help.');
 }
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 
-if (!MONGODB_URI) {
+// Only throw error if not in build phase
+if (!MONGODB_URI && !isVercelBuild && !isCIBuild && !isBuildPhase) {
   const help = StartupValidator.getConfigurationHelp();
   console.error('Database configuration error:');
   help.forEach(line => console.error(line));

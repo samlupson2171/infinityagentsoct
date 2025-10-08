@@ -32,7 +32,12 @@ export class StartupValidator {
     }
 
     // Skip validation during Vercel builds or CI environments
-    if (process.env.VERCEL === '1' || process.env.CI === 'true' || process.env.NEXT_PHASE === 'phase-production-build') {
+    // Vercel sets VERCEL=1, CI=1, and NODE_ENV=production during builds
+    const isVercelBuild = process.env.VERCEL === '1' || process.env.VERCEL_ENV !== undefined;
+    const isCIBuild = process.env.CI === '1' || process.env.CI === 'true';
+    const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
+    
+    if (isVercelBuild || isCIBuild || isBuildPhase) {
       console.log('🔍 Skipping environment validation (build environment detected)');
       this.validationResult = {
         isValid: true,
