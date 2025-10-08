@@ -67,13 +67,25 @@ const EnquirySchema = new Schema<IEnquiry>(
     secondChoiceDestination: {
       type: String,
       trim: true,
-      minlength: [2, 'Destination name must be at least 2 characters long'],
+      validate: {
+        validator: function (value: string) {
+          // Allow empty string or validate length if provided
+          return !value || value.length >= 2;
+        },
+        message: 'Destination name must be at least 2 characters long',
+      },
       maxlength: [50, 'Destination name cannot exceed 50 characters'],
     },
     thirdChoiceDestination: {
       type: String,
       trim: true,
-      minlength: [2, 'Destination name must be at least 2 characters long'],
+      validate: {
+        validator: function (value: string) {
+          // Allow empty string or validate length if provided
+          return !value || value.length >= 2;
+        },
+        message: 'Destination name must be at least 2 characters long',
+      },
       maxlength: [50, 'Destination name cannot exceed 50 characters'],
     },
     resort: {
@@ -86,9 +98,12 @@ const EnquirySchema = new Schema<IEnquiry>(
       required: [true, 'Travel date is required'],
       validate: {
         validator: function (date: Date) {
-          return date > new Date();
+          // Allow dates from today onwards (not strictly future to account for timezone differences)
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          return date >= today;
         },
-        message: 'Travel date must be in the future',
+        message: 'Travel date must be today or in the future',
       },
     },
     departureAirport: {

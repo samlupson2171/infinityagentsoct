@@ -7,6 +7,7 @@ import {
   sendEnquiryConfirmationEmail,
 } from '@/lib/email';
 import { z } from 'zod';
+import mongoose from 'mongoose';
 
 export const dynamic = 'force-dynamic';
 
@@ -103,6 +104,20 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const enquiryData = createEnquirySchema.parse(body);
 
+    // Convert empty strings to undefined for optional fields
+    if (enquiryData.secondChoiceDestination === '') {
+      enquiryData.secondChoiceDestination = undefined;
+    }
+    if (enquiryData.thirdChoiceDestination === '') {
+      enquiryData.thirdChoiceDestination = undefined;
+    }
+    if (enquiryData.resort === '') {
+      enquiryData.resort = undefined;
+    }
+    if (enquiryData.additionalNotes === '') {
+      enquiryData.additionalNotes = undefined;
+    }
+
     // Connect to database
     await connectDB();
 
@@ -111,7 +126,7 @@ export async function POST(request: NextRequest) {
       ...enquiryData,
       travelDate: new Date(enquiryData.travelDate),
       agentEmail: token.email,
-      submittedBy: token.sub,
+      submittedBy: new mongoose.Types.ObjectId(token.sub),
       status: 'new',
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -181,6 +196,9 @@ export async function POST(request: NextRequest) {
     );
   } catch (error: any) {
     console.error('Error creating enquiry:', error);
+    console.error('Error stack:', error.stack);
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
 
     // Handle validation errors
     if (error instanceof z.ZodError) {
@@ -197,12 +215,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Handle Mongoose validation errors
+    if (error.name === 'ValidationError') {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Database validation failed',
+            details: Object.values(error.errors || {}).map((err: any) => ({
+              field: err.path,
+              message: err.message,
+            })),
+          },
+        },
+        { status: 400 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
           message: 'Failed to submit enquiry',
+          details: error.message,
         },
       },
       { status: 500 }
