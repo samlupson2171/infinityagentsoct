@@ -6,6 +6,7 @@ export interface AIGenerationRequest {
   region: string;
   sections: string[]; // Which sections to generate
   targetAudience?:
+    | 'stag-hen'
     | 'families'
     | 'young-adults'
     | 'couples'
@@ -135,8 +136,20 @@ class OpenAIProvider implements AIProvider {
     console.log(`🔧 buildPrompt called with section: "${section}"`);
 
     const baseContext = `Generate travel content for ${request.destinationName} in ${request.region}, ${request.country}.`;
+    
+    // Enhanced audience descriptions
+    const audienceDescriptions: Record<string, string> = {
+      'stag-hen': 'stag and hen parties (bachelor/bachelorette parties) looking for exciting nightlife, group activities, entertainment venues, party-friendly accommodations, and memorable group celebrations',
+      'families': 'families with children looking for safe, fun, and family-friendly experiences',
+      'young-adults': 'young adults (18-30) seeking adventure, nightlife, and social experiences',
+      'couples': 'romantic couples looking for intimate experiences and quality time together',
+      'solo-travelers': 'independent solo travelers seeking authentic experiences and social opportunities',
+      'luxury': 'luxury travelers expecting premium services, exclusive experiences, and high-end amenities',
+      'budget': 'budget-conscious travelers looking for affordable options and value for money'
+    };
+    
     const audienceContext = request.targetAudience
-      ? `Target audience: ${request.targetAudience}.`
+      ? `Target audience: ${audienceDescriptions[request.targetAudience] || request.targetAudience}. Tailor the content specifically for this audience, highlighting relevant venues, activities, and experiences.`
       : '';
     const toneContext = request.contentTone
       ? `Writing tone: ${request.contentTone}.`

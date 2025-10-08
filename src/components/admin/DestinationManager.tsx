@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDebounce } from '@/lib/hooks/useDebounce';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
-import { useToast } from '@/components/shared/Toast';
 
 interface DestinationListItem {
   _id: string;
@@ -233,6 +232,43 @@ export default function DestinationManager({
       });
     } finally {
       setBulkActionLoading(false);
+    }
+  };
+
+  // Handle individual delete
+  const handleDeleteDestination = async (id: string, name: string, status: string) => {
+    const confirmMessage = status === 'published'
+      ? `"${name}" is currently published. Are you sure you want to delete it? This action cannot be undone.`
+      : `Are you sure you want to delete "${name}"? This action cannot be undone.`;
+
+    if (!confirm(confirmMessage)) return;
+
+    try {
+      const forceParam = status === 'published' ? '?force=true' : '';
+      const response = await fetch(`/api/admin/destinations/${id}${forceParam}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete destination');
+      }
+
+      setToast({
+        message: `Successfully deleted "${name}"`,
+        type: 'success',
+      });
+
+      // Refresh the list
+      await fetchDestinations();
+    } catch (err) {
+      setToast({
+        message:
+          err instanceof Error
+            ? err.message
+            : 'Failed to delete destination',
+        type: 'error',
+      });
     }
   };
 
@@ -555,11 +591,15 @@ export default function DestinationManager({
                         </button>
                         <button
                           onClick={() =>
-                            (window.location.href = `/admin/destinations/${destination._id}/duplicate`)
+                            handleDeleteDestination(
+                              destination._id,
+                              destination.name,
+                              destination.status
+                            )
                           }
-                          className="text-purple-600 hover:text-purple-900"
+                          className="text-red-600 hover:text-red-900"
                         >
-                          Duplicate
+                          Delete
                         </button>
                       </div>
                     </td>
@@ -651,11 +691,30 @@ export default function DestinationManager({
 
       {/* Toast */}
       {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
+        <div
+          className={`fixed top-4 right-4 z-50 max-w-sm w-full border rounded-lg shadow-lg p-4 ${
+            toast.type === 'success'
+              ? 'bg-green-50 border-green-200 text-green-800'
+              : 'bg-red-50 border-red-200 text-red-800'
+          }`}
+        >
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <span className="text-lg">{toast.type === 'success' ? '✓' : '✕'}</span>
+            </div>
+            <div className="ml-3 flex-1">
+              <p className="text-sm">{toast.message}</p>
+            </div>
+            <div className="ml-4 flex-shrink-0">
+              <button
+                onClick={() => setToast(null)}
+                className="text-lg opacity-60 hover:opacity-100 transition-opacity"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

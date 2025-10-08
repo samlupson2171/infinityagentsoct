@@ -22,6 +22,16 @@ interface DestinationFormData {
   slug?: string;
   heroImage?: string;
   galleryImages?: string[];
+  quickFacts?: {
+    climate?: string;
+    bestTime?: string;
+    flightTime?: string;
+    population?: string;
+    language?: string;
+    currency?: string;
+    timeZone?: string;
+    airport?: string;
+  };
 }
 
 interface DestinationFormProps {
@@ -99,6 +109,16 @@ export function DestinationForm({
     slug: destination?.slug || '',
     heroImage: destination?.heroImage || undefined,
     galleryImages: destination?.galleryImages || [],
+    quickFacts: {
+      climate: destination?.quickFacts?.climate || '',
+      bestTime: destination?.quickFacts?.bestTime || '',
+      flightTime: destination?.quickFacts?.flightTime || '',
+      population: destination?.quickFacts?.population || '',
+      language: destination?.quickFacts?.language || '',
+      currency: destination?.quickFacts?.currency || '',
+      timeZone: destination?.quickFacts?.timeZone || '',
+      airport: destination?.quickFacts?.airport || '',
+    },
   });
 
   // Auto-save state
@@ -491,14 +511,7 @@ export function DestinationForm({
             onBlur={() => handleFieldBlur('slug')}
             placeholder="benidorm"
             error={touched.slug ? errors.slug : undefined}
-            helperText={
-              <span className={getSlugValidationColor()}>
-                {slugValidationStatus === 'checking' && (
-                  <LoadingSpinner size="xs" className="inline mr-1" />
-                )}
-                {getSlugValidationMessage()}
-              </span>
-            }
+            helperText={getSlugValidationMessage()}
             validation={validationRules.slug}
           />
         </FieldGroup>
@@ -519,6 +532,134 @@ export function DestinationForm({
             />
           </FieldGroup>
         )}
+
+        {/* Quick Facts Section */}
+        <FieldGroup
+          title="Quick Facts"
+          description="Key information displayed on destination cards"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              label="Climate"
+              name="quickFacts.climate"
+              type="text"
+              value={formData.quickFacts?.climate || ''}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  quickFacts: { ...prev.quickFacts, climate: value },
+                }))
+              }
+              placeholder="e.g., Mediterranean with 300+ days of sunshine"
+              helperText="Describe the typical weather and climate"
+            />
+
+            <FormField
+              label="Best Time to Visit"
+              name="quickFacts.bestTime"
+              type="text"
+              value={formData.quickFacts?.bestTime || ''}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  quickFacts: { ...prev.quickFacts, bestTime: value },
+                }))
+              }
+              placeholder="e.g., April to October"
+              helperText="Recommended months or seasons"
+            />
+
+            <FormField
+              label="Flight Time"
+              name="quickFacts.flightTime"
+              type="text"
+              value={formData.quickFacts?.flightTime || ''}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  quickFacts: { ...prev.quickFacts, flightTime: value },
+                }))
+              }
+              placeholder="e.g., 2.5 hours from UK"
+              helperText="Typical flight duration"
+            />
+
+            <FormField
+              label="Population"
+              name="quickFacts.population"
+              type="text"
+              value={formData.quickFacts?.population || ''}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  quickFacts: { ...prev.quickFacts, population: value },
+                }))
+              }
+              placeholder="e.g., 70,000"
+              helperText="Approximate population"
+            />
+
+            <FormField
+              label="Language"
+              name="quickFacts.language"
+              type="text"
+              value={formData.quickFacts?.language || ''}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  quickFacts: { ...prev.quickFacts, language: value },
+                }))
+              }
+              placeholder="e.g., Spanish, English widely spoken"
+              helperText="Primary and commonly spoken languages"
+            />
+
+            <FormField
+              label="Currency"
+              name="quickFacts.currency"
+              type="text"
+              value={formData.quickFacts?.currency || ''}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  quickFacts: { ...prev.quickFacts, currency: value },
+                }))
+              }
+              placeholder="e.g., Euro (EUR)"
+              helperText="Local currency"
+            />
+
+            <FormField
+              label="Time Zone"
+              name="quickFacts.timeZone"
+              type="text"
+              value={formData.quickFacts?.timeZone || ''}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  quickFacts: { ...prev.quickFacts, timeZone: value },
+                }))
+              }
+              placeholder="e.g., CET (UTC+1)"
+              helperText="Local time zone"
+            />
+
+            <FormField
+              label="Airport"
+              name="quickFacts.airport"
+              type="text"
+              value={formData.quickFacts?.airport || ''}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  quickFacts: { ...prev.quickFacts, airport: value },
+                }))
+              }
+              placeholder="e.g., Alicante Airport (ALC)"
+              helperText="Nearest airport with code"
+            />
+          </div>
+        </FieldGroup>
 
         {/* Form Actions */}
         <div className="flex justify-between items-center pt-6 border-t border-gray-200">

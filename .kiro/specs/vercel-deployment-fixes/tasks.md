@@ -36,7 +36,7 @@
   - Check that build completes successfully
   - _Requirements: 1.3, 2.3, 4.2_
 
-- [-] 6. Deploy and Verify on Vercel
+- [x] 6. Deploy and Verify on Vercel
   - Push changes to repository
   - Trigger Vercel deployment
   - Monitor build logs for any errors

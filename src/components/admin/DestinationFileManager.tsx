@@ -27,6 +27,28 @@ interface DestinationFileManagerProps {
   readOnly?: boolean;
 }
 
+// Helper functions
+const formatFileSize = (bytes: number) => {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+const getFileIcon = (fileType: string) => {
+  switch (fileType) {
+    case 'pdf':
+      return '📄';
+    case 'excel':
+      return '📊';
+    case 'image':
+      return '🖼️';
+    default:
+      return '📎';
+  }
+};
+
 export default function DestinationFileManager({
   destinationId,
   files,
@@ -36,27 +58,6 @@ export default function DestinationFileManager({
   const [isUploading, setIsUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const { showSuccess, showError } = useToast();
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
-
-  const getFileIcon = (fileType: string) => {
-    switch (fileType) {
-      case 'pdf':
-        return '📄';
-      case 'excel':
-        return '📊';
-      case 'image':
-        return '🖼️';
-      default:
-        return '📎';
-    }
-  };
 
   const handleFileUpload = useCallback(
     async (fileList: FileList) => {
@@ -404,17 +405,4 @@ function FileItem({ file, onDelete, onUpdate, readOnly }: FileItemProps) {
       </div>
     </div>
   );
-}
-
-function getFileIcon(fileType: string) {
-  switch (fileType) {
-    case 'pdf':
-      return '📄';
-    case 'excel':
-      return '📊';
-    case 'image':
-      return '🖼️';
-    default:
-      return '📎';
-  }
 }

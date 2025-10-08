@@ -65,13 +65,9 @@ export async function GET(request: NextRequest) {
       gradientColors: dest.gradientColors,
       highlights: dest.quickFacts
         ? [
-            dest.quickFacts.climate && `${dest.quickFacts.climate} climate`,
-            dest.quickFacts.bestTime &&
-              `Best time: ${dest.quickFacts.bestTime}`,
-            dest.quickFacts.flightTime &&
-              `${dest.quickFacts.flightTime} flight time`,
-            dest.quickFacts.language && `Language: ${dest.quickFacts.language}`,
-            dest.quickFacts.airport && `Airport: ${dest.quickFacts.airport}`,
+            dest.quickFacts.climate,
+            dest.quickFacts.bestTime,
+            dest.quickFacts.flightTime,
           ].filter(Boolean)
         : [],
       climate: dest.quickFacts?.climate || 'Mediterranean',
