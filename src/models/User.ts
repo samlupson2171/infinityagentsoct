@@ -6,6 +6,7 @@ export interface IUser extends Document {
   companyName: string;
   abtaPtsNumber: string;
   contactEmail: string;
+  phoneNumber: string;
   websiteAddress: string;
   password: string;
   isApproved: boolean;
@@ -66,6 +67,19 @@ const UserSchema = new Schema<IUser>(
           return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         },
         message: 'Please provide a valid email address',
+      },
+    },
+    phoneNumber: {
+      type: String,
+      required: [true, 'Phone number is required'],
+      trim: true,
+      minlength: [10, 'Phone number must be at least 10 digits'],
+      maxlength: [20, 'Phone number cannot exceed 20 characters'],
+      validate: {
+        validator: function (phone: string) {
+          return /^[\d\s\-\+\(\)]+$/.test(phone);
+        },
+        message: 'Phone number can only contain digits, spaces, hyphens, plus signs, and parentheses',
       },
     },
     websiteAddress: {

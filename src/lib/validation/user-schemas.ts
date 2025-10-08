@@ -29,6 +29,15 @@ export const enhancedRegistrationSchema = baseUserSchema
         'ABTA/PTS number must start with ABTA or PTS followed by 4-10 alphanumeric characters'
       )
       .transform((val) => val.toUpperCase()),
+    phoneNumber: z
+      .string()
+      .min(10, 'Phone number must be at least 10 digits')
+      .max(20, 'Phone number cannot exceed 20 characters')
+      .regex(
+        /^[\d\s\-\+\(\)]+$/,
+        'Phone number can only contain digits, spaces, hyphens, plus signs, and parentheses'
+      )
+      .trim(),
     websiteAddress: z
       .string()
       .url('Please provide a valid HTTP or HTTPS website URL')

@@ -41,6 +41,15 @@ const registerSchema = z
       .string()
       .email('Please provide a valid email address')
       .toLowerCase(),
+    phoneNumber: z
+      .string()
+      .min(10, 'Phone number must be at least 10 digits')
+      .max(20, 'Phone number cannot exceed 20 characters')
+      .regex(
+        /^[\d\s\-\+\(\)]+$/,
+        'Phone number can only contain digits, spaces, hyphens, plus signs, and parentheses'
+      )
+      .trim(),
     websiteAddress: z
       .string()
       .url('Please provide a valid HTTP or HTTPS website URL')
@@ -318,6 +327,33 @@ export default function RegisterForm() {
               {errors.contactEmail.message}
             </p>
           )}
+        </div>
+
+        {/* Phone Number Field */}
+        <div>
+          <label
+            htmlFor="phoneNumber"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Phone Number *
+          </label>
+          <input
+            {...register('phoneNumber')}
+            type="tel"
+            id="phoneNumber"
+            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              errors.phoneNumber ? 'border-red-500' : 'border-gray-300'
+            }`}
+            placeholder="Enter your phone number"
+          />
+          {errors.phoneNumber && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.phoneNumber.message}
+            </p>
+          )}
+          <p className="mt-1 text-xs text-gray-500">
+            Include country code if applicable (e.g., +44 20 1234 5678)
+          </p>
         </div>
 
         {/* Website Address Field */}

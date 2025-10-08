@@ -94,6 +94,7 @@ export async function sendAdminNotificationEmail(data: {
   userName: string;
   companyName: string;
   contactEmail: string;
+  phoneNumber?: string;
   abtaPtsNumber: string;
   websiteAddress: string;
   consortia?: string;
@@ -163,6 +164,16 @@ export async function sendAdminNotificationEmail(data: {
                 <a href="mailto:${data.contactEmail}" style="color: #007bff; text-decoration: none;">${data.contactEmail}</a>
               </td>
             </tr>
+            ${
+              data.phoneNumber
+                ? `
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">Phone Number:</td>
+              <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">${data.phoneNumber}</td>
+            </tr>
+            `
+                : ''
+            }
             <tr>
               <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">ABTA/PTS Number:</td>
               <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef; font-family: monospace; background-color: #e9ecef; padding: 8px; border-radius: 4px;">${data.abtaPtsNumber}</td>

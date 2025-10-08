@@ -343,6 +343,16 @@ export default function ApprovalDashboard({
                     {selectedUser.contactEmail}
                   </p>
                 </div>
+                {selectedUser.phoneNumber && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Phone Number
+                    </label>
+                    <p className="text-sm text-gray-900">
+                      {selectedUser.phoneNumber}
+                    </p>
+                  </div>
+                )}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     ABTA/PTS Number
