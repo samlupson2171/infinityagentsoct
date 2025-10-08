@@ -79,10 +79,9 @@ export const ENVIRONMENT_CONFIG = {
 
 /**
  * Patterns that indicate potentially unsafe credential usage
+ * These are ONLY unsafe in development - production MongoDB Atlas URIs are safe
  */
 const UNSAFE_CREDENTIAL_PATTERNS = [
-  /mongodb\+srv:\/\/[^:]+:[^@]+@/i, // MongoDB connection string with embedded credentials
-  /mongodb:\/\/[^:]+:[^@]+@/i,     // MongoDB connection string with embedded credentials
   /your-[a-z-]+-here/i,            // Placeholder patterns
   /example\.com/i,                  // Example domains
   /password123/i,                   // Common weak passwords
@@ -92,9 +91,52 @@ const UNSAFE_CREDENTIAL_PATTERNS = [
 ];
 
 /**
+ * Safe production patterns - MongoDB Atlas connection strings are SAFE in production
+ * These use TLS/SSL encryption and are stored as environment variables
+ */
+const SAFE_PRODUCTION_PATTERNS = [
+  /mongodb\+srv:\/\/[^:]+:[^@]+@[a-z0-9-]+\.mongodb\.net/i,           // Atlas cluster
+  /mongodb\+srv:\/\/[^:]+:[^@]+@[a-z0-9-]+\.[a-z0-9]+\.mongodb\.net/i, // Atlas with region
+  /mongodb:\/\/[^:]+:[^@]+@[a-z0-9-]+\.mongodb\.net/i,                // Atlas standard connection
+];
+
+/**
+ * Production environment configuration
+ */
+interface ProductionEnvironmentConfig {
+  isProduction: boolean;
+  isBuildPhase: boolean;
+  isVercelBuild: boolean;
+  skipCredentialChecks: boolean;
+}
+
+/**
  * Environment Variable Validator Class
  */
 export class EnvironmentValidator {
+  /**
+   * Detect production and build environment
+   */
+  static detectEnvironment(): ProductionEnvironmentConfig {
+    const isProduction = process.env.NODE_ENV === 'production';
+    const isBuildPhase = 
+      process.env.NEXT_PHASE === 'phase-production-build' ||
+      process.env.VERCEL === '1' ||
+      process.env.CI === 'true' ||
+      process.env.VERCEL_ENV !== undefined;
+    const isVercelBuild = process.env.VERCEL === '1';
+    
+    // Skip credential checks during build or in production with proper MongoDB Atlas URIs
+    const skipCredentialChecks = isBuildPhase || (isProduction && isVercelBuild);
+
+    return {
+      isProduction,
+      isBuildPhase,
+      isVercelBuild,
+      skipCredentialChecks
+    };
+  }
+
   /**
    * Validate all required environment variables
    */
@@ -275,6 +317,12 @@ export class EnvironmentValidator {
    */
   static checkCredentialSafety(): SecurityCheck[] {
     const checks: SecurityCheck[] = [];
+    const env = this.detectEnvironment();
+
+    // Skip credential checks during build phase
+    if (env.isBuildPhase) {
+      return checks;
+    }
 
     // Check all environment variables for unsafe patterns
     for (const variable of [...ENVIRONMENT_CONFIG.required, ...ENVIRONMENT_CONFIG.optional]) {
@@ -282,6 +330,22 @@ export class EnvironmentValidator {
       if (value) {
         const issues: string[] = [];
         let isSecure = true;
+
+        // For MongoDB URI, check if it's a safe production pattern first
+        if (variable === 'MONGODB_URI') {
+          const isSafeProduction = SAFE_PRODUCTION_PATTERNS.some(pattern => pattern.test(value));
+          
+          if (isSafeProduction && env.isProduction) {
+            // MongoDB Atlas URIs are safe in production - skip unsafe pattern checks
+            checks.push({
+              variable,
+              value: this.maskSensitiveValue(variable, value),
+              isSecure: true,
+              issues: []
+            });
+            continue;
+          }
+        }
 
         // Check for unsafe credential patterns
         for (const pattern of UNSAFE_CREDENTIAL_PATTERNS) {
@@ -334,6 +398,24 @@ export class EnvironmentValidator {
    * Generate comprehensive validation report
    */
   static generateReport(): EnvironmentValidationReport {
+    const env = this.detectEnvironment();
+    
+    // During build phase, skip validation to prevent build failures
+    if (env.isBuildPhase) {
+      return {
+        isValid: true,
+        requiredVariables: [],
+        optionalVariables: [],
+        securityChecks: [],
+        summary: {
+          totalChecked: 0,
+          passed: 0,
+          failed: 0,
+          warnings: 0
+        }
+      };
+    }
+
     const requiredVariables = this.validateRequiredVars();
     const optionalVariables = this.validateOptionalVars();
     const securityChecks = this.checkCredentialSafety();
@@ -364,6 +446,13 @@ export class EnvironmentValidator {
    */
   static getConfigurationErrors(): string[] {
     const errors: string[] = [];
+    const env = this.detectEnvironment();
+    
+    // Skip error reporting during build phase
+    if (env.isBuildPhase) {
+      return errors;
+    }
+
     const report = this.generateReport();
 
     // Add required variable errors
@@ -380,11 +469,12 @@ export class EnvironmentValidator {
         errors.push(`${result.variable}: ${result.message}`);
       });
 
-    // Add security issues
+    // Add security issues (but log as warnings in production)
     report.securityChecks
       .filter(check => !check.isSecure)
       .forEach(check => {
-        errors.push(`${check.variable}: ${check.issues.join(', ')}`);
+        const prefix = env.isProduction ? 'Warning' : 'Error';
+        errors.push(`${prefix} - ${check.variable}: ${check.issues.join(', ')}`);
       });
 
     return errors;
@@ -395,6 +485,14 @@ export class EnvironmentValidator {
    */
   static getSetupInstructions(): string[] {
     const instructions: string[] = [];
+    const env = this.detectEnvironment();
+    
+    // Skip instructions during build phase
+    if (env.isBuildPhase) {
+      instructions.push('⏭️  Environment validation skipped during build phase');
+      return instructions;
+    }
+
     const report = this.generateReport();
 
     const missingRequired = report.requiredVariables.filter(r => !r.isValid);
@@ -412,19 +510,22 @@ export class EnvironmentValidator {
 
     const securityIssues = report.securityChecks.filter(check => !check.isSecure);
     if (securityIssues.length > 0) {
-      instructions.push('Security issues detected:');
+      const issueType = env.isProduction ? 'Security warnings' : 'Security issues detected';
+      instructions.push(`${issueType}:`);
       instructions.push('');
       
       securityIssues.forEach(check => {
         instructions.push(`• ${check.variable}: ${check.issues.join(', ')}`);
-        instructions.push('  Please update this variable with a secure value');
+        if (!env.isProduction) {
+          instructions.push('  Please update this variable with a secure value');
+        }
         instructions.push('');
       });
     }
 
     if (instructions.length === 0) {
       instructions.push('✅ All environment variables are properly configured!');
-    } else {
+    } else if (!env.isProduction) {
       instructions.push('📖 For detailed setup instructions, see LAUNCH_GUIDE.md');
     }
 

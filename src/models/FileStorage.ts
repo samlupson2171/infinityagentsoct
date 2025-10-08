@@ -76,17 +76,14 @@ const FileStorageSchema = new Schema<IFileStorage>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Uploader is required'],
-      index: true,
     },
     associatedMaterial: {
       type: Schema.Types.ObjectId,
       ref: 'TrainingMaterial',
-      index: true,
     },
     isOrphaned: {
       type: Boolean,
       default: false,
-      index: true,
     },
   },
   {

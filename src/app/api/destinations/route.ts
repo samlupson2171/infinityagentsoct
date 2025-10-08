@@ -4,6 +4,8 @@ import Destination from '@/models/Destination';
 
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 // GET /api/destinations - Get published destinations for public site
 export async function GET(request: NextRequest) {
   try {

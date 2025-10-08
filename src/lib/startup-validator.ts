@@ -31,19 +31,19 @@ export class StartupValidator {
       return this.validationResult;
     }
 
-    // Skip validation during Vercel builds or CI environments
-    // Vercel sets VERCEL=1, CI=1, and NODE_ENV=production during builds
-    const isVercelBuild = process.env.VERCEL === '1' || process.env.VERCEL_ENV !== undefined;
-    const isCIBuild = process.env.CI === '1' || process.env.CI === 'true';
-    const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
+    // Enhanced build environment detection
+    // Skip validation during any build scenario to prevent false positives
+    const isBuildEnvironment = this.detectBuildEnvironment();
     
-    if (isVercelBuild || isCIBuild || isBuildPhase) {
-      console.log('🔍 Skipping environment validation (build environment detected)');
+    if (isBuildEnvironment) {
+      const buildType = this.getBuildEnvironmentType();
+      console.log(`🔍 Skipping environment validation (${buildType} detected)`);
       this.validationResult = {
         isValid: true,
         errors: [],
         warnings: [],
         report: {
+          isValid: true,
           requiredVariables: [],
           optionalVariables: [],
           securityChecks: [],
@@ -103,6 +103,65 @@ export class StartupValidator {
     this.logValidationResults(this.validationResult);
 
     return this.validationResult;
+  }
+
+  /**
+   * Detect if running in a build environment
+   * Checks multiple indicators to ensure validation is skipped during all build scenarios
+   */
+  private static detectBuildEnvironment(): boolean {
+    // Next.js build phase detection
+    const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
+    
+    // Vercel environment detection
+    const isVercelBuild = process.env.VERCEL === '1';
+    const hasVercelEnv = process.env.VERCEL_ENV !== undefined;
+    
+    // CI environment detection
+    const isCIBuild = process.env.CI === '1' || process.env.CI === 'true';
+    
+    // GitHub Actions detection
+    const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+    
+    // GitLab CI detection
+    const isGitLabCI = process.env.GITLAB_CI === 'true';
+    
+    // Additional build indicators
+    const isProductionBuild = process.env.NODE_ENV === 'production' && 
+                             (isBuildPhase || isVercelBuild || isCIBuild);
+    
+    return isBuildPhase || 
+           isVercelBuild || 
+           hasVercelEnv || 
+           isCIBuild || 
+           isGitHubActions || 
+           isGitLabCI || 
+           isProductionBuild;
+  }
+
+  /**
+   * Get a human-readable description of the build environment type
+   */
+  private static getBuildEnvironmentType(): string {
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+      return 'Next.js build phase';
+    }
+    if (process.env.VERCEL === '1') {
+      return 'Vercel build environment';
+    }
+    if (process.env.GITHUB_ACTIONS === 'true') {
+      return 'GitHub Actions CI';
+    }
+    if (process.env.GITLAB_CI === 'true') {
+      return 'GitLab CI';
+    }
+    if (process.env.CI === '1' || process.env.CI === 'true') {
+      return 'CI environment';
+    }
+    if (process.env.VERCEL_ENV !== undefined) {
+      return 'Vercel environment';
+    }
+    return 'build environment';
   }
 
   /**

@@ -154,19 +154,16 @@ const ImportHistorySchema = new Schema<IImportHistory>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Importer is required'],
-      index: true,
     },
     importedAt: {
       type: Date,
       default: Date.now,
-      index: true,
     },
     status: {
       type: String,
       required: true,
       enum: ['pending', 'processing', 'completed', 'failed', 'rolled-back'],
       default: 'pending',
-      index: true,
     },
     summary: {
       type: ImportSummarySchema,

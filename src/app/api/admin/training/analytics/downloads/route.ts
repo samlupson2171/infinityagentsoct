@@ -5,6 +5,8 @@ import { DownloadTracker } from '@/lib/download-tracker';
 
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 export async function GET(request: NextRequest) {
   try {
     // Check authentication and admin role

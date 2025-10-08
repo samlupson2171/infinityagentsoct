@@ -4,6 +4,7 @@ import { connectDB } from '@/lib/mongodb';
 import User from '@/models/User';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 export async function GET(request: NextRequest) {
   try {

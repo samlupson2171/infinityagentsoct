@@ -7,6 +7,8 @@ import Quote from '@/models/Quote';
 
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 export async function GET(request: NextRequest) {
   // Handle build-time gracefully
   if (process.env.NODE_ENV === 'production' && !process.env.MONGODB_URI) {

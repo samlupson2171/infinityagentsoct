@@ -7,6 +7,8 @@ import User from '@/models/User';
 
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 export async function GET(request: NextRequest) {
   try {
     // Get user session and verify admin role

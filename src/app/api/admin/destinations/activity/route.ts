@@ -6,6 +6,8 @@ import Destination from '@/models/Destination';
 
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 // GET /api/admin/destinations/activity - Get recent destination activity
 export async function GET(request: NextRequest) {
   try {

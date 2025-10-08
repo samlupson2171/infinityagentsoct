@@ -6,6 +6,7 @@ import {
 } from '@/lib/validation/quote-data-integrity';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 export async function GET(request: NextRequest) {
   try {
