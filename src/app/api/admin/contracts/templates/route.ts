@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { connectToDatabase } from '@/lib/mongodb';
 import ContractTemplate from '@/models/ContractTemplate';
-import { ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
 
 
 export const dynamic = 'force-dynamic';
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
       title: title.trim(),
       content: content.trim(),
       isActive: true,
-      createdBy: new ObjectId(session.user.id),
+      createdBy: new mongoose.Types.ObjectId(session.user.id),
       effectiveDate: effectiveDate ? new Date(effectiveDate) : new Date(),
       createdAt: new Date(),
     });
