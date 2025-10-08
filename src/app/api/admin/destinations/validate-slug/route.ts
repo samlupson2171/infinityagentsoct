@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import Destination from '@/models/Destination';
 import { connectToDatabase } from '@/lib/mongodb';
 
+
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     // Check authentication

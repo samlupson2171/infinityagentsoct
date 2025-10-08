@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { getUniqueLocations } from '@/lib/activity-utils';
 import { connectToDatabase } from '@/lib/mongodb';
 
+
+export const dynamic = 'force-dynamic';
 interface LocationsResponse {
   success: boolean;
   data?: string[];

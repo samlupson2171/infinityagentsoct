@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import EnquiriesManager from '@/components/admin/EnquiriesManager';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Enquiries Management - Infinity Weekends Admin',
   description: 'Manage and track client enquiries submitted by travel agents',

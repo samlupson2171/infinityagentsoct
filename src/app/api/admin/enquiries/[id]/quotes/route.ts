@@ -5,6 +5,8 @@ import Quote from '@/models/Quote';
 import Enquiry from '@/models/Enquiry';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 const createQuoteFromEnquirySchema = z.object({
   leadName: z.string().min(1, 'Lead name is required').max(100).optional(),
   hotelName: z.string().min(1, 'Hotel name is required').max(200),

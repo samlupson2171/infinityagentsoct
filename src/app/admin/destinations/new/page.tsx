@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { DestinationForm } from '@/components/admin/DestinationForm';
 
+export const dynamic = 'force-dynamic';
+
 interface DestinationFormData {
   name: string;
   country: string;

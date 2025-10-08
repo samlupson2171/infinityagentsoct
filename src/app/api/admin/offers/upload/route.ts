@@ -8,6 +8,8 @@ import {
   previewExcelStructure,
 } from '@/lib/excel-parser';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     // Verify admin authorization

@@ -7,6 +7,8 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import mongoose from 'mongoose';
 
+
+export const dynamic = 'force-dynamic';
 interface RouteParams {
   params: {
     id: string;

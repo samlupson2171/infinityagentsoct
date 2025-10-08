@@ -5,6 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import QuoteManager from '@/components/admin/QuoteManager';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
+export const dynamic = 'force-dynamic';
+
 function QuotesPageContent() {
   const searchParams = useSearchParams();
   const enquiryId = searchParams.get('enquiry');

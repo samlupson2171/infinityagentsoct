@@ -3,6 +3,8 @@ import { requireAdmin } from '@/lib/auth-middleware';
 import { sendTestEmail } from '@/lib/resend-email';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 const emailSettingsSchema = z.object({
   fromEmail: z.string().email('Valid from email is required'),
   fromName: z.string().min(1, 'From name is required'),

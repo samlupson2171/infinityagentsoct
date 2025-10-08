@@ -5,6 +5,8 @@ import { connectDB } from '@/lib/mongodb';
 import { promises as fs } from 'fs';
 import path from 'path';
 
+
+export const dynamic = 'force-dynamic';
 interface RouteParams {
   params: {
     id: string;

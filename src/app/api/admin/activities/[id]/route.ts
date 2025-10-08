@@ -5,6 +5,8 @@ import { connectToDatabase } from '@/lib/mongodb';
 import Activity from '@/models/Activity';
 import mongoose from 'mongoose';
 
+
+export const dynamic = 'force-dynamic';
 // GET /api/admin/activities/[id] - Get specific activity
 export async function GET(
   request: NextRequest,

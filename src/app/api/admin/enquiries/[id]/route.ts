@@ -4,6 +4,8 @@ import { connectDB } from '@/lib/mongodb';
 import Enquiry from '@/models/Enquiry';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 const updateEnquirySchema = z.object({
   status: z.enum(['new', 'in-progress', 'completed']).optional(),
   notes: z.string().optional(),

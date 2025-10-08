@@ -6,6 +6,8 @@ import {
   rollbackMigration,
 } from '@/lib/destination-migration';
 
+export const dynamic = 'force-dynamic';
+
 // POST /api/admin/destinations/migrate - Run destination migration
 export async function POST(request: NextRequest) {
   try {

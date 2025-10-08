@@ -4,6 +4,8 @@ import { connectDB } from '@/lib/mongodb';
 import Offer from '@/models/Offer';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 const createOfferSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200, 'Title too long'),
   description: z

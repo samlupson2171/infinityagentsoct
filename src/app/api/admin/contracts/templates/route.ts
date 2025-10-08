@@ -5,6 +5,8 @@ import { connectToDatabase } from '@/lib/mongodb';
 import ContractTemplate from '@/models/ContractTemplate';
 import { ObjectId } from 'mongodb';
 
+
+export const dynamic = 'force-dynamic';
 // GET /api/admin/contracts/templates - Get all contract templates with version history
 export async function GET(request: NextRequest) {
   try {

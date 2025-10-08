@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import ContractTemplateManager from '@/components/admin/ContractTemplateManager';
 import { ToastProvider } from '@/components/shared/Toast';
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminContractsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();

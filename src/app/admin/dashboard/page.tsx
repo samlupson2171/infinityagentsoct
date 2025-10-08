@@ -14,6 +14,8 @@ import SettingsManager from '@/components/admin/SettingsManager';
 import QuoteStatistics from '@/components/admin/QuoteStatistics';
 import QuoteSearchAndFilter from '@/components/admin/QuoteSearchAndFilter';
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('approvals');
   const [sidebarOpen, setSidebarOpen] = useState(false);

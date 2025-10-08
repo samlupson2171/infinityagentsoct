@@ -10,6 +10,8 @@ import {
 import mongoose from 'mongoose';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 const uploadedFileSchema = z.object({
   id: z.string(),
   originalName: z.string(),

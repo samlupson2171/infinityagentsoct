@@ -5,6 +5,8 @@ import User from '@/models/User';
 import { sendApprovalNotificationEmail } from '@/lib/resend-email';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 const approveUserSchema = z.object({
   userId: z.string().min(1, 'User ID is required'),
 });

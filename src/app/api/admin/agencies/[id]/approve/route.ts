@@ -19,6 +19,8 @@ import {
 } from '@/lib/server-error-handling';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 // Validation schema for approval request
 const approvalSchema = z.object({
   comments: z

@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+export const dynamic = 'force-dynamic';
+
 export default function TestQuotePage() {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import { StartupValidator } from '@/lib/startup-validator';
 
+
+export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     // Perform environment validation

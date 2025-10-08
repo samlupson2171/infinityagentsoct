@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { ActivityCategory } from '@/models/Activity';
 
+
+export const dynamic = 'force-dynamic';
 interface CategoriesResponse {
   success: boolean;
   data?: Array<{

@@ -3,6 +3,8 @@ import { connectDB } from '@/lib/mongodb';
 import Offer from '@/models/Offer';
 import { getToken } from 'next-auth/jwt';
 
+
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     // Check if user is authenticated and approved

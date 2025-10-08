@@ -5,6 +5,8 @@ import Activity, { IActivity } from '@/models/Activity';
 import { connectToDatabase } from '@/lib/mongodb';
 import mongoose from 'mongoose';
 
+
+export const dynamic = 'force-dynamic';
 interface ActivityDetailResponse {
   success: boolean;
   data?: any;

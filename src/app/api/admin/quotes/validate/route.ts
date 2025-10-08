@@ -5,6 +5,8 @@ import { quoteValidationHelpers } from '@/lib/validation/quote-validation';
 import { connectDB } from '@/lib/mongodb';
 import Enquiry from '@/models/Enquiry';
 
+
+export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     // Verify admin authorization

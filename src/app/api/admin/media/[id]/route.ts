@@ -7,6 +7,8 @@ import { unlink, rmdir } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
 
+
+export const dynamic = 'force-dynamic';
 interface RouteParams {
   params: {
     id: string;

@@ -19,6 +19,8 @@ import {
   type ApiResponse,
 } from '@/lib/server-error-handling';
 
+
+export const dynamic = 'force-dynamic';
 async function handleRegistration(request: NextRequest): Promise<NextResponse> {
   // Get client IP for rate limiting
   const clientIp =

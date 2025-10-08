@@ -5,6 +5,8 @@ import { connectToDatabase } from '@/lib/mongodb';
 import ContractTemplate from '@/models/ContractTemplate';
 import { ObjectId } from 'mongodb';
 
+
+export const dynamic = 'force-dynamic';
 // POST /api/admin/contracts/templates/[id]/activate - Activate a specific template version
 export async function POST(
   request: NextRequest,

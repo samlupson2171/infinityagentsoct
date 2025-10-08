@@ -5,6 +5,8 @@ import { connectToDatabase } from '@/lib/mongodb';
 import Destination from '@/models/Destination';
 import { Types } from 'mongoose';
 
+
+export const dynamic = 'force-dynamic';
 // GET /api/admin/destinations/[id]/preview - Get destination preview (including unpublished)
 export async function GET(
   request: NextRequest,

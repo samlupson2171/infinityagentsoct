@@ -5,6 +5,8 @@ import { connectToDatabase } from '@/lib/mongodb';
 import Destination from '@/models/Destination';
 import { Types } from 'mongoose';
 
+
+export const dynamic = 'force-dynamic';
 // PATCH /api/admin/destinations/[id]/auto-save - Auto-save destination changes
 export async function PATCH(
   request: NextRequest,

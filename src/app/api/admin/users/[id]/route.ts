@@ -4,6 +4,8 @@ import { connectDB } from '@/lib/mongodb';
 import User from '@/models/User';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 const updateUserSchema = z.object({
   name: z.string().min(1).optional(),
   companyName: z.string().min(1).optional(),

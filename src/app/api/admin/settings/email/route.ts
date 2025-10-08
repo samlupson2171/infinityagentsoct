@@ -5,6 +5,8 @@ import Settings from '@/models/Settings';
 import mongoose from 'mongoose';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 // For now, we'll store settings in environment variables or a simple JSON file
 // In production, you might want to use a database table for settings
 const emailSettingsSchema = z.object({

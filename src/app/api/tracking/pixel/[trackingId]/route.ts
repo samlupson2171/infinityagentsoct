@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SecureEmailTracker } from '@/lib/security/secure-email-tracking';
 
+
+export const dynamic = 'force-dynamic';
 // 1x1 transparent pixel image data
 const PIXEL_DATA = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',

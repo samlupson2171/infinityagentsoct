@@ -3,6 +3,8 @@
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import DestinationManager from '@/components/admin/DestinationManager';
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminDestinationsPage() {
   return (
     <ProtectedRoute requireAdmin>

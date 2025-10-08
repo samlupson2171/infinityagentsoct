@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import OffersManager from '@/components/admin/OffersManager';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Offers Management - Infinity Weekends Admin',
   description:

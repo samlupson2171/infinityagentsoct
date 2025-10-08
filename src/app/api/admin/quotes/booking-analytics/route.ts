@@ -3,6 +3,8 @@ import { requireAdmin } from '@/lib/auth-middleware';
 import { connectDB } from '@/lib/mongodb';
 import Quote from '@/models/Quote';
 
+
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     // Verify admin authorization

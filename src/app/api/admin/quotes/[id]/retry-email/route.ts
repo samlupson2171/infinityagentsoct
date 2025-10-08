@@ -4,6 +4,8 @@ import { connectDB } from '@/lib/mongodb';
 import Quote from '@/models/Quote';
 import { sendQuoteEmail, sendQuoteUpdateEmail } from '@/lib/email';
 
+
+export const dynamic = 'force-dynamic';
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }

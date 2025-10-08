@@ -3,6 +3,8 @@ import { getToken } from 'next-auth/jwt';
 import { connectDB } from '@/lib/mongodb';
 import Enquiry from '@/models/Enquiry';
 
+
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     // Simple authentication check

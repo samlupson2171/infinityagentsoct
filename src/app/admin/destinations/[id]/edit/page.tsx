@@ -8,6 +8,8 @@ import DestinationContentEditor from '@/components/admin/DestinationContentEdito
 import DestinationFileManager from '@/components/admin/DestinationFileManager';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
+export const dynamic = 'force-dynamic';
+
 interface DestinationFormData {
   name: string;
   country: string;

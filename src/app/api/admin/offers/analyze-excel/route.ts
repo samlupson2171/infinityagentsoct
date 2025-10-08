@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { excelSmartDetector } from '@/lib/excel-smart-detector';
 import { excelMetadataExtractor } from '@/lib/excel-metadata-extractor';
 
+
+export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     // Check authentication

@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { connectToDatabase } from '@/lib/mongodb';
 import Destination from '@/models/Destination';
 
+
+export const dynamic = 'force-dynamic';
 // GET /api/admin/destinations/stats - Get destination statistics
 export async function GET(request: NextRequest) {
   try {

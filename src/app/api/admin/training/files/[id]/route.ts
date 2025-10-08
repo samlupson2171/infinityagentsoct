@@ -5,6 +5,8 @@ import { FileManager } from '@/lib/file-manager';
 import { connectToDatabase } from '@/lib/mongodb';
 import mongoose from 'mongoose';
 
+
+export const dynamic = 'force-dynamic';
 interface RouteParams {
   params: {
     id: string;

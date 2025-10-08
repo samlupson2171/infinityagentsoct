@@ -3,6 +3,8 @@ import { SecureEmailTracker } from '@/lib/security/secure-email-tracking';
 import { connectDB } from '@/lib/mongodb';
 import Quote from '@/models/Quote';
 
+
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

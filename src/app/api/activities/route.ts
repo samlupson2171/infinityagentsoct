@@ -11,6 +11,8 @@ import {
   validateRequired,
 } from '@/lib/error-handling';
 
+export const dynamic = 'force-dynamic';
+
 interface SearchParams {
   search?: string;
   location?: string;

@@ -5,6 +5,8 @@ import { connectToDatabase } from '@/lib/mongodb';
 import Destination, { IDestination } from '@/models/Destination';
 import { Types } from 'mongoose';
 
+
+export const dynamic = 'force-dynamic';
 // GET /api/admin/destinations - List destinations with filtering, search, and pagination
 export async function GET(request: NextRequest) {
   try {

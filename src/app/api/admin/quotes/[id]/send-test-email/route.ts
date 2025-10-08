@@ -5,6 +5,8 @@ import Quote from '@/models/Quote';
 import { sendQuoteEmail } from '@/lib/email';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 const testEmailSchema = z.object({
   testEmail: z.string().email('Invalid email address'),
 });

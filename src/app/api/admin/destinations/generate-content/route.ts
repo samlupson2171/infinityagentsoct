@@ -10,6 +10,8 @@ import {
 import { connectToDatabase } from '@/lib/mongodb';
 import Destination from '@/models/Destination';
 
+
+export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     // Check authentication

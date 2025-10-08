@@ -10,6 +10,8 @@ import Enquiry from '@/models/Enquiry';
 import User from '@/models/User';
 import { sendQuoteEmail, sendQuoteUpdateEmail } from '@/lib/email';
 
+
+export const dynamic = 'force-dynamic';
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }

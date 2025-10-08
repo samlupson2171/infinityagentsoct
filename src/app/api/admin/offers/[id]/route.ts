@@ -4,6 +4,8 @@ import { connectDB } from '@/lib/mongodb';
 import Offer from '@/models/Offer';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 const updateOfferSchema = z.object({
   title: z
     .string()

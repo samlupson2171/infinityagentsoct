@@ -3,6 +3,8 @@ import { getToken } from 'next-auth/jwt';
 import { connectDB } from '@/lib/mongodb';
 import TrainingMaterial from '@/models/TrainingMaterial';
 
+
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     // Check if user is authenticated and approved

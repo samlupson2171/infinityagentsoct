@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import Destination from '@/models/Destination';
 
+
+export const dynamic = 'force-dynamic';
 // GET /api/destinations/[slug] - Get individual destination by slug
 export async function GET(
   request: NextRequest,

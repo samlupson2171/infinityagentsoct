@@ -3,6 +3,8 @@ import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import AdminActivityManager from '@/components/admin/AdminActivityManager';
 import ActivitiesUpload from '@/components/admin/ActivitiesUpload';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Activities Management - Infinity Weekends Admin',
   description:

@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 
+export const dynamic = 'force-dynamic';
+
 export default function SimpleQuotePage() {
   const [enquiries, setEnquiries] = useState<any[]>([]);
   const [selectedEnquiry, setSelectedEnquiry] = useState<string>('');

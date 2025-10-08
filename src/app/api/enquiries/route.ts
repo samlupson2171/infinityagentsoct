@@ -8,6 +8,9 @@ import {
 } from '@/lib/email';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
+
+
 const createEnquirySchema = z.object({
   leadName: z
     .string()

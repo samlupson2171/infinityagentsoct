@@ -7,6 +7,8 @@ import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
 
+
+export const dynamic = 'force-dynamic';
 interface UploadedImageData {
   id: string;
   originalName: string;

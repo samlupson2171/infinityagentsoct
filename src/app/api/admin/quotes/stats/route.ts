@@ -5,6 +5,8 @@ import { connectToDatabase } from '@/lib/mongodb';
 import Quote from '@/models/Quote';
 import Enquiry from '@/models/Enquiry';
 
+
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);

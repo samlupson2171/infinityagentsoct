@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import QuoteMonitoring from '@/lib/quote-monitoring';
 import OptimizedQuoteQueries from '@/lib/optimized-quote-queries';
 
+
+export const dynamic = 'force-dynamic';
 /**
  * GET /api/admin/quotes/monitoring
  * Get quote system monitoring data and analytics

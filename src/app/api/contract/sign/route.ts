@@ -21,6 +21,8 @@ import {
 } from '@/lib/server-error-handling';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 // Validation schema for contract signing
 const contractSigningSchema = z.object({
   contractId: z.string().min(1, 'Contract ID is required'),

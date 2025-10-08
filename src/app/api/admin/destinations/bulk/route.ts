@@ -5,6 +5,8 @@ import { connectToDatabase } from '@/lib/mongodb';
 import Destination from '@/models/Destination';
 import { Types } from 'mongoose';
 
+
+export const dynamic = 'force-dynamic';
 // POST /api/admin/destinations/bulk - Bulk operations on destinations
 export async function POST(request: NextRequest) {
   try {

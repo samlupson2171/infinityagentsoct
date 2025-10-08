@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { ContentMigrator } from '@/lib/content-migration';
 import { z } from 'zod';
 
+
+export const dynamic = 'force-dynamic';
 const migrationRequestSchema = z.object({
   action: z.enum(['migrate', 'status', 'rollback']),
   options: z

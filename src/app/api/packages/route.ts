@@ -6,6 +6,8 @@ import ActivityPackage from '@/models/ActivityPackage';
 import Activity from '@/models/Activity';
 import mongoose from 'mongoose';
 
+
+export const dynamic = 'force-dynamic';
 // GET /api/packages - Get user's packages
 export async function GET(request: NextRequest) {
   try {

@@ -6,6 +6,8 @@ import Destination from '@/models/Destination';
 import { unlink } from 'fs/promises';
 import { join } from 'path';
 
+
+export const dynamic = 'force-dynamic';
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string; fileId: string } }

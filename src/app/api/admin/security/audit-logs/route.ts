@@ -3,6 +3,8 @@ import { requireQuoteAdmin } from '@/lib/middleware/quote-auth-middleware';
 import { QuoteAuditLogger } from '@/lib/audit/quote-audit-logger';
 import { QuoteDataSanitizer } from '@/lib/security/quote-data-sanitizer';
 
+
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     // Verify admin authorization

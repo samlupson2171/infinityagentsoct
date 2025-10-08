@@ -5,6 +5,8 @@ import { FileManager } from '@/lib/file-manager';
 import { connectDB } from '@/lib/mongodb';
 import mongoose from 'mongoose';
 
+
+export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     // Check authentication

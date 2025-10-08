@@ -11,6 +11,8 @@ import {
 } from '@/lib/validation/quote-validation';
 import { QuoteServerValidator } from '@/lib/validation/quote-server-validation';
 
+
+export const dynamic = 'force-dynamic';
 // Use the enhanced validation schema
 const updateQuoteSchema = quoteUpdateValidationSchema;
 

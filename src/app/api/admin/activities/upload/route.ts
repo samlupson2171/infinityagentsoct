@@ -12,6 +12,8 @@ import {
   validateRequired,
 } from '@/lib/error-handling';
 
+export const dynamic = 'force-dynamic';
+
 interface UploadResponse {
   success: boolean;
   data?: {

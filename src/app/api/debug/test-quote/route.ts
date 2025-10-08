@@ -4,6 +4,8 @@ import { connectDB } from '@/lib/mongodb';
 import Quote from '@/models/Quote';
 import Enquiry from '@/models/Enquiry';
 
+
+export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     console.log('=== DEBUG: Starting quote creation test ===');

@@ -7,6 +7,8 @@ import Offer from '@/models/Offer';
 import Activity from '@/models/Activity';
 import { Types } from 'mongoose';
 
+
+export const dynamic = 'force-dynamic';
 // GET /api/admin/destinations/[id]/suggestions - Get content suggestions for a destination
 export async function GET(
   request: NextRequest,

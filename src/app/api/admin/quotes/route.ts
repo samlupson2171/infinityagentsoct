@@ -9,6 +9,8 @@ import {
   QuoteFormData,
 } from '@/lib/validation/quote-validation';
 
+
+export const dynamic = 'force-dynamic';
 // Use the enhanced validation schema
 const createQuoteSchema = quoteFormValidationSchema;
 
