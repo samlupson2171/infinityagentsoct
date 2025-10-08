@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import TinyMCEWrapper from './TinyMCEWrapper';
-import { createTinyMCEImageHandler } from '@/lib/image-upload-handler';
 
 interface WYSIWYGEditorProps {
   value: string;
@@ -23,50 +21,25 @@ export default function WYSIWYGEditor({
   height = 400,
   className = '',
 }: WYSIWYGEditorProps) {
-  // Handle image upload with default handler
-  const handleImageUpload = async (file: File): Promise<string> => {
-    if (onImageUpload) {
-      return onImageUpload(file);
-    } else {
-      // Use default TinyMCE image handler
-      const defaultHandler = createTinyMCEImageHandler();
-      return defaultHandler(file);
-    }
-  };
-
+  // Simple textarea fallback when TinyMCE is disabled
   return (
-    <TinyMCEWrapper
-      value={value}
-      onChange={onChange}
-      onImageUpload={handleImageUpload}
-      placeholder={placeholder}
-      disabled={disabled}
-      height={height}
-      className={className}
-    />
+    <div className={`wysiwyg-editor ${className}`}>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        disabled={disabled}
+        className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical"
+        style={{ height: height }}
+      />
+      <div className="text-sm text-gray-500 mt-2">
+        Rich text editor is temporarily disabled. Using plain text mode.
+      </div>
+    </div>
   );
 }
 
-/**
- * Basic content sanitization
- */
-function sanitizeContent(content: string): string {
-  if (!content) return '';
 
-  // Remove script tags and event handlers
-  let sanitized = content.replace(
-    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-    ''
-  );
-  sanitized = sanitized.replace(/on\w+="[^"]*"/gi, '');
-  sanitized = sanitized.replace(/javascript:/gi, '');
-
-  // Remove potentially dangerous protocols
-  sanitized = sanitized.replace(/vbscript:/gi, '');
-  sanitized = sanitized.replace(/data:text\/html/gi, 'data:text/plain');
-
-  return sanitized;
-}
 
 /**
  * Validate content length and structure

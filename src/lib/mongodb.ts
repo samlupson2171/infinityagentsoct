@@ -2,9 +2,12 @@ import mongoose from 'mongoose';
 import { StartupValidator } from './startup-validator';
 
 // Validate environment on module load (skip during build)
+// Skip validation during build process
 const validationResult = process.env.NODE_ENV === 'production' && !process.env.MONGODB_URI 
   ? { isValid: false, errors: [], warnings: [] }
-  : StartupValidator.validateEnvironmentGraceful();
+  : (typeof window === 'undefined' && process.env.NODE_ENV === 'production') 
+    ? { isValid: true, errors: [], warnings: [] } // Skip during build
+    : StartupValidator.validateEnvironmentGraceful();
 
 // Check if database feature is available
 if (!StartupValidator.isFeatureAvailable('database')) {

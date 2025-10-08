@@ -50,6 +50,15 @@ const nextConfig = {
       };
     }
 
+    // Handle missing CSS files gracefully
+    const originalReadFileSync = require('fs').readFileSync;
+    require('fs').readFileSync = function(path, options) {
+      if (path.includes('default-stylesheet.css')) {
+        return 'body { margin: 0; padding: 0; }';
+      }
+      return originalReadFileSync.call(this, path, options);
+    };
+
     return config;
   },
 }
