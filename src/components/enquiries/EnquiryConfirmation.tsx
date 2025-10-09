@@ -27,7 +27,7 @@ export default function EnquiryConfirmation({
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          router.push('/offers');
+          router.push('/');
           return 0;
         }
         return prev - 1;
@@ -195,7 +195,7 @@ export default function EnquiryConfirmation({
           <div className="space-y-4">
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <p className="text-sm text-blue-800">
-                Redirecting to offers page in{' '}
+                Redirecting to home page in{' '}
                 <span className="font-bold text-blue-900">{countdown}</span>{' '}
                 seconds...
               </p>
@@ -203,7 +203,7 @@ export default function EnquiryConfirmation({
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
-                href="/offers"
+                href="/"
                 className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
               >
                 <svg
@@ -216,10 +216,10 @@ export default function EnquiryConfirmation({
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                   />
                 </svg>
-                View Current Offers
+                Return to Home
               </Link>
 
               <Link
