@@ -71,13 +71,45 @@ async function postHandler(request: NextRequest) {
       );
     }
 
-    // Create the quote
-    const quote = new Quote({
+    // Prepare quote data with proper type conversions
+    const quotePayload: any = {
       ...quoteData,
       arrivalDate: new Date(quoteData.arrivalDate),
       createdBy: token.sub,
       status: 'draft',
-    });
+    };
+
+    // Handle linkedPackage with proper date conversion
+    if (quoteData.linkedPackage) {
+      quotePayload.linkedPackage = {
+        ...quoteData.linkedPackage,
+        lastRecalculatedAt: quoteData.linkedPackage.lastRecalculatedAt
+          ? new Date(quoteData.linkedPackage.lastRecalculatedAt)
+          : undefined,
+      };
+    }
+
+    // Handle priceHistory with proper date conversion and user ID
+    if (quoteData.priceHistory && quoteData.priceHistory.length > 0) {
+      quotePayload.priceHistory = quoteData.priceHistory.map((entry) => ({
+        ...entry,
+        timestamp: entry.timestamp ? new Date(entry.timestamp) : new Date(),
+        userId: entry.userId,
+      }));
+    } else if (quoteData.linkedPackage && typeof quoteData.linkedPackage.calculatedPrice === 'number') {
+      // Initialize price history with package selection if not provided
+      quotePayload.priceHistory = [
+        {
+          price: quoteData.totalPrice,
+          reason: 'package_selection',
+          timestamp: new Date(),
+          userId: token.sub,
+        },
+      ];
+    }
+
+    // Create the quote
+    const quote = new Quote(quotePayload);
 
     await quote.save();
 

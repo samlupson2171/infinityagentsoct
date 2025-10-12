@@ -6,6 +6,7 @@ import ApprovalDashboard from '@/components/admin/ApprovalDashboard';
 import UserManagement from '@/components/admin/UserManagement';
 import DestinationsDashboard from '@/components/admin/DestinationsDashboard';
 import OffersManager from '@/components/admin/OffersManager';
+import SuperPackageManager from '@/components/admin/SuperPackageManager';
 import AdminActivityManager from '@/components/admin/AdminActivityManager';
 import TrainingManager from '@/components/admin/TrainingManager';
 import EnquiriesManager from '@/components/admin/EnquiriesManager';
@@ -57,6 +58,7 @@ export default function AdminDashboardPage() {
     },
     { id: 'destinations', name: 'Destinations', icon: '🏖️' },
     { id: 'offers', name: 'Offers', icon: '🎯' },
+    { id: 'super-packages', name: 'Super Packages', icon: '📦' },
     { id: 'activities', name: 'Activities', icon: '🎪' },
     { id: 'training', name: 'Training Materials', icon: '📚' },
     { id: 'enquiries', name: 'Enquiries', icon: '💬' },
@@ -337,6 +339,12 @@ export default function AdminDashboardPage() {
               {activeTab === 'offers' && (
                 <section>
                   <OffersManager />
+                </section>
+              )}
+
+              {activeTab === 'super-packages' && (
+                <section>
+                  <SuperPackageManager />
                 </section>
               )}
 

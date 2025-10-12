@@ -247,6 +247,39 @@ export const quoteFormValidationSchema = z
         'Internal notes contains invalid content'
       )
       .optional(),
+
+    linkedPackage: z
+      .object({
+        packageId: z.string().min(1, 'Package ID is required'),
+        packageName: z.string().min(1, 'Package name is required'),
+        packageVersion: z.number().int().positive(),
+        selectedTier: z.object({
+          tierIndex: z.number().int().min(0),
+          tierLabel: z.string().min(1),
+        }),
+        selectedNights: z.number().int().positive(),
+        selectedPeriod: z.string().min(1),
+        calculatedPrice: z.union([z.number().min(0), z.literal('ON_REQUEST')]),
+        priceWasOnRequest: z.boolean(),
+        customPriceApplied: z.boolean().optional(),
+        lastRecalculatedAt: z.string().datetime().optional(),
+      })
+      .optional(),
+
+    priceHistory: z
+      .array(
+        z.object({
+          price: z.number().min(0, 'Price must be a positive number'),
+          reason: z.enum(['package_selection', 'recalculation', 'manual_override'], {
+            errorMap: () => ({
+              message: 'Reason must be one of: package_selection, recalculation, manual_override',
+            }),
+          }),
+          timestamp: z.string().datetime().optional(),
+          userId: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ID format'),
+        })
+      )
+      .optional(),
   })
   .refine(
     (data) =>
@@ -443,6 +476,39 @@ export const quoteUpdateValidationSchema = z.object({
 
   version: z.number().int().min(1).optional(),
   status: z.enum(QUOTE_BUSINESS_RULES.QUOTE_STATUSES).optional(),
+
+  linkedPackage: z
+    .object({
+      packageId: z.string().min(1, 'Package ID is required'),
+      packageName: z.string().min(1, 'Package name is required'),
+      packageVersion: z.number().int().positive(),
+      selectedTier: z.object({
+        tierIndex: z.number().int().min(0),
+        tierLabel: z.string().min(1),
+      }),
+      selectedNights: z.number().int().positive(),
+      selectedPeriod: z.string().min(1),
+      calculatedPrice: z.union([z.number().min(0), z.literal('ON_REQUEST')]),
+      priceWasOnRequest: z.boolean(),
+      customPriceApplied: z.boolean().optional(),
+      lastRecalculatedAt: z.string().datetime().optional(),
+    })
+    .optional(),
+
+  priceHistory: z
+    .array(
+      z.object({
+        price: z.number().min(0, 'Price must be a positive number'),
+        reason: z.enum(['package_selection', 'recalculation', 'manual_override'], {
+          errorMap: () => ({
+            message: 'Reason must be one of: package_selection, recalculation, manual_override',
+          }),
+        }),
+        timestamp: z.string().datetime().optional(),
+        userId: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ID format'),
+      })
+    )
+    .optional(),
 });
 
 // Server-side validation with additional business rules

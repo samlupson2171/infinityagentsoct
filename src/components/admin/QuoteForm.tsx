@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAutoSave, useUnsavedChanges } from '@/lib/hooks/useAutoSave';
@@ -10,6 +10,11 @@ import {
   QUOTE_BUSINESS_RULES,
   quoteValidationHelpers,
 } from '@/lib/validation/quote-validation';
+import PackageSelector from './PackageSelector';
+import PriceSyncIndicator from './PriceSyncIndicator';
+import PriceRecalculationModal from './PriceRecalculationModal';
+import { useQuotePrice } from '@/lib/hooks/useQuotePrice';
+import { PackageSelection, LinkedPackageInfo } from '@/types/quote-price-sync';
 
 interface QuoteFormProps {
   enquiryId?: string;
@@ -30,6 +35,10 @@ export default function QuoteForm({
 }: QuoteFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isPackageSelectorOpen, setIsPackageSelectorOpen] = useState(false);
+  const [isRecalculationModalOpen, setIsRecalculationModalOpen] = useState(false);
+  const [linkedPackageInfo, setLinkedPackageInfo] = useState<LinkedPackageInfo | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   // Form setup with react-hook-form and zod validation
   const {
@@ -66,9 +75,48 @@ export default function QuoteForm({
   const [validationWarnings, setValidationWarnings] = useState<string[]>([]);
   const [isValidatingServer, setIsValidatingServer] = useState(false);
 
+  // Integrate useQuotePrice hook for price synchronization
+  const {
+    syncStatus,
+    calculatedPrice,
+    priceBreakdown,
+    error: priceError,
+    recalculatePrice,
+    markAsCustomPrice,
+    resetToCalculated,
+    validationWarnings: priceValidationWarnings,
+  } = useQuotePrice({
+    linkedPackage: linkedPackageInfo,
+    numberOfPeople: watch('numberOfPeople'),
+    numberOfNights: watch('numberOfNights'),
+    arrivalDate: watch('arrivalDate'),
+    currentPrice: watch('totalPrice'),
+    onPriceUpdate: (price) => {
+      setValue('totalPrice', price);
+    },
+    autoRecalculate: true,
+  });
+
+  // Load linked package info from initialData when editing
+  useEffect(() => {
+    if (initialData && (initialData as any).linkedPackage) {
+      const linkedPkg = (initialData as any).linkedPackage;
+      setLinkedPackageInfo({
+        packageId: linkedPkg.packageId?.toString() || '',
+        packageName: linkedPkg.packageName || '',
+        packageVersion: linkedPkg.packageVersion || 1,
+        tierLabel: linkedPkg.selectedTier?.tierLabel || '',
+        periodUsed: linkedPkg.selectedPeriod || '',
+        tierIndex: linkedPkg.selectedTier?.tierIndex || 0,
+        originalPrice: linkedPkg.calculatedPrice || linkedPkg.originalPrice || 0,
+      });
+    }
+  }, [initialData]);
+
   // Watch specific fields instead of entire formData object
   const numberOfPeople = watch('numberOfPeople');
   const numberOfRooms = watch('numberOfRooms');
+  const numberOfNights = watch('numberOfNights');
   const totalPrice = watch('totalPrice');
   const currency = watch('currency');
   const arrivalDate = watch('arrivalDate');
@@ -137,7 +185,9 @@ export default function QuoteForm({
       );
     }
 
-    setValidationWarnings(warnings);
+    // Merge with price validation warnings from useQuotePrice hook
+    const allWarnings = [...warnings, ...priceValidationWarnings];
+    setValidationWarnings(allWarnings);
   }, [
     numberOfPeople,
     numberOfRooms,
@@ -146,6 +196,7 @@ export default function QuoteForm({
     arrivalDate,
     whatsIncluded,
     transferIncluded,
+    priceValidationWarnings,
   ]);
 
   // Simplified validation - remove server-side validation for now
@@ -179,11 +230,44 @@ export default function QuoteForm({
 
   // Handle form submission
   const onFormSubmit = async (data: QuoteFormData) => {
+    // If there are validation warnings, require confirmation
+    if (validationWarnings.length > 0) {
+      const confirmed = window.confirm(
+        `There are ${validationWarnings.length} validation warning(s):\n\n` +
+        validationWarnings.map((w, i) => `${i + 1}. ${w}`).join('\n') +
+        '\n\nDo you want to proceed anyway?'
+      );
+      
+      if (!confirmed) {
+        return;
+      }
+    }
+
     setIsSubmitting(true);
     setSubmitError(null);
 
     try {
-      await onSubmit(data);
+      // Include linkedPackage data if available
+      const submitData = {
+        ...data,
+        ...(linkedPackageInfo && {
+          linkedPackage: {
+            packageId: linkedPackageInfo.packageId,
+            packageName: linkedPackageInfo.packageName,
+            packageVersion: linkedPackageInfo.packageVersion,
+            selectedTier: {
+              tierIndex: linkedPackageInfo.tierIndex,
+              tierLabel: linkedPackageInfo.tierLabel,
+            },
+            selectedNights: data.numberOfNights,
+            selectedPeriod: linkedPackageInfo.periodUsed,
+            calculatedPrice: typeof linkedPackageInfo.originalPrice === 'number' ? linkedPackageInfo.originalPrice : data.totalPrice,
+            priceWasOnRequest: linkedPackageInfo.originalPrice === 'ON_REQUEST',
+          },
+        }),
+      };
+      
+      await onSubmit(submitData as QuoteFormData);
       reset(data); // Reset form state to mark as clean
     } catch (error) {
       setSubmitError(
@@ -198,6 +282,94 @@ export default function QuoteForm({
   const estimatedRooms = Math.ceil(numberOfPeople / 2);
   // Removed auto-update of rooms to prevent infinite loop
   // Users can manually adjust rooms as needed
+
+  // Handle package selection with atomic updates
+  const handlePackageSelect = (selection: PackageSelection) => {
+    // Use startTransition for atomic, non-urgent state updates
+    startTransition(() => {
+      try {
+        // Update all form fields atomically
+        setValue('numberOfPeople', selection.numberOfPeople);
+        setValue('numberOfNights', selection.numberOfNights);
+        setValue('arrivalDate', selection.arrivalDate);
+        setValue('numberOfRooms', Math.ceil(selection.numberOfPeople / 2));
+        // Only set currency if it's a valid option
+        const validCurrency = ['GBP', 'EUR', 'USD'].includes(selection.priceCalculation.currency);
+        if (validCurrency) {
+          setValue('currency', selection.priceCalculation.currency as 'GBP' | 'EUR' | 'USD');
+        }
+        setValue('isSuperPackage', true);
+        
+        // Build inclusions text from package
+        if (selection.inclusions && selection.inclusions.length > 0) {
+          const inclusionsText = selection.inclusions
+            .map((inc) => `• ${inc.text}`)
+            .join('\n');
+          setValue('whatsIncluded', inclusionsText);
+        }
+        
+        // Set price if calculated (not ON_REQUEST)
+        if (selection.priceCalculation.price !== 'ON_REQUEST') {
+          setValue('totalPrice', selection.priceCalculation.price);
+        }
+        
+        // Add accommodation examples to internal notes
+        if (selection.accommodationExamples && selection.accommodationExamples.length > 0) {
+          const notesText = `Accommodation Examples:\n${selection.accommodationExamples.map((ex) => `• ${ex}`).join('\n')}`;
+          setValue('internalNotes', notesText);
+        }
+
+        // Store linked package info for price synchronization
+        setLinkedPackageInfo({
+          packageId: selection.packageId,
+          packageName: selection.packageName,
+          packageVersion: selection.packageVersion,
+          tierIndex: selection.priceCalculation.tierIndex,
+          tierLabel: selection.priceCalculation.tierUsed,
+          periodUsed: selection.priceCalculation.periodUsed,
+          originalPrice: selection.priceCalculation.price,
+        });
+      } catch (error) {
+        setSubmitError(
+          error instanceof Error ? error.message : 'Failed to apply package'
+        );
+      }
+    });
+  };
+
+  // Handle unlinking package with confirmation and data preservation
+  const handleUnlinkPackage = () => {
+    const confirmed = window.confirm(
+      'Are you sure you want to unlink this package?\n\n' +
+      'All current field values will be preserved, but automatic price recalculation will stop.\n\n' +
+      'You can manually edit all fields after unlinking.'
+    );
+    
+    if (!confirmed) {
+      return;
+    }
+
+    // Preserve all current field values - they remain unchanged
+    // Only remove the package link and stop auto-recalculation
+    setLinkedPackageInfo(null);
+    setValue('isSuperPackage', false);
+    
+    // Note: All form fields (price, people, nights, date, inclusions, etc.) 
+    // remain exactly as they are - we only remove the package relationship
+  };
+
+  // Handle manual price changes to detect custom prices
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPrice = parseFloat(e.target.value) || 0;
+    setValue('totalPrice', newPrice);
+    
+    // If there's a linked package and price differs from calculated, mark as custom
+    if (linkedPackageInfo && calculatedPrice && calculatedPrice !== 'ON_REQUEST') {
+      if (Math.abs(newPrice - calculatedPrice) > 0.01) {
+        markAsCustomPrice();
+      }
+    }
+  };
 
   return (
     <div className={className}>
@@ -479,9 +651,172 @@ export default function QuoteForm({
 
             {/* Package Details */}
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Package Details
-              </h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-900">
+                  Package Details
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setIsPackageSelectorOpen(true)}
+                  className="px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  Select Super Package
+                </button>
+              </div>
+
+              {/* Linked Package Info */}
+              {linkedPackageInfo && (
+                <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center">
+                        <svg
+                          className="w-5 h-5 text-blue-600 mr-2"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <span className="text-sm font-medium text-blue-900">
+                          Linked to Super Package
+                        </span>
+                      </div>
+                      <div className="mt-2 space-y-1">
+                        <div className="flex items-center">
+                          <span className="text-sm font-medium text-blue-900">
+                            {linkedPackageInfo.packageName}
+                          </span>
+                          {linkedPackageInfo.packageVersion && (
+                            <span className="ml-2 text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded">
+                              v{linkedPackageInfo.packageVersion}
+                            </span>
+                          )}
+                        </div>
+                        {linkedPackageInfo.tierLabel && (
+                          <div className="text-xs text-blue-700">
+                            <span className="font-medium">Tier:</span> {linkedPackageInfo.tierLabel}
+                            {linkedPackageInfo.periodUsed && (
+                              <>
+                                {' • '}
+                                <span className="font-medium">Period:</span> {linkedPackageInfo.periodUsed}
+                              </>
+                            )}
+                          </div>
+                        )}
+                        {linkedPackageInfo.originalPrice === 'ON_REQUEST' && (
+                          <div className="text-xs text-amber-700 flex items-center mt-1">
+                            <svg
+                              className="w-3 h-3 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                              />
+                            </svg>
+                            Price was "ON REQUEST" - manually entered
+                          </div>
+                        )}
+                        <div className="mt-2">
+                          <a
+                            href={`/admin/super-packages/${linkedPackageInfo.packageId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:text-blue-800 underline flex items-center"
+                          >
+                            View package details
+                            <svg
+                              className="w-3 h-3 ml-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                              />
+                            </svg>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleUnlinkPackage}
+                      className="ml-3 text-blue-600 hover:text-blue-800 flex-shrink-0"
+                      title="Unlink package"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  {isEditing && (
+                    <div className="mt-3 pt-3 border-t border-blue-200">
+                      <button
+                        type="button"
+                        onClick={() => setIsRecalculationModalOpen(true)}
+                        className="w-full inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <svg
+                          className="w-4 h-4 mr-2"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                          />
+                        </svg>
+                        Recalculate Price
+                      </button>
+                    </div>
+                  )}
+                  <div className="mt-3 pt-3 border-t border-blue-200">
+                    <p className="text-xs text-blue-700">
+                      <svg
+                        className="w-3 h-3 inline mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      Quote fields have been populated from the package. You can still make manual adjustments.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <div className="mb-4">
                 <label className="flex items-center">
@@ -573,22 +908,28 @@ export default function QuoteForm({
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label
-                    htmlFor="totalPrice"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Total Price *
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label
+                      htmlFor="totalPrice"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Total Price *
+                    </label>
+                    {linkedPackageInfo && (
+                      <PriceSyncIndicator
+                        status={syncStatus}
+                        priceBreakdown={priceBreakdown || undefined}
+                        error={priceError || undefined}
+                        onRecalculate={recalculatePrice}
+                        onResetToCalculated={resetToCalculated}
+                      />
+                    )}
+                  </div>
                   <input
                     type="number"
                     id="totalPrice"
                     {...register('totalPrice', { valueAsNumber: true })}
-                    onBlur={(e) =>
-                      validateServerSide(
-                        'totalPrice',
-                        parseFloat(e.target.value)
-                      )
-                    }
+                    onChange={handlePriceChange}
                     min="0"
                     max="1000000"
                     step="0.01"
@@ -600,6 +941,11 @@ export default function QuoteForm({
                   {errors.totalPrice && (
                     <p className="text-red-600 text-sm mt-1">
                       {errors.totalPrice.message}
+                    </p>
+                  )}
+                  {priceError && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {priceError}
                     </p>
                   )}
                 </div>
@@ -732,6 +1078,29 @@ export default function QuoteForm({
           </form>
         </div>
       </div>
+
+      {/* Package Selector Modal */}
+      <PackageSelector
+        isOpen={isPackageSelectorOpen}
+        onClose={() => setIsPackageSelectorOpen(false)}
+        onSelect={handlePackageSelect}
+        initialPeople={numberOfPeople}
+        initialNights={numberOfNights}
+        initialDate={arrivalDate}
+      />
+
+      {/* Price Recalculation Modal */}
+      {isEditing && linkedPackageInfo && (initialData as any)?._id && (
+        <PriceRecalculationModal
+          isOpen={isRecalculationModalOpen}
+          onClose={() => setIsRecalculationModalOpen(false)}
+          quoteId={(initialData as any)._id}
+          onSuccess={() => {
+            // Refresh the form or trigger a refetch
+            window.location.reload();
+          }}
+        />
+      )}
     </div>
   );
 }

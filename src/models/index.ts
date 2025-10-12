@@ -12,6 +12,7 @@ export { default as Destination } from './Destination';
 export { default as ContractTemplate } from './ContractTemplate';
 export { default as ContractSignature } from './ContractSignature';
 export { default as FileStorage } from './FileStorage';
+export { default as SuperOfferPackage } from './SuperOfferPackage';
 
 // Export interfaces
 export type { IUser } from './User';
@@ -35,6 +36,13 @@ export type {
 export type { IContractTemplate } from './ContractTemplate';
 export type { IContractSignature } from './ContractSignature';
 export type { IFileStorage } from './FileStorage';
+export type {
+  ISuperOfferPackage,
+  IGroupSizeTier,
+  IPricePoint,
+  IPricingEntry,
+  IInclusion,
+} from './SuperOfferPackage';
 
 // Export enums
 export { ActivityCategory } from './Activity';

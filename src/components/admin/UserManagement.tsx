@@ -176,6 +176,12 @@ export default function UserManagement({
       if (!newUserForm.contactEmail.trim()) {
         throw new Error('Email is required');
       }
+      if (!newUserForm.phoneNumber.trim()) {
+        throw new Error('Phone number is required');
+      }
+      if (newUserForm.phoneNumber.trim().length < 10) {
+        throw new Error('Phone number must be at least 10 digits');
+      }
       if (!newUserForm.password.trim()) {
         throw new Error('Password is required');
       }
@@ -976,7 +982,7 @@ export default function UserManagement({
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Name
+                    Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -985,11 +991,12 @@ export default function UserManagement({
                       setNewUserForm({ ...newUserForm, name: e.target.value })
                     }
                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Email
+                    Email <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
@@ -1001,11 +1008,12 @@ export default function UserManagement({
                       })
                     }
                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Phone Number
+                    Phone Number <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="tel"
@@ -1017,12 +1025,16 @@ export default function UserManagement({
                       })
                     }
                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Enter phone number"
+                    placeholder="+44 20 1234 5678 or 01234567890"
+                    required
                   />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Format: 10-20 characters. Can include digits, spaces, hyphens, plus signs, and parentheses (e.g., +44 20 1234 5678, (020) 1234-5678, or 01234567890)
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Password
+                    Password <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="password"
@@ -1036,6 +1048,7 @@ export default function UserManagement({
                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     minLength={8}
                     placeholder="Minimum 8 characters"
+                    required
                   />
                   <p className="mt-1 text-xs text-gray-500">
                     Password must be at least 8 characters long
@@ -1043,7 +1056,7 @@ export default function UserManagement({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Company Name
+                    Company Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -1055,11 +1068,12 @@ export default function UserManagement({
                       })
                     }
                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Website
+                    Website <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="url"
@@ -1072,11 +1086,12 @@ export default function UserManagement({
                     }
                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="https://example.com"
+                    required
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    ABTA/PTS Number
+                    ABTA/PTS Number <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -1089,6 +1104,7 @@ export default function UserManagement({
                     }
                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="e.g., ABTA12345 or PTS67890"
+                    required
                   />
                   <p className="mt-1 text-xs text-gray-500">
                     Must start with ABTA or PTS followed by 4-10 alphanumeric
@@ -1222,7 +1238,11 @@ export default function UserManagement({
                       })
                     }
                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="+44 20 1234 5678 or 01234567890"
                   />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Format: 10-20 characters. Can include digits, spaces, hyphens, plus signs, and parentheses
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">

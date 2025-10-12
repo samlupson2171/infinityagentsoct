@@ -4,6 +4,7 @@ import './globals.css';
 import SessionProvider from '@/components/auth/SessionProvider';
 import Navigation from '@/components/Navigation';
 import { ToastProvider } from '@/components/shared/Toast';
+import { QueryProvider } from '@/lib/providers/QueryProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,12 +22,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SessionProvider>
-          <ToastProvider>
-            <Navigation />
-            {children}
-          </ToastProvider>
-        </SessionProvider>
+        <QueryProvider>
+          <SessionProvider>
+            <ToastProvider>
+              <Navigation />
+              {children}
+            </ToastProvider>
+          </SessionProvider>
+        </QueryProvider>
       </body>
     </html>
   );

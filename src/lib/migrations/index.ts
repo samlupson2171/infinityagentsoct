@@ -17,6 +17,10 @@ import {
   up as createQuotesCollection,
   down as rollbackQuotesCollection,
 } from './007-create-quotes-collection';
+import {
+  up as createSuperPackagesCollection,
+  down as rollbackSuperPackagesCollection,
+} from './008-create-super-packages-collection';
 
 // Register all migrations
 migrationRunner.addMigration({
@@ -47,6 +51,14 @@ migrationRunner.addMigration({
     'Create quotes collection and extend enquiries with quote references',
   up: createQuotesCollection,
   down: rollbackQuotesCollection,
+});
+
+migrationRunner.addMigration({
+  version: '008',
+  description:
+    'Create super offer packages collection and add linkedPackage field to quotes',
+  up: createSuperPackagesCollection,
+  down: rollbackSuperPackagesCollection,
 });
 
 // Note: Migrations 002, 003, and 005 are temporarily disabled due to interface inconsistencies

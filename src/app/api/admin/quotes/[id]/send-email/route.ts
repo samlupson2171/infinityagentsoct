@@ -8,7 +8,11 @@ import { connectDB } from '@/lib/mongodb';
 import Quote from '@/models/Quote';
 import Enquiry from '@/models/Enquiry';
 import User from '@/models/User';
-import { sendQuoteEmail, sendQuoteUpdateEmail } from '@/lib/email';
+import {
+  sendQuoteEmail,
+  sendQuoteUpdateEmail,
+  sendQuoteAdminNotificationEmail,
+} from '@/lib/email';
 
 
 export const dynamic = 'force-dynamic';
@@ -44,7 +48,7 @@ export async function POST(
           select: 'name companyName contactEmail',
         },
       },
-      { path: 'createdBy', select: 'name email' },
+      { path: 'createdBy', select: 'name email contactEmail' },
     ]);
 
     if (!quote) {
@@ -167,6 +171,47 @@ export async function POST(
     try {
       // Send secure email using the new system
       const emailResult = await sendQuoteEmail(emailData as any);
+
+      // Send admin notification with package details (internal only)
+      if (!wasUpdated) {
+        // Only send admin notification for new quotes, not updates
+        try {
+          const adminNotificationData = {
+            quoteId: quote._id.toString(),
+            quoteReference: `Q${quote._id.toString().slice(-8).toUpperCase()}`,
+            leadName: quote.leadName,
+            agentEmail: quote.enquiryId.agentEmail,
+            agentName: quote.enquiryId.submittedBy?.name,
+            agentCompany: quote.enquiryId.submittedBy?.companyName,
+            hotelName: quote.hotelName,
+            numberOfPeople: quote.numberOfPeople,
+            numberOfNights: quote.numberOfNights,
+            arrivalDate: quote.arrivalDate,
+            totalPrice: quote.totalPrice,
+            currency: quote.currency,
+            formattedPrice: `${quote.currency === 'GBP' ? '£' : quote.currency === 'EUR' ? '€' : '$'}${quote.totalPrice.toLocaleString()}`,
+            createdBy: quote.createdBy?.name || 'Unknown',
+            linkedPackage: quote.linkedPackage
+              ? {
+                  packageName: quote.linkedPackage.packageName,
+                  packageVersion: quote.linkedPackage.packageVersion,
+                  selectedTier: quote.linkedPackage.selectedTier.tierLabel,
+                  selectedPeriod: quote.linkedPackage.selectedPeriod,
+                  calculatedPrice: quote.linkedPackage.calculatedPrice,
+                }
+              : undefined,
+          };
+
+          await sendQuoteAdminNotificationEmail(adminNotificationData);
+          console.log('Admin notification sent for new quote with package details');
+        } catch (adminEmailError) {
+          // Log but don't fail the main email sending
+          console.error(
+            'Failed to send admin notification email:',
+            adminEmailError
+          );
+        }
+      }
 
       // Update quote status and email tracking
       quote.status = 'sent';

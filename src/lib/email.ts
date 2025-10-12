@@ -1045,6 +1045,13 @@ export async function sendQuoteEmail(data: {
   currency: string;
   formattedPrice: string;
   version: number;
+  // Super Package Integration (internal use only)
+  linkedPackage?: {
+    packageName: string;
+    packageVersion: number;
+    selectedTier: string;
+    selectedPeriod: string;
+  };
 }) {
   const subject = `Your Quote from Infinity Weekends - ${data.quoteReference}`;
   const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
@@ -1325,6 +1332,274 @@ export async function sendQuoteEmail(data: {
   }
 }
 
+// Admin notification email for quote creation with package details
+export async function sendQuoteAdminNotificationEmail(data: {
+  quoteId: string;
+  quoteReference: string;
+  leadName: string;
+  agentEmail: string;
+  agentName?: string;
+  agentCompany?: string;
+  hotelName: string;
+  numberOfPeople: number;
+  numberOfNights: number;
+  arrivalDate: Date;
+  totalPrice: number;
+  currency: string;
+  formattedPrice: string;
+  createdBy: string;
+  linkedPackage?: {
+    packageName: string;
+    packageVersion: number;
+    selectedTier: string;
+    selectedPeriod: string;
+    calculatedPrice: number;
+  };
+}) {
+  // Import User model dynamically to avoid circular dependencies
+  const { default: User } = await import('@/models/User');
+
+  try {
+    // Get all admin users
+    const adminUsers = await User.find({ role: 'admin' }).select(
+      'contactEmail name'
+    );
+
+    if (adminUsers.length === 0) {
+      console.warn('No admin users found in the system for notification');
+      return null;
+    }
+
+    const subject = `New Quote Created - ${data.quoteReference}`;
+    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const quoteUrl = `${baseUrl}/admin/quotes`;
+
+    const formatDate = (date: Date) => {
+      return date.toLocaleDateString('en-GB', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    };
+
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+          <img src="${baseUrl}/infinity-weekends-logo.png" 
+               alt="Infinity Weekends Logo" 
+               style="max-width: 200px; height: auto; margin-bottom: 10px;" />
+          <h1 style="color: #007bff; margin: 0; font-size: 28px;">Infinity Weekends</h1>
+          <p style="color: #6c757d; margin: 5px 0 0 0; font-size: 14px;">Admin Notification</p>
+        </div>
+        
+        <div style="background-color: #d1ecf1; border: 1px solid #bee5eb; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+          <h2 style="color: #0c5460; margin-top: 0; display: flex; align-items: center;">
+            <span style="margin-right: 10px;">📋</span> New Quote Created
+          </h2>
+          <p style="margin-bottom: 0; font-size: 16px; line-height: 1.6;">
+            A new quote has been created and sent to the client.
+          </p>
+        </div>
+        
+        <div style="background-color: #f8f9fa; padding: 25px; border-radius: 8px; margin: 25px 0;">
+          <h3 style="margin-top: 0; color: #495057; border-bottom: 2px solid #dee2e6; padding-bottom: 10px;">
+            📋 Quote Details
+          </h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold; width: 160px; color: #495057; border-bottom: 1px solid #e9ecef;">Quote Reference:</td>
+              <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef; font-family: monospace; font-weight: bold;">${data.quoteReference}</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">Lead Name:</td>
+              <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">${data.leadName}</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">Hotel:</td>
+              <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">${data.hotelName}</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">Arrival Date:</td>
+              <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">${formatDate(data.arrivalDate)}</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">Group Size:</td>
+              <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">${data.numberOfPeople} people, ${data.numberOfNights} nights</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">Total Price:</td>
+              <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef; font-size: 18px; font-weight: bold;">${data.formattedPrice}</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">Agent Email:</td>
+              <td style="padding: 12px 0; border-bottom: 1px solid #e9ecef;">
+                <a href="mailto:${data.agentEmail}" style="color: #007bff; text-decoration: none;">${data.agentEmail}</a>
+              </td>
+            </tr>
+            ${
+              data.agentName
+                ? `
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">Agent Name:</td>
+              <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">${data.agentName}</td>
+            </tr>
+            `
+                : ''
+            }
+            ${
+              data.agentCompany
+                ? `
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">Agent Company:</td>
+              <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">${data.agentCompany}</td>
+            </tr>
+            `
+                : ''
+            }
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold; color: #495057;">Created By:</td>
+              <td style="padding: 12px 0; color: #6c757d;">${data.createdBy}</td>
+            </tr>
+          </table>
+        </div>
+        
+        ${
+          data.linkedPackage
+            ? `
+        <div style="background-color: #fff3cd; border: 2px solid #ffc107; padding: 25px; border-radius: 8px; margin: 25px 0;">
+          <h3 style="margin-top: 0; color: #856404; display: flex; align-items: center;">
+            <span style="margin-right: 10px;">⭐</span> Super Package Used
+          </h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 8px 0; font-weight: bold; width: 160px; color: #856404;">Package Name:</td>
+              <td style="padding: 8px 0; color: #212529; font-weight: bold;">${data.linkedPackage.packageName}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; font-weight: bold; color: #856404;">Package Version:</td>
+              <td style="padding: 8px 0; color: #212529;">v${data.linkedPackage.packageVersion}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; font-weight: bold; color: #856404;">Selected Tier:</td>
+              <td style="padding: 8px 0; color: #212529;">${data.linkedPackage.selectedTier}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; font-weight: bold; color: #856404;">Selected Period:</td>
+              <td style="padding: 8px 0; color: #212529;">${data.linkedPackage.selectedPeriod}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; font-weight: bold; color: #856404;">Calculated Price:</td>
+              <td style="padding: 8px 0; color: #212529; font-weight: bold;">${data.linkedPackage.calculatedPrice.toLocaleString('en-GB', {
+                style: 'currency',
+                currency: data.currency,
+              })}</td>
+            </tr>
+          </table>
+          <p style="margin: 15px 0 0 0; font-size: 14px; color: #856404; font-style: italic;">
+            ℹ️ This quote was generated using a Super Package. Package details are for internal reference only and are not included in customer-facing emails.
+          </p>
+        </div>
+        `
+            : `
+        <div style="background-color: #e7f3ff; border: 1px solid #b3d9ff; padding: 20px; border-radius: 8px; margin: 25px 0;">
+          <p style="margin: 0; color: #0056b3; font-size: 14px;">
+            ℹ️ This quote was created manually without using a Super Package.
+          </p>
+        </div>
+        `
+        }
+        
+        <div style="background-color: #e7f3ff; border: 1px solid #b3d9ff; padding: 25px; border-radius: 8px; margin: 25px 0;">
+          <h3 style="margin-top: 0; color: #0056b3;">⚡ Quick Actions</h3>
+          <p style="margin-bottom: 20px; line-height: 1.6;">
+            View and manage this quote in the admin dashboard:
+          </p>
+          <div style="text-align: center;">
+            <a href="${quoteUrl}" 
+               style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
+              📊 View Quote in Admin Panel
+            </a>
+          </div>
+        </div>
+        
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #dee2e6; font-size: 12px; color: #6c757d; text-align: center;">
+          <p style="margin: 5px 0;">This is an automated notification from the Infinity Weekends Admin System.</p>
+          <p style="margin: 5px 0;">Quote created on ${new Date().toLocaleDateString(
+            'en-GB',
+            {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            }
+          )}</p>
+          <p style="margin: 5px 0;">© ${new Date().getFullYear()} Infinity Weekends. All rights reserved.</p>
+        </div>
+      </div>
+    `;
+
+    // Send email to all admin users
+    const emailPromises = adminUsers.map(async (admin) => {
+      const mailOptions = {
+        from: process.env.SMTP_USER,
+        to: admin.contactEmail,
+        subject,
+        html,
+      };
+
+      try {
+        const info = await sendEmailWithRetry(mailOptions, 3, 1000);
+        console.log(
+          `Quote admin notification email sent to ${admin.contactEmail}:`,
+          info.messageId
+        );
+        return {
+          success: true,
+          email: admin.contactEmail,
+          messageId: info.messageId,
+        };
+      } catch (error) {
+        console.error(
+          `Failed to send quote admin notification email to ${admin.contactEmail}:`,
+          error
+        );
+        return {
+          success: false,
+          email: admin.contactEmail,
+          error: (error as Error).message,
+        };
+      }
+    });
+
+    const results = await Promise.allSettled(emailPromises);
+    const successful = results.filter(
+      (result) => result.status === 'fulfilled' && result.value.success
+    ).length;
+    const failed = results.length - successful;
+
+    console.log(
+      `Quote admin notification emails: ${successful} sent successfully, ${failed} failed`
+    );
+
+    return {
+      totalAdmins: adminUsers.length,
+      successful,
+      failed,
+      results: results.map((result) =>
+        result.status === 'fulfilled'
+          ? result.value
+          : { success: false, error: (result.reason as Error).message }
+      ),
+    };
+  } catch (error) {
+    console.error('Failed to send quote admin notification emails:', error);
+    throw error;
+  }
+}
+
 // Quote update notification email
 export async function sendQuoteUpdateEmail(data: {
   quoteId: string;
@@ -1340,6 +1615,13 @@ export async function sendQuoteUpdateEmail(data: {
   version: number;
   previousVersion: number;
   changesDescription?: string;
+  // Super Package Integration (internal use only)
+  linkedPackage?: {
+    packageName: string;
+    packageVersion: number;
+    selectedTier: string;
+    selectedPeriod: string;
+  };
 }) {
   const subject = `Updated Quote from Infinity Weekends - ${data.quoteReference} (v${data.version})`;
   const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';

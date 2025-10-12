@@ -149,16 +149,64 @@ export async function PUT(
     // Store original version for version history
     const originalVersion = quote.version;
 
+    // Track if price changed for price history
+    const priceChanged = updateData.totalPrice !== undefined && 
+                        updateData.totalPrice !== quote.totalPrice;
+    const oldPrice = quote.totalPrice;
+
     // Update quote fields
     Object.keys(updateData).forEach((key) => {
       if (updateData[key as keyof typeof updateData] !== undefined) {
         if (key === 'arrivalDate') {
           quote[key] = new Date(updateData[key] as string);
-        } else {
+        } else if (key === 'linkedPackage' && updateData.linkedPackage) {
+          // Handle linkedPackage with proper date conversion
+          quote.linkedPackage = {
+            ...updateData.linkedPackage,
+            lastRecalculatedAt: updateData.linkedPackage.lastRecalculatedAt
+              ? new Date(updateData.linkedPackage.lastRecalculatedAt)
+              : quote.linkedPackage?.lastRecalculatedAt,
+          } as any;
+        } else if (key === 'priceHistory' && updateData.priceHistory) {
+          // Handle priceHistory with proper date conversion
+          quote.priceHistory = updateData.priceHistory.map((entry) => ({
+            ...entry,
+            timestamp: entry.timestamp ? new Date(entry.timestamp) : new Date(),
+            userId: entry.userId,
+          })) as any;
+        } else if (key !== 'linkedPackage' && key !== 'priceHistory') {
           (quote as any)[key] = updateData[key as keyof typeof updateData];
         }
       }
     });
+
+    // Add price change to history if price was updated
+    if (priceChanged && updateData.totalPrice !== undefined) {
+      if (!quote.priceHistory) {
+        quote.priceHistory = [];
+      }
+
+      // Determine the reason for price change
+      let reason: 'package_selection' | 'recalculation' | 'manual_override' = 'manual_override';
+      
+      // Check if this is from a recalculation (linkedPackage updated with new lastRecalculatedAt)
+      if (updateData.linkedPackage?.lastRecalculatedAt) {
+        reason = 'recalculation';
+      } else if (updateData.linkedPackage && !quote.linkedPackage) {
+        // New package selection
+        reason = 'package_selection';
+      } else if (quote.linkedPackage?.customPriceApplied) {
+        // Manual override when custom price is applied
+        reason = 'manual_override';
+      }
+
+      quote.priceHistory.push({
+        price: updateData.totalPrice,
+        reason,
+        timestamp: new Date(),
+        userId: user.id,
+      } as any);
+    }
 
     // Increment version if this is a significant update
     const significantFields = [

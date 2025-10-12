@@ -34,6 +34,31 @@ export interface IQuote extends Document {
   // Notes and Comments
   internalNotes?: string;
 
+  // Super Package Integration
+  linkedPackage?: {
+    packageId: mongoose.Types.ObjectId;
+    packageName: string;
+    packageVersion: number;
+    selectedTier: {
+      tierIndex: number;
+      tierLabel: string;
+    };
+    selectedNights: number;
+    selectedPeriod: string;
+    calculatedPrice: number | 'ON_REQUEST';
+    priceWasOnRequest: boolean;
+    customPriceApplied?: boolean; // Track if price was manually overridden
+    lastRecalculatedAt?: Date; // Track when price was last recalculated
+  };
+
+  // Price History
+  priceHistory?: Array<{
+    price: number;
+    reason: 'package_selection' | 'recalculation' | 'manual_override';
+    timestamp: Date;
+    userId: mongoose.Types.ObjectId;
+  }>;
+
   // Booking Interest Tracking
   bookingInterest?: {
     expressed: boolean;
@@ -185,6 +210,88 @@ const QuoteSchema = new Schema<IQuote>(
       maxlength: 1000,
     },
 
+    // Super Package Integration
+    linkedPackage: {
+      packageId: {
+        type: Schema.Types.ObjectId,
+        ref: 'SuperOfferPackage',
+      },
+      packageName: {
+        type: String,
+        maxlength: 200,
+      },
+      packageVersion: {
+        type: Number,
+        min: 1,
+      },
+      selectedTier: {
+        tierIndex: {
+          type: Number,
+          min: 0,
+        },
+        tierLabel: {
+          type: String,
+          maxlength: 100,
+        },
+      },
+      selectedNights: {
+        type: Number,
+        min: 1,
+      },
+      selectedPeriod: {
+        type: String,
+        maxlength: 200,
+      },
+      calculatedPrice: {
+        type: Schema.Types.Mixed, // Can be number or 'ON_REQUEST'
+        validate: {
+          validator: function (value: any) {
+            return (
+              typeof value === 'number' ||
+              value === 'ON_REQUEST' ||
+              value === undefined
+            );
+          },
+          message: 'calculatedPrice must be a number or "ON_REQUEST"',
+        },
+      },
+      priceWasOnRequest: {
+        type: Boolean,
+        default: false,
+      },
+      customPriceApplied: {
+        type: Boolean,
+        default: false,
+      },
+      lastRecalculatedAt: Date,
+    },
+
+    // Price History
+    priceHistory: [
+      {
+        price: {
+          type: Number,
+          required: true,
+          min: 0,
+        },
+        reason: {
+          type: String,
+          enum: ['package_selection', 'recalculation', 'manual_override'],
+          required: true,
+        },
+        timestamp: {
+          type: Date,
+          default: Date.now,
+          required: true,
+        },
+        userId: {
+          type: Schema.Types.ObjectId,
+          ref: 'User',
+          required: true,
+        },
+      },
+    ],
+
     // Booking Interest Tracking
     bookingInterest: {
       expressed: {
@@ -234,9 +341,10 @@ QuoteSchema.index({
   'bookingInterest.expressed': 1,
   'bookingInterest.expressedAt': -1,
 });
+QuoteSchema.index({ 'linkedPackage.packageId': 1 }, { sparse: true });
 
 // Virtual for formatted price
-QuoteSchema.virtual('formattedPrice').get(function () {
+QuoteSchema.virtual('formattedPrice').get(function (this: IQuote) {
   const currencySymbols: { [key: string]: string } = {
     GBP: '£',
     EUR: '€',
@@ -248,8 +356,9 @@ QuoteSchema.virtual('formattedPrice').get(function () {
 });
 
 // Virtual for quote reference
-QuoteSchema.virtual('quoteReference').get(function () {
-  return `Q${this._id.toString().slice(-8).toUpperCase()}`;
+QuoteSchema.virtual('quoteReference').get(function (this: IQuote) {
+  const id = this._id as mongoose.Types.ObjectId;
+  return `Q${id.toString().slice(-8).toUpperCase()}`;
 });
 
 // Ensure virtual fields are serialized

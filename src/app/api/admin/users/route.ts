@@ -10,6 +10,7 @@ export const dynamic = 'force-dynamic';
 const createUserSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   contactEmail: z.string().email('Valid email is required'),
+  phoneNumber: z.string().min(10, 'Phone number must be at least 10 characters'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   companyName: z.string().min(1, 'Company name is required'),
   websiteAddress: z.string().url('Valid website URL is required'),

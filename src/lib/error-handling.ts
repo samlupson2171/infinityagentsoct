@@ -35,6 +35,17 @@ export enum ErrorCode {
   PACKAGE_EMPTY = 'PACKAGE_EMPTY',
   INVALID_DATE_RANGE = 'INVALID_DATE_RANGE',
   CAPACITY_EXCEEDED = 'CAPACITY_EXCEEDED',
+
+  // Super Package specific errors
+  PACKAGE_NOT_FOUND = 'PACKAGE_NOT_FOUND',
+  PACKAGE_INACTIVE = 'PACKAGE_INACTIVE',
+  PACKAGE_HAS_LINKED_QUOTES = 'PACKAGE_HAS_LINKED_QUOTES',
+  INVALID_PRICING_MATRIX = 'INVALID_PRICING_MATRIX',
+  PRICE_CALCULATION_ERROR = 'PRICE_CALCULATION_ERROR',
+  NO_MATCHING_TIER = 'NO_MATCHING_TIER',
+  NO_MATCHING_PERIOD = 'NO_MATCHING_PERIOD',
+  PRICE_ON_REQUEST = 'PRICE_ON_REQUEST',
+  IMPORT_VALIDATION_ERROR = 'IMPORT_VALIDATION_ERROR',
 }
 
 export interface APIError {
@@ -126,6 +137,24 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
   [ErrorCode.INVALID_DATE_RANGE]: 'Please select a valid date range.',
   [ErrorCode.CAPACITY_EXCEEDED]:
     'The number of people exceeds the activity capacity.',
+
+  [ErrorCode.PACKAGE_NOT_FOUND]: 'The requested package could not be found.',
+  [ErrorCode.PACKAGE_INACTIVE]:
+    'This package is currently inactive and cannot be used.',
+  [ErrorCode.PACKAGE_HAS_LINKED_QUOTES]:
+    'This package cannot be deleted because it is linked to existing quotes.',
+  [ErrorCode.INVALID_PRICING_MATRIX]:
+    'The pricing matrix is incomplete or invalid.',
+  [ErrorCode.PRICE_CALCULATION_ERROR]:
+    'Unable to calculate price. Please check your selections.',
+  [ErrorCode.NO_MATCHING_TIER]:
+    'No pricing tier found for the specified number of people.',
+  [ErrorCode.NO_MATCHING_PERIOD]:
+    'No pricing found for the selected arrival date.',
+  [ErrorCode.PRICE_ON_REQUEST]:
+    'Price is available on request. Please enter manually.',
+  [ErrorCode.IMPORT_VALIDATION_ERROR]:
+    'The imported file contains validation errors.',
 };
 
 /**

@@ -5,6 +5,7 @@ import QuoteForm from './QuoteForm';
 import SimpleQuoteForm from './SimpleQuoteForm';
 import QuoteEmailPreview from './QuoteEmailPreview';
 import QuoteVersionHistory from './QuoteVersionHistory';
+import PriceRecalculationModal from './PriceRecalculationModal';
 
 interface Quote {
   _id: string;
@@ -52,6 +53,19 @@ interface Quote {
     bookingUrgency?: string;
     additionalRequests?: string;
   };
+  linkedPackage?: {
+    packageId: string;
+    packageName: string;
+    packageVersion: number;
+    selectedTier: {
+      tierIndex: number;
+      tierLabel: string;
+    };
+    selectedNights: number;
+    selectedPeriod: string;
+    calculatedPrice: number;
+    priceWasOnRequest: boolean;
+  };
 }
 
 interface PaginationData {
@@ -81,8 +95,12 @@ export default function QuoteManager({
   const [showEmailAnalytics, setShowEmailAnalytics] = useState(false);
   const [showEmailPreview, setShowEmailPreview] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [showRecalculationModal, setShowRecalculationModal] = useState(false);
   const [previewQuoteId, setPreviewQuoteId] = useState<string | null>(null);
   const [versionHistoryQuoteId, setVersionHistoryQuoteId] = useState<
+    string | null
+  >(null);
+  const [recalculationQuoteId, setRecalculationQuoteId] = useState<
     string | null
   >(null);
   const [statusFilter, setStatusFilter] = useState<
@@ -233,6 +251,11 @@ export default function QuoteManager({
     setShowVersionHistory(true);
   };
 
+  const handleRecalculatePrice = (quoteId: string) => {
+    setRecalculationQuoteId(quoteId);
+    setShowRecalculationModal(true);
+  };
+
   const handleSendTestEmail = async (quoteId: string) => {
     const testEmail = prompt('Enter email address for test:');
     if (!testEmail) return;
@@ -341,8 +364,10 @@ export default function QuoteManager({
     setShowEditModal(false);
     setShowEmailPreview(false);
     setShowVersionHistory(false);
+    setShowRecalculationModal(false);
     setPreviewQuoteId(null);
     setVersionHistoryQuoteId(null);
+    setRecalculationQuoteId(null);
   };
 
   const formatDate = (date: string) => {
@@ -786,6 +811,13 @@ export default function QuoteManager({
                             {quote.numberOfPeople} people •{' '}
                             {quote.numberOfNights} nights
                           </div>
+                          {quote.linkedPackage && (
+                            <div className="mt-1">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800">
+                                📦 {quote.linkedPackage.packageName}
+                              </span>
+                            </div>
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -929,6 +961,27 @@ export default function QuoteManager({
                               />
                             </svg>
                           </button>
+                          {quote.linkedPackage && (
+                            <button
+                              onClick={() => handleRecalculatePrice(quote._id)}
+                              className="text-teal-600 hover:text-teal-900"
+                              title="Recalculate Price"
+                            >
+                              <svg
+                                className="h-4 w-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                            </button>
+                          )}
                           <button
                             onClick={() => handleSendTestEmail(quote._id)}
                             disabled={actionLoading === quote._id}
@@ -1307,6 +1360,91 @@ export default function QuoteManager({
                 </div>
               </div>
 
+              {/* Linked Super Package Information */}
+              {selectedQuote.linkedPackage && (
+                <div>
+                  <h5 className="font-medium text-gray-900 mb-3">
+                    Linked Super Package
+                  </h5>
+                  <div className="bg-indigo-50 border border-indigo-200 p-4 rounded-lg">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <div className="text-sm font-medium text-indigo-900">
+                          📦 {selectedQuote.linkedPackage.packageName}
+                        </div>
+                        <div className="text-xs text-indigo-700 mt-1">
+                          Package Version: v
+                          {selectedQuote.linkedPackage.packageVersion}
+                        </div>
+                      </div>
+                      <a
+                        href={`/admin/super-packages/${selectedQuote.linkedPackage.packageId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-indigo-600 hover:text-indigo-800 underline"
+                      >
+                        View Package →
+                      </a>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <span className="font-medium text-indigo-900">
+                          Group Size Tier:
+                        </span>
+                        <div className="text-indigo-800 mt-1">
+                          {selectedQuote.linkedPackage.selectedTier.tierLabel}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="font-medium text-indigo-900">
+                          Duration:
+                        </span>
+                        <div className="text-indigo-800 mt-1">
+                          {selectedQuote.linkedPackage.selectedNights} nights
+                        </div>
+                      </div>
+                      <div>
+                        <span className="font-medium text-indigo-900">
+                          Pricing Period:
+                        </span>
+                        <div className="text-indigo-800 mt-1">
+                          {selectedQuote.linkedPackage.selectedPeriod}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="font-medium text-indigo-900">
+                          Calculated Price:
+                        </span>
+                        <div className="text-indigo-800 mt-1">
+                          {selectedQuote.linkedPackage.priceWasOnRequest ? (
+                            <span className="text-orange-600 font-medium">
+                              ON REQUEST (Manual Entry)
+                            </span>
+                          ) : (
+                            selectedQuote.linkedPackage.calculatedPrice.toLocaleString(
+                              'en-GB',
+                              {
+                                style: 'currency',
+                                currency: selectedQuote.currency,
+                              }
+                            )
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 pt-3 border-t border-indigo-200">
+                      <p className="text-xs text-indigo-700">
+                        💡 This quote was created from a Super Package. The
+                        pricing and inclusions were automatically populated from
+                        the package configuration.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Package Details */}
               <div>
                 <h5 className="font-medium text-gray-900 mb-3">
@@ -1331,6 +1469,11 @@ export default function QuoteManager({
                     {selectedQuote.transferIncluded && (
                       <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                         Transfer Included
+                      </span>
+                    )}
+                    {selectedQuote.linkedPackage && (
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                        Linked to Package
                       </span>
                     )}
                   </div>
@@ -1438,6 +1581,23 @@ export default function QuoteManager({
           onClose={() => {
             setShowVersionHistory(false);
             setVersionHistoryQuoteId(null);
+          }}
+        />
+      )}
+
+      {/* Price Recalculation Modal */}
+      {showRecalculationModal && recalculationQuoteId && (
+        <PriceRecalculationModal
+          isOpen={showRecalculationModal}
+          quoteId={recalculationQuoteId}
+          onClose={() => {
+            setShowRecalculationModal(false);
+            setRecalculationQuoteId(null);
+          }}
+          onSuccess={() => {
+            setShowRecalculationModal(false);
+            setRecalculationQuoteId(null);
+            fetchQuotes(); // Refresh the quotes list
           }}
         />
       )}
