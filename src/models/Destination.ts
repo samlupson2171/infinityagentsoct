@@ -317,7 +317,7 @@ const DestinationFileSchema = new Schema<IDestinationFile>({
   id: {
     type: String,
     required: [true, 'File ID is required'],
-    unique: true,
+    // Note: unique constraint removed from subdocument - uniqueness is enforced at application level
   },
   filename: {
     type: String,
