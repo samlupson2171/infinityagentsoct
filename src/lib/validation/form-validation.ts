@@ -110,12 +110,12 @@ export const validationHelpers = {
     return { isValid: true };
   },
 
-  // Website URL validation with protocol checking
+  // Website URL validation with protocol checking (optional field)
   validateWebsite: (
-    value: string
+    value?: string
   ): { isValid: boolean; message?: string; formatted?: string } => {
     if (!value || value.trim().length === 0) {
-      return { isValid: false, message: 'Website address is required' };
+      return { isValid: true }; // Optional field
     }
 
     let formatted = value.trim();
@@ -298,7 +298,9 @@ export const enhancedFormSchemas = {
           } catch {
             return false;
           }
-        }, 'Please provide a valid HTTP or HTTPS website URL'),
+        }, 'Please provide a valid HTTP or HTTPS website URL')
+        .optional()
+        .or(z.literal('')),
       password: z
         .string()
         .min(8, 'Password must be at least 8 characters long')

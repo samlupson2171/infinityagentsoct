@@ -93,11 +93,10 @@ async function handleRegistration(request: NextRequest): Promise<NextResponse> {
     throw new DatabaseError('Unable to connect to database');
   }
 
-  // Check for existing users with comprehensive validation
-  const [existingUserByEmail, existingUserByAbta] = await Promise.all([
-    User.findOne({ contactEmail: validatedData.contactEmail }).lean(),
-    User.findOne({ abtaPtsNumber: validatedData.abtaPtsNumber }).lean(),
-  ]);
+  // Check for existing users - only check email uniqueness
+  const existingUserByEmail = await User.findOne({ 
+    contactEmail: validatedData.contactEmail 
+  }).lean();
 
   if (existingUserByEmail) {
     Logger.warn('Registration attempt with existing email', {
@@ -110,21 +109,6 @@ async function handleRegistration(request: NextRequest): Promise<NextResponse> {
       {
         field: 'contactEmail',
         value: validatedData.contactEmail,
-      }
-    );
-  }
-
-  if (existingUserByAbta) {
-    Logger.warn('Registration attempt with existing ABTA/PTS number', {
-      abtaPtsNumber: validatedData.abtaPtsNumber,
-      existingUserId: Array.isArray(existingUserByAbta) ? existingUserByAbta[0]?._id : existingUserByAbta._id,
-      clientIp,
-    });
-    throw new ConflictError(
-      'An account with this ABTA/PTS number already exists',
-      {
-        field: 'abtaPtsNumber',
-        value: validatedData.abtaPtsNumber,
       }
     );
   }

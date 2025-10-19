@@ -50,7 +50,9 @@ export const enhancedRegistrationSchema = baseUserSchema
         } catch {
           return false;
         }
-      }, 'Please provide a valid HTTP or HTTPS website URL'),
+      }, 'Please provide a valid HTTP or HTTPS website URL')
+      .optional()
+      .or(z.literal('')),
     password: z
       .string()
       .min(8, 'Password must be at least 8 characters long')

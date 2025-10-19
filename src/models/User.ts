@@ -39,7 +39,7 @@ const UserSchema = new Schema<IUser>(
     },
     companyName: {
       type: String,
-      required: [true, 'Company name is required'],
+      required: false, // Deprecated in favor of 'company' field
       trim: true,
       minlength: [2, 'Company name must be at least 2 characters long'],
       maxlength: [200, 'Company name cannot exceed 200 characters'],
@@ -47,7 +47,6 @@ const UserSchema = new Schema<IUser>(
     abtaPtsNumber: {
       type: String,
       required: [true, 'ABTA/PTS number is required'],
-      unique: true,
       uppercase: true,
       validate: {
         validator: function (value: string) {
@@ -84,9 +83,10 @@ const UserSchema = new Schema<IUser>(
     },
     websiteAddress: {
       type: String,
-      required: [true, 'Website address is required'],
+      required: false,
       validate: {
         validator: function (url: string) {
+          if (!url) return true; // Allow empty/undefined
           try {
             const parsedUrl = new URL(url);
             return (

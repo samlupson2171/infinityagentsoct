@@ -10,7 +10,6 @@ import {
 } from '@/lib/hooks/useFormValidation';
 import { enhancedFormSchemas } from '@/lib/validation/form-validation';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
-import { Toast } from '@/components/shared/Toast';
 
 type EnhancedRegistrationData = {
   name: string;
@@ -385,7 +384,7 @@ export default function EnhancedRegisterForm() {
             htmlFor="websiteAddress"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Website Address *
+            Website Address
           </label>
           <input
             {...register('websiteAddress')}
@@ -395,15 +394,16 @@ export default function EnhancedRegisterForm() {
               'websiteAddress',
               'border-gray-300 focus:ring-blue-500'
             )}`}
-            placeholder="https://www.yourcompany.com"
+            placeholder="https://www.yourcompany.com (optional)"
             onChange={(e) =>
               handleFieldChange('websiteAddress', e.target.value)
             }
-            aria-describedby={
-              errors.websiteAddress ? 'website-error' : undefined
-            }
+            aria-describedby={`website-help ${errors.websiteAddress ? 'website-error' : ''}`}
             aria-invalid={!!errors.websiteAddress}
           />
+          <p id="website-help" className="mt-1 text-xs text-gray-500">
+            Optional - Enter your company website if available
+          </p>
           {errors.websiteAddress && (
             <p
               id="website-error"
@@ -585,11 +585,29 @@ export default function EnhancedRegisterForm() {
 
       {/* Success Toast */}
       {showSuccessToast && (
-        <Toast
-          type="success"
-          message="Registration successful! Redirecting to confirmation page..."
-          onClose={() => setShowSuccessToast(false)}
-        />
+        <div className="fixed top-4 right-4 z-50">
+          <div className="max-w-sm w-full bg-green-50 border border-green-200 text-green-800 rounded-lg shadow-lg p-4">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <span className="text-lg">✓</span>
+              </div>
+              <div className="ml-3 flex-1">
+                <h4 className="font-medium">Registration Successful!</h4>
+                <p className="mt-1 text-sm opacity-90">
+                  Redirecting to confirmation page...
+                </p>
+              </div>
+              <div className="ml-4 flex-shrink-0">
+                <button
+                  onClick={() => setShowSuccessToast(false)}
+                  className="text-lg opacity-60 hover:opacity-100 transition-opacity"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

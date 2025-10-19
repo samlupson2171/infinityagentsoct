@@ -14,11 +14,6 @@ const registerSchema = z
       .min(2, 'Name must be at least 2 characters long')
       .max(100, 'Name cannot exceed 100 characters')
       .trim(),
-    companyName: z
-      .string()
-      .min(2, 'Company name must be at least 2 characters long')
-      .max(200, 'Company name cannot exceed 200 characters')
-      .trim(),
     company: z
       .string()
       .min(2, 'Company name must be at least 2 characters long')
@@ -62,7 +57,9 @@ const registerSchema = z
         } catch {
           return false;
         }
-      }, 'Please provide a valid HTTP or HTTPS website URL'),
+      }, 'Please provide a valid HTTP or HTTPS website URL')
+      .optional()
+      .or(z.literal('')),
     password: z
       .string()
       .min(8, 'Password must be at least 8 characters long')
@@ -205,34 +202,10 @@ export default function RegisterForm() {
         {/* Company Name Field */}
         <div>
           <label
-            htmlFor="companyName"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Company Name *
-          </label>
-          <input
-            {...register('companyName')}
-            type="text"
-            id="companyName"
-            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.companyName ? 'border-red-500' : 'border-gray-300'
-            }`}
-            placeholder="Enter your company name"
-          />
-          {errors.companyName && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.companyName.message}
-            </p>
-          )}
-        </div>
-
-        {/* Company Field (Enhanced) */}
-        <div>
-          <label
             htmlFor="company"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Company *
+            Company Name *
           </label>
           <input
             {...register('company')}
@@ -362,7 +335,7 @@ export default function RegisterForm() {
             htmlFor="websiteAddress"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Website Address *
+            Website Address
           </label>
           <input
             {...register('websiteAddress')}
@@ -371,13 +344,16 @@ export default function RegisterForm() {
             className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
               errors.websiteAddress ? 'border-red-500' : 'border-gray-300'
             }`}
-            placeholder="https://www.yourcompany.com"
+            placeholder="https://www.yourcompany.com (optional)"
           />
           {errors.websiteAddress && (
             <p className="mt-1 text-sm text-red-600">
               {errors.websiteAddress.message}
             </p>
           )}
+          <p className="mt-1 text-xs text-gray-500">
+            Optional - Enter your company website if available
+          </p>
         </div>
 
         {/* Password Field */}
