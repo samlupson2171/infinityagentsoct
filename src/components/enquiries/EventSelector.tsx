@@ -15,6 +15,7 @@ interface Event {
   name: string;
   description?: string;
   categories: Category[];
+  minimumPeople?: number;
 }
 
 interface EventSelectorProps {
@@ -252,6 +253,11 @@ export default function EventSelector({
                 {event.description && (
                   <p className="mt-1 text-sm text-gray-500 line-clamp-2">
                     {event.description}
+                  </p>
+                )}
+                {event.minimumPeople && (
+                  <p className="mt-1 text-xs text-orange-600 font-medium">
+                    Min. {event.minimumPeople} people required
                   </p>
                 )}
                 <div className="mt-2 flex flex-wrap gap-1">

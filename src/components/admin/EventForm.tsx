@@ -22,6 +22,7 @@ interface EventFormData {
     estimatedCost: number;
     currency: string;
   };
+  minimumPeople?: number;
 }
 
 interface EventFormProps {
@@ -43,6 +44,7 @@ export default function EventForm({ eventId, onSuccess, onCancel }: EventFormPro
       estimatedCost: 0,
       currency: 'GBP',
     },
+    minimumPeople: undefined,
   });
 
   const [categories, setCategories] = useState<Category[]>([]);
@@ -89,6 +91,7 @@ export default function EventForm({ eventId, onSuccess, onCancel }: EventFormPro
             displayOrder: event.displayOrder,
             isActive: event.isActive,
             pricing: event.pricing || { estimatedCost: 0, currency: 'GBP' },
+            minimumPeople: event.minimumPeople,
           });
         }
       } catch (error) {
@@ -434,6 +437,25 @@ export default function EventForm({ eventId, onSuccess, onCancel }: EventFormPro
             <option value="USD">USD</option>
           </select>
         </div>
+      </div>
+
+      {/* Minimum People */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Minimum People Required (Optional)
+        </label>
+        <input
+          type="number"
+          value={formData.minimumPeople || ''}
+          onChange={(e) => handleChange('minimumPeople', e.target.value ? parseInt(e.target.value) : undefined)}
+          min="1"
+          max="100"
+          className="w-32 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="e.g., 10"
+        />
+        <p className="mt-1 text-sm text-gray-500">
+          Minimum number of people required for this event
+        </p>
       </div>
 
       {/* Active Status */}

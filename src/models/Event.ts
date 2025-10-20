@@ -12,6 +12,7 @@ export interface IEvent extends Document {
     estimatedCost?: number;
     currency?: string;
   };
+  minimumPeople?: number;
   metadata: {
     createdBy: mongoose.Types.ObjectId;
     updatedBy: mongoose.Types.ObjectId;
@@ -71,6 +72,11 @@ const EventSchema = new Schema<IEvent>(
         default: 'GBP',
         enum: ['GBP', 'EUR', 'USD'],
       },
+    },
+    minimumPeople: {
+      type: Number,
+      min: [1, 'Minimum people must be at least 1'],
+      max: [100, 'Minimum people cannot exceed 100'],
     },
     metadata: {
       createdBy: {
