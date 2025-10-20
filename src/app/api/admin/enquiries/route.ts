@@ -77,8 +77,9 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    // Get enquiries with pagination (simplified - no populate for now)
+    // Get enquiries with pagination and populate events
     const enquiries = await Enquiry.find(query)
+      .populate('eventsRequested', 'name')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

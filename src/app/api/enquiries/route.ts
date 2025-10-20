@@ -51,7 +51,10 @@ const createEnquirySchema = z.object({
     .int()
     .min(1, 'Number of guests must be at least 1')
     .max(50, 'Number of guests cannot exceed 50'),
-  eventsRequested: z.array(z.string()).default([]),
+  eventsRequested: z.array(z.string()).default([]).refine(
+    (ids) => ids.every((id) => mongoose.Types.ObjectId.isValid(id)),
+    'Invalid event IDs'
+  ),
   accommodationType: z.enum(['hotel', 'apartments'], {
     required_error: 'Accommodation type is required',
   }),
@@ -121,9 +124,31 @@ export async function POST(request: NextRequest) {
     // Connect to database
     await connectDB();
 
+    // Validate event IDs exist
+    if (enquiryData.eventsRequested.length > 0) {
+      const Event = mongoose.models.Event || (await import('@/models/Event')).default;
+      const eventCount = await Event.countDocuments({
+        _id: { $in: enquiryData.eventsRequested.map((id) => new mongoose.Types.ObjectId(id)) },
+      });
+
+      if (eventCount !== enquiryData.eventsRequested.length) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'VALIDATION_ERROR',
+              message: 'One or more event IDs are invalid',
+            },
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     // Create new enquiry
     const enquiry = new Enquiry({
       ...enquiryData,
+      eventsRequested: enquiryData.eventsRequested.map((id) => new mongoose.Types.ObjectId(id)),
       travelDate: new Date(enquiryData.travelDate),
       agentEmail: token.email,
       submittedBy: new mongoose.Types.ObjectId(token.sub),
@@ -134,8 +159,9 @@ export async function POST(request: NextRequest) {
 
     await enquiry.save();
 
-    // Populate submitter info for email
+    // Populate submitter info and events for email
     await enquiry.populate('submittedBy', 'name companyName contactEmail');
+    await enquiry.populate('eventsRequested', 'name');
 
     // Send notification email to Infinity Weekends
     try {
@@ -151,7 +177,7 @@ export async function POST(request: NextRequest) {
         departureAirport: enquiry.departureAirport,
         numberOfNights: enquiry.numberOfNights,
         numberOfGuests: enquiry.numberOfGuests,
-        eventsRequested: enquiry.eventsRequested,
+        eventsRequested: (enquiry.eventsRequested as any[]).map((e: any) => e.name || e),
         accommodationType: enquiry.accommodationType,
         boardType: enquiry.boardType,
         budgetPerPerson: enquiry.budgetPerPerson,

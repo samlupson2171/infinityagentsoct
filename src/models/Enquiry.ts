@@ -6,14 +6,14 @@ export interface IEnquiry extends Document {
   agentEmail: string;
   firstChoiceDestination: string;
   secondChoiceDestination?: string;
-  thirdChoiceDestination?: string;
   resort?: string;
   travelDate: Date;
-  departureAirport: string;
+  arrivalAirport: string;
   numberOfNights: number;
   numberOfGuests: number;
-  eventsRequested: string[];
+  eventsRequested: mongoose.Types.ObjectId[];
   accommodationType: 'hotel' | 'apartments';
+  starRating: string;
   boardType: string;
   budgetPerPerson: number;
   additionalNotes?: string;
@@ -76,18 +76,6 @@ const EnquirySchema = new Schema<IEnquiry>(
       },
       maxlength: [50, 'Destination name cannot exceed 50 characters'],
     },
-    thirdChoiceDestination: {
-      type: String,
-      trim: true,
-      validate: {
-        validator: function (value: string) {
-          // Allow empty string or validate length if provided
-          return !value || value.length >= 2;
-        },
-        message: 'Destination name must be at least 2 characters long',
-      },
-      maxlength: [50, 'Destination name cannot exceed 50 characters'],
-    },
     resort: {
       type: String,
       trim: true,
@@ -106,12 +94,12 @@ const EnquirySchema = new Schema<IEnquiry>(
         message: 'Travel date must be today or in the future',
       },
     },
-    departureAirport: {
+    arrivalAirport: {
       type: String,
-      required: [true, 'Departure airport is required'],
+      required: [true, 'Arrival airport is required'],
       trim: true,
-      minlength: [3, 'Departure airport must be at least 3 characters long'],
-      maxlength: [100, 'Departure airport cannot exceed 100 characters'],
+      minlength: [3, 'Arrival airport must be at least 3 characters long'],
+      maxlength: [100, 'Arrival airport cannot exceed 100 characters'],
     },
     numberOfNights: {
       type: Number,
@@ -125,24 +113,26 @@ const EnquirySchema = new Schema<IEnquiry>(
       min: [1, 'Number of guests must be at least 1'],
       max: [100, 'Number of guests cannot exceed 100'],
     },
-    eventsRequested: {
-      type: [String],
-      default: [],
-      validate: {
-        validator: function (events: string[]) {
-          return events.every(
-            (event) => event.trim().length >= 2 && event.trim().length <= 100
-          );
-        },
-        message: 'Each event must be between 2 and 100 characters',
+    eventsRequested: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Event',
       },
-    },
+    ],
     accommodationType: {
       type: String,
       required: [true, 'Accommodation type is required'],
       enum: {
         values: ['hotel', 'apartments'],
         message: 'Accommodation type must be hotel or apartments',
+      },
+    },
+    starRating: {
+      type: String,
+      required: [true, 'Star rating is required'],
+      enum: {
+        values: ['2', '3', '4', '5'],
+        message: 'Star rating must be 2, 3, 4, or 5',
       },
     },
     boardType: {

@@ -13,6 +13,8 @@ export { default as ContractTemplate } from './ContractTemplate';
 export { default as ContractSignature } from './ContractSignature';
 export { default as FileStorage } from './FileStorage';
 export { default as SuperOfferPackage } from './SuperOfferPackage';
+export { default as Event } from './Event';
+export { default as Category } from './Category';
 
 // Export interfaces
 export type { IUser } from './User';
@@ -43,6 +45,8 @@ export type {
   IPricingEntry,
   IInclusion,
 } from './SuperOfferPackage';
+export type { IEvent } from './Event';
+export type { ICategory } from './Category';
 
 // Export enums
 export { ActivityCategory } from './Activity';

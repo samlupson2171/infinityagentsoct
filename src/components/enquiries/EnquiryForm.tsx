@@ -3,20 +3,21 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import EventSelector from './EventSelector';
 
 interface EnquiryFormData {
   leadName: string;
   tripType: 'stag' | 'hen' | 'other';
   firstChoiceDestination: string;
   secondChoiceDestination: string;
-  thirdChoiceDestination: string;
   resort: string;
   travelDate: string;
-  departureAirport: string;
+  arrivalAirport: string;
   numberOfNights: number;
   numberOfGuests: number;
   eventsRequested: string[];
   accommodationType: 'hotel' | 'apartments';
+  starRating: string;
   boardType: string;
   budgetPerPerson: number;
   additionalNotes: string;
@@ -47,14 +48,14 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
     tripType: 'stag',
     firstChoiceDestination: '',
     secondChoiceDestination: '',
-    thirdChoiceDestination: '',
     resort: '',
     travelDate: '',
-    departureAirport: '',
+    arrivalAirport: '',
     numberOfNights: 3,
     numberOfGuests: 10,
     eventsRequested: [],
     accommodationType: 'hotel',
+    starRating: '',
     boardType: '',
     budgetPerPerson: 500,
     additionalNotes: '',
@@ -104,20 +105,7 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
     }
   }, [searchParams]);
 
-  const eventOptions = [
-    'Boat Party',
-    'Club Entry',
-    'Bar Crawl',
-    'Beach Activities',
-    'Water Sports',
-    'Go Karting',
-    'Paintball',
-    'Quad Biking',
-    'Spa Treatment',
-    'Restaurant Booking',
-    'Private Transfer',
-    'Airport Meet & Greet',
-  ];
+  // Event options are now loaded dynamically via EventSelector component
 
   const destinationOptions = [
     'Benidorm',
@@ -170,12 +158,10 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
     }
   };
 
-  const handleEventToggle = (event: string) => {
+  const handleEventsChange = (eventIds: string[]) => {
     setFormData((prev) => ({
       ...prev,
-      eventsRequested: prev.eventsRequested.includes(event)
-        ? prev.eventsRequested.filter((e) => e !== event)
-        : [...prev.eventsRequested, event],
+      eventsRequested: eventIds,
     }));
   };
 
@@ -409,7 +395,7 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
                 <h4 className="text-md font-medium text-gray-800 mb-3">
                   Destination Preferences (in order of preference)
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label
                       htmlFor="firstChoiceDestination"
@@ -452,35 +438,6 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
                       {destinationOptions
                         .filter(
                           (dest) => dest !== formData.firstChoiceDestination
-                        )
-                        .map((destination) => (
-                          <option key={destination} value={destination}>
-                            {destination}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="thirdChoiceDestination"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      3rd Choice
-                    </label>
-                    <select
-                      id="thirdChoiceDestination"
-                      name="thirdChoiceDestination"
-                      value={formData.thirdChoiceDestination}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option value="">Select destination</option>
-                      {destinationOptions
-                        .filter(
-                          (dest) =>
-                            dest !== formData.firstChoiceDestination &&
-                            dest !== formData.secondChoiceDestination
                         )
                         .map((destination) => (
                           <option key={destination} value={destination}>
@@ -533,21 +490,21 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
 
                 <div>
                   <label
-                    htmlFor="departureAirport"
+                    htmlFor="arrivalAirport"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                    Departure Airport *
+                    Arrival Airport *
                   </label>
                   <input
                     type="text"
-                    id="departureAirport"
-                    name="departureAirport"
-                    value={formData.departureAirport}
+                    id="arrivalAirport"
+                    name="arrivalAirport"
+                    value={formData.arrivalAirport}
                     onChange={handleInputChange}
                     required
                     maxLength={100}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="e.g., London Heathrow, Manchester"
+                    placeholder="e.g., Alicante, Palma de Mallorca"
                   />
                 </div>
 
@@ -621,7 +578,7 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
               <h3 className="text-lg font-medium text-gray-900 mb-4">
                 Accommodation
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label
                     htmlFor="accommodationType"
@@ -639,6 +596,29 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
                   >
                     <option value="hotel">Hotel</option>
                     <option value="apartments">Apartments</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="starRating"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Required Star Rating *
+                  </label>
+                  <select
+                    id="starRating"
+                    name="starRating"
+                    value={formData.starRating}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">Select star rating</option>
+                    <option value="2">2 Star</option>
+                    <option value="3">3 Star</option>
+                    <option value="4">4 Star</option>
+                    <option value="5">5 Star</option>
                   </select>
                 </div>
 
@@ -676,27 +656,11 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
               <p className="text-sm text-gray-600 mb-4">
                 Select any events or activities your client is interested in:
               </p>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                {eventOptions.map((event) => (
-                  <label key={event} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={formData.eventsRequested.includes(event)}
-                      onChange={() => handleEventToggle(event)}
-                      className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">{event}</span>
-                  </label>
-                ))}
-              </div>
-              {formData.eventsRequested.length > 0 && (
-                <div className="mt-3 p-2 bg-blue-50 border border-blue-200 rounded">
-                  <p className="text-sm text-blue-800">
-                    <span className="font-medium">Selected events:</span>{' '}
-                    {formData.eventsRequested.join(', ')}
-                  </p>
-                </div>
-              )}
+              <EventSelector
+                destination={formData.firstChoiceDestination}
+                selectedEvents={formData.eventsRequested}
+                onChange={handleEventsChange}
+              />
             </div>
 
             {/* Additional Notes */}
@@ -753,8 +717,6 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
                         1st: {formData.firstChoiceDestination}
                         {formData.secondChoiceDestination &&
                           `, 2nd: ${formData.secondChoiceDestination}`}
-                        {formData.thirdChoiceDestination &&
-                          `, 3rd: ${formData.thirdChoiceDestination}`}
                       </>
                     ) : (
                       'Not specified'

@@ -21,6 +21,10 @@ import {
   up as createSuperPackagesCollection,
   down as rollbackSuperPackagesCollection,
 } from './008-create-super-packages-collection';
+import {
+  up as createEventsCollection,
+  down as rollbackEventsCollection,
+} from './009-create-events-collection';
 
 // Register all migrations
 migrationRunner.addMigration({
@@ -59,6 +63,14 @@ migrationRunner.addMigration({
     'Create super offer packages collection and add linkedPackage field to quotes',
   up: createSuperPackagesCollection,
   down: rollbackSuperPackagesCollection,
+});
+
+migrationRunner.addMigration({
+  version: '009',
+  description:
+    'Create events and categories collections with predefined categories and migrate hardcoded events',
+  up: createEventsCollection,
+  down: rollbackEventsCollection,
 });
 
 // Note: Migrations 002, 003, and 005 are temporarily disabled due to interface inconsistencies

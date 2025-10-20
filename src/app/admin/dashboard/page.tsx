@@ -7,7 +7,7 @@ import UserManagement from '@/components/admin/UserManagement';
 import DestinationsDashboard from '@/components/admin/DestinationsDashboard';
 import OffersManager from '@/components/admin/OffersManager';
 import SuperPackageManager from '@/components/admin/SuperPackageManager';
-import AdminActivityManager from '@/components/admin/AdminActivityManager';
+import EventsManager from '@/components/admin/EventsManager';
 import TrainingManager from '@/components/admin/TrainingManager';
 import EnquiriesManager from '@/components/admin/EnquiriesManager';
 import AgencyManagement from '@/components/admin/AgencyManagement';
@@ -59,7 +59,7 @@ export default function AdminDashboardPage() {
     { id: 'destinations', name: 'Destinations', icon: '🏖️' },
     { id: 'offers', name: 'Offers', icon: '🎯' },
     { id: 'super-packages', name: 'Super Packages', icon: '📦' },
-    { id: 'activities', name: 'Activities', icon: '🎪' },
+    { id: 'events', name: 'Events', icon: '📅' },
     { id: 'training', name: 'Training Materials', icon: '📚' },
     { id: 'enquiries', name: 'Enquiries', icon: '💬' },
     { id: 'quotes', name: 'Quote Analytics', icon: '📊' },
@@ -363,9 +363,9 @@ export default function AdminDashboardPage() {
                 </section>
               )}
 
-              {activeTab === 'activities' && (
+              {activeTab === 'events' && (
                 <section>
-                  <AdminActivityManager />
+                  <EventsManager />
                 </section>
               )}
 
