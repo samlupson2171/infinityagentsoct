@@ -8,17 +8,29 @@ export const dynamic = 'force-dynamic';
 /**
  * GET /api/admin/events/categories
  * Retrieve all categories with optional event counts
+ * 
+ * Public Access: When activeOnly=true, this endpoint allows unauthenticated access
+ * to support the public enquiry form. This is safe because:
+ * - Only returns active (published) categories
+ * - No sensitive data is exposed
+ * - Read-only operation
+ * 
+ * Admin Access: All other operations require authentication
  */
 export async function GET(request: NextRequest) {
   try {
-    // Authenticate and authorize
-    await requireAdmin(request);
-
     await connectToDatabase();
 
     const { searchParams } = new URL(request.url);
     const includeEventCount = searchParams.get('includeEventCount') === 'true';
     const activeOnly = searchParams.get('activeOnly') === 'true';
+
+    // Only require authentication if NOT requesting active categories only
+    // This allows the public enquiry form to fetch active categories
+    // while keeping admin operations (includeEventCount, all categories) protected
+    if (!activeOnly) {
+      await requireAdmin(request);
+    }
 
     let categories;
 

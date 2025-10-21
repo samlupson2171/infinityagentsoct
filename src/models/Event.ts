@@ -201,14 +201,14 @@ EventSchema.methods.addDestination = function (destination: string) {
 };
 
 EventSchema.methods.removeDestination = function (destination: string) {
-  this.destinations = this.destinations.filter((d) => d !== destination);
+  this.destinations = this.destinations.filter((d: string) => d !== destination);
   return this.save();
 };
 
 EventSchema.methods.addCategory = function (
   categoryId: mongoose.Types.ObjectId
 ) {
-  if (!this.categories.some((id) => id.equals(categoryId))) {
+  if (!this.categories.some((id: mongoose.Types.ObjectId) => id.equals(categoryId))) {
     this.categories.push(categoryId);
   }
   return this.save();
@@ -217,7 +217,7 @@ EventSchema.methods.addCategory = function (
 EventSchema.methods.removeCategory = function (
   categoryId: mongoose.Types.ObjectId
 ) {
-  this.categories = this.categories.filter((id) => !id.equals(categoryId));
+  this.categories = this.categories.filter((id: mongoose.Types.ObjectId) => !id.equals(categoryId));
   return this.save();
 };
 
