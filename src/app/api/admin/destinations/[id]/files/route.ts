@@ -3,8 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { connectToDatabase } from '@/lib/mongodb';
 import Destination from '@/models/Destination';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
+import { put } from '@vercel/blob';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -74,23 +73,13 @@ export async function POST(
     // Generate unique filename
     const fileId = uuidv4();
     const fileExtension = file.name.split('.').pop();
-    const filename = `${fileId}.${fileExtension}`;
+    const filename = `destinations/${params.id}/${fileId}.${fileExtension}`;
 
-    // Create upload directory
-    const uploadDir = join(
-      process.cwd(),
-      'public',
-      'uploads',
-      'destinations',
-      params.id
-    );
-    await mkdir(uploadDir, { recursive: true });
-
-    // Save file
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const filePath = join(uploadDir, filename);
-    await writeFile(filePath, buffer);
+    // Upload to Vercel Blob
+    const blob = await put(filename, file, {
+      access: 'public',
+      addRandomSuffix: false,
+    });
 
     // Determine file type
     let fileType: 'pdf' | 'excel' | 'image' | 'document' = 'document';
@@ -108,12 +97,12 @@ export async function POST(
     // Create file record
     const fileRecord = {
       id: fileId,
-      filename,
+      filename: blob.pathname,
       originalName: file.name,
       fileType,
       mimeType: file.type,
       size: file.size,
-      url: `/uploads/destinations/${params.id}/${filename}`,
+      url: blob.url,
       uploadedBy: session.user.id,
       uploadedAt: new Date(),
       description: description || undefined,

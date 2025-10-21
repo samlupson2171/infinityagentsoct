@@ -3,8 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { connectToDatabase } from '@/lib/mongodb';
 import Destination from '@/models/Destination';
-import { unlink } from 'fs/promises';
-import { join } from 'path';
+import { del } from '@vercel/blob';
 
 
 export const dynamic = 'force-dynamic';
@@ -48,14 +47,14 @@ export async function DELETE(
     const file = destination.files[fileIndex];
     console.log('File found at index:', fileIndex, 'file:', file);
 
-    // Delete physical file
+    // Delete file from Vercel Blob
     try {
-      const filePath = join(process.cwd(), 'public', file.url);
-      console.log('Attempting to delete physical file:', filePath);
-      await unlink(filePath);
-      console.log('Physical file deleted successfully');
+      console.log('Attempting to delete blob file:', file.url);
+      await del(file.url);
+      console.log('Blob file deleted successfully');
     } catch (error) {
-      console.warn('Could not delete physical file:', error);
+      console.warn('Could not delete blob file:', error);
+      // Continue with database deletion even if blob deletion fails
     }
 
     // Remove file from destination

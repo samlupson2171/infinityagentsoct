@@ -1,0 +1,1555 @@
+
+> infinity-weekends-website@0.1.0 build
+> DISABLE_TINYMCE=true next build
+
+ ⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
+  ▲ Next.js 14.2.5
+  - Environments: .env.local, .env.production
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings
+
+./src/lib/hooks/useSuperPackagePriceCalculation.ts
+Attempted import error: 'parseApiError' is not exported from '@/lib/errors/quote-price-error-handler' (imported as 'parseApiError').
+
+Import trace for requested module:
+./src/lib/hooks/useSuperPackagePriceCalculation.ts
+./src/lib/hooks/useQuotePrice.ts
+./src/components/admin/QuoteForm.tsx
+./src/components/admin/EnquiriesManager.tsx
+
+./src/lib/hooks/useSuperPackagePriceCalculation.ts
+Attempted import error: 'parseApiError' is not exported from '@/lib/errors/quote-price-error-handler' (imported as 'parseApiError').
+
+Import trace for requested module:
+./src/lib/hooks/useSuperPackagePriceCalculation.ts
+./src/lib/hooks/useQuotePrice.ts
+./src/components/admin/QuoteForm.tsx
+./src/components/admin/EnquiriesManager.tsx
+
+./src/lib/hooks/useSuperPackagePriceCalculation.ts
+Attempted import error: 'parseApiError' is not exported from '@/lib/errors/quote-price-error-handler' (imported as 'parseApiError').
+
+Import trace for requested module:
+./src/lib/hooks/useSuperPackagePriceCalculation.ts
+./src/lib/hooks/useQuotePrice.ts
+./src/components/admin/QuoteForm.tsx
+./src/components/admin/EnquiriesManager.tsx
+
+./src/lib/hooks/useSuperPackagePriceCalculation.ts
+Attempted import error: 'parseApiError' is not exported from '@/lib/errors/quote-price-error-handler' (imported as 'parseApiError').
+
+Import trace for requested module:
+./src/lib/hooks/useSuperPackagePriceCalculation.ts
+./src/lib/hooks/useQuotePrice.ts
+./src/components/admin/QuoteForm.tsx
+./src/components/admin/EnquiriesManager.tsx
+
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+(node:28754) [MONGOOSE] Warning: Duplicate schema index on {"version":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28753) [MONGOOSE] Warning: Duplicate schema index on {"version":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28752) [MONGOOSE] Warning: Duplicate schema index on {"version":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28752) [MONGOOSE] Warning: Duplicate schema index on {"slug":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:28752) [MONGOOSE] Warning: Duplicate schema index on {"name":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:28753) [MONGOOSE] Warning: Duplicate schema index on {"timestamp":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:28752) [MONGOOSE] Warning: Duplicate schema index on {"timestamp":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:28754) [MONGOOSE] Warning: Duplicate schema index on {"timestamp":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:28754) [MONGOOSE] Warning: Duplicate schema index on {"key":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:28753) [MONGOOSE] Warning: Duplicate schema index on {"name":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:28753) [MONGOOSE] Warning: Duplicate schema index on {"slug":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:28754) [MONGOOSE] Warning: Duplicate schema index on {"name":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:28754) [MONGOOSE] Warning: Duplicate schema index on {"slug":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+   Generating static pages (0/46) ...
+Error exporting super packages: n [Error]: Dynamic server usage: Route /api/admin/super-packages/export couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (/Users/samlupson/Documents/infinagent/.next/server/chunks/8948.js:1:37249)
+    at d (/Users/samlupson/Documents/infinagent/.next/server/chunks/6900.js:30:25624)
+    at a (/Users/samlupson/Documents/infinagent/.next/server/chunks/6900.js:30:18613)
+    at m (/Users/samlupson/Documents/infinagent/.next/server/app/api/admin/super-packages/export/route.js:1:3450)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:36264
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+  description: "Route /api/admin/super-packages/export couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+MongoServerSelectionError: connection <monitor> to 65.62.36.126:27017 closed
+    at Timeout._onTimeout (/Users/samlupson/Documents/infinagent/node_modules/mongodb/lib/sdam/topology.js:278:38)
+    at listOnTimeout (node:internal/timers:581:17)
+    at process.processTimers (node:internal/timers:519:7) {
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-2xppepz-shard-00-01.1pgp6zc.mongodb.net:27017' => [ServerDescription],
+      'ac-2xppepz-shard-00-00.1pgp6zc.mongodb.net:27017' => [ServerDescription],
+      'ac-2xppepz-shard-00-02.1pgp6zc.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-ez1tb1-shard-0',
+    maxElectionId: null,
+    maxSetVersion: null,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [Symbol(errorLabels)]: Set(0) {}
+}
+MongoServerSelectionError: connection <monitor> to 65.62.36.117:27017 closed
+    at Timeout._onTimeout (/Users/samlupson/Documents/infinagent/node_modules/mongodb/lib/sdam/topology.js:278:38)
+    at listOnTimeout (node:internal/timers:581:17)
+    at process.processTimers (node:internal/timers:519:7) {
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-2xppepz-shard-00-02.1pgp6zc.mongodb.net:27017' => [ServerDescription],
+      'ac-2xppepz-shard-00-00.1pgp6zc.mongodb.net:27017' => [ServerDescription],
+      'ac-2xppepz-shard-00-01.1pgp6zc.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-ez1tb1-shard-0',
+    maxElectionId: null,
+    maxSetVersion: null,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [Symbol(errorLabels)]: Set(0) {}
+}
+MongoServerSelectionError: connection <monitor> to 65.62.36.117:27017 closed
+    at Timeout._onTimeout (/Users/samlupson/Documents/infinagent/node_modules/mongodb/lib/sdam/topology.js:278:38)
+    at listOnTimeout (node:internal/timers:581:17)
+    at process.processTimers (node:internal/timers:519:7) {
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-2xppepz-shard-00-02.1pgp6zc.mongodb.net:27017' => [ServerDescription],
+      'ac-2xppepz-shard-00-00.1pgp6zc.mongodb.net:27017' => [ServerDescription],
+      'ac-2xppepz-shard-00-01.1pgp6zc.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-ez1tb1-shard-0',
+    maxElectionId: null,
+    maxSetVersion: null,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [Symbol(errorLabels)]: Set(0) {}
+}
+Error fetching package statistics: n [Error]: Dynamic server usage: Route /api/admin/super-packages/statistics couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (/Users/samlupson/Documents/infinagent/.next/server/chunks/8948.js:1:37249)
+    at d (/Users/samlupson/Documents/infinagent/.next/server/chunks/6900.js:30:25624)
+    at a (/Users/samlupson/Documents/infinagent/.next/server/chunks/6900.js:30:18613)
+    at m (/Users/samlupson/Documents/infinagent/.next/server/app/api/admin/super-packages/statistics/route.js:1:1364)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:36264
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+  description: "Route /api/admin/super-packages/statistics couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Error: <Html> should not be imported outside of pages/_document.
+Read more: https://nextjs.org/docs/messages/no-document-import-in-page
+    at Z (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:5430)
+    at I (/Users/samlupson/Documents/infinagent/.next/server/chunks/1682.js:6:1263)
+    at renderWithHooks (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5658:16)
+    at renderIndeterminateComponent (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5732:15)
+    at renderElement (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5957:7)
+    at renderNodeDestructiveImpl (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:6115:11)
+    at renderNodeDestructive (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:6087:14)
+    at finishClassComponent (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5688:3)
+    at renderClassComponent (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5696:3)
+    at renderElement (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5954:7)
+
+Error occurred prerendering page "/404". Read more: https://nextjs.org/docs/messages/prerender-error
+
+Error: <Html> should not be imported outside of pages/_document.
+Read more: https://nextjs.org/docs/messages/no-document-import-in-page
+    at Z (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:5430)
+    at I (/Users/samlupson/Documents/infinagent/.next/server/chunks/1682.js:6:1263)
+    at renderWithHooks (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5658:16)
+    at renderIndeterminateComponent (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5732:15)
+    at renderElement (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5957:7)
+    at renderNodeDestructiveImpl (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:6115:11)
+    at renderNodeDestructive (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:6087:14)
+    at finishClassComponent (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5688:3)
+    at renderClassComponent (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5696:3)
+    at renderElement (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5954:7)
+Error: <Html> should not be imported outside of pages/_document.
+Read more: https://nextjs.org/docs/messages/no-document-import-in-page
+    at Z (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:5430)
+    at I (/Users/samlupson/Documents/infinagent/.next/server/chunks/1682.js:6:1263)
+    at renderWithHooks (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5658:16)
+    at renderIndeterminateComponent (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5732:15)
+    at renderElement (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5957:7)
+    at renderNodeDestructiveImpl (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:6115:11)
+    at renderNodeDestructive (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:6087:14)
+    at finishClassComponent (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5688:3)
+    at renderClassComponent (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5696:3)
+    at renderElement (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5954:7)
+
+Error occurred prerendering page "/500". Read more: https://nextjs.org/docs/messages/prerender-error
+
+Error: <Html> should not be imported outside of pages/_document.
+Read more: https://nextjs.org/docs/messages/no-document-import-in-page
+    at Z (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:5430)
+    at I (/Users/samlupson/Documents/infinagent/.next/server/chunks/1682.js:6:1263)
+    at renderWithHooks (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5658:16)
+    at renderIndeterminateComponent (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5732:15)
+    at renderElement (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5957:7)
+    at renderNodeDestructiveImpl (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:6115:11)
+    at renderNodeDestructive (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:6087:14)
+    at finishClassComponent (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5688:3)
+    at renderClassComponent (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5696:3)
+    at renderElement (/Users/samlupson/Documents/infinagent/node_modules/react-dom/cjs/react-dom-server.browser.development.js:5954:7)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/contracts". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/activities". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/destinations/new". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+   Generating static pages (11/46) 
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/destinations". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/dashboard". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/events/categories". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/events". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/events/new". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/debug-quote". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/quotes". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/simple-quote". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/super-packages/calculator". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/super-packages/debug". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/super-packages/import". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/super-packages". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+   Generating static pages (22/46) 
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/test-package-fetch". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/test-quote". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/super-packages/new". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/auth/pending". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/auth/login". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/auth/register". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/auth/register/confirmation". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/admin/test-upload". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/auth/register/success". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/destinations". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/enquiries/confirmation". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/destinations/benidorm". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+   Generating static pages (34/46) 
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/unauthorized". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/packages". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/training". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/enquiries". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/offers". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908) {
+  digest: '534887062'
+}
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+
+Error occurred prerendering page "/_not-found". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at t.useContext (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:109363)
+    at f (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:42812)
+    at h (/Users/samlupson/Documents/infinagent/.next/server/chunks/4288.js:1:34700)
+    at au (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:10446)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:15122
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+    at a_ (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:49776)
+    at ab (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:11808)
+    at /Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16871
+    at aw (/Users/samlupson/Documents/infinagent/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:35:16908)
+ ✓ Generating static pages (46/46)
+
+> Export encountered errors on following paths:
+	/_error: /404
+	/_error: /500
+	/_not-found/page: /_not-found
+	/activities/page: /activities
+	/admin/contracts/page: /admin/contracts
+	/admin/dashboard/page: /admin/dashboard
+	/admin/debug-quote/page: /admin/debug-quote
+	/admin/destinations/new/page: /admin/destinations/new
+	/admin/destinations/page: /admin/destinations
+	/admin/events/categories/page: /admin/events/categories
+	/admin/events/new/page: /admin/events/new
+	/admin/events/page: /admin/events
+	/admin/quotes/page: /admin/quotes
+	/admin/simple-quote/page: /admin/simple-quote
+	/admin/super-packages/calculator/page: /admin/super-packages/calculator
+	/admin/super-packages/debug/page: /admin/super-packages/debug
+	/admin/super-packages/import/page: /admin/super-packages/import
+	/admin/super-packages/new/page: /admin/super-packages/new
+	/admin/super-packages/page: /admin/super-packages
+	/admin/test-package-fetch/page: /admin/test-package-fetch
+	/admin/test-quote/page: /admin/test-quote
+	/admin/test-upload/page: /admin/test-upload
+	/auth/login/page: /auth/login
+	/auth/pending/page: /auth/pending
+	/auth/register/confirmation/page: /auth/register/confirmation
+	/auth/register/page: /auth/register
+	/auth/register/success/page: /auth/register/success
+	/destinations/benidorm/page: /destinations/benidorm
+	/destinations/page: /destinations
+	/enquiries/confirmation/page: /enquiries/confirmation
+	/enquiries/page: /enquiries
+	/offers/page: /offers
+	/packages/page: /packages
+	/page: /
+	/training/page: /training
+	/unauthorized/page: /unauthorized
