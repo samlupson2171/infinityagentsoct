@@ -97,7 +97,8 @@ async function sendEmailWithRetry(
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const info = await transporter.sendMail(mailOptions);
+      const transporterInstance = getTransporter();
+      const info = await transporterInstance.sendMail(mailOptions);
       console.log(
         `Email sent successfully on attempt ${attempt}:`,
         info.messageId
@@ -129,6 +130,7 @@ export async function sendAdminNotificationEmail(data: {
   userName: string;
   companyName: string;
   contactEmail: string;
+  phoneNumber: string;
   abtaPtsNumber: string;
   websiteAddress: string;
   consortia?: string;
@@ -199,6 +201,12 @@ export async function sendAdminNotificationEmail(data: {
               <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">Email:</td>
               <td style="padding: 12px 0; border-bottom: 1px solid #e9ecef;">
                 <a href="mailto:${data.contactEmail}" style="color: #007bff; text-decoration: none;">${data.contactEmail}</a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">Phone Number:</td>
+              <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">
+                <a href="tel:${data.phoneNumber}" style="color: #007bff; text-decoration: none;">${data.phoneNumber}</a>
               </td>
             </tr>
             <tr>
@@ -1750,6 +1758,109 @@ export async function sendQuoteUpdateEmail(data: {
     console.error('Failed to send quote update email:', error);
     throw new EmailDeliveryError(
       `Failed to send quote update email: ${(error as Error).message}`
+    );
+  }
+}
+
+
+// Test email function for SMTP configuration verification
+export async function sendTestEmail(data: {
+  toEmail: string;
+  fromEmail: string;
+  fromName: string;
+}): Promise<any> {
+  const subject = 'Test Email - Infinity Weekends SMTP Configuration';
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #007bff; margin: 0; font-size: 28px;">Infinity Weekends</h1>
+        <p style="color: #6c757d; margin: 5px 0 0 0; font-size: 14px;">Email Configuration Test</p>
+      </div>
+      
+      <div style="background-color: #d4edda; border: 1px solid #c3e6cb; padding: 25px; border-radius: 8px; margin-bottom: 25px;">
+        <h2 style="color: #155724; margin-top: 0; display: flex; align-items: center;">
+          <span style="margin-right: 10px;">✅</span> SMTP Configuration Test Successful
+        </h2>
+        <p style="margin-bottom: 0; font-size: 16px; line-height: 1.6;">
+          Your email configuration is working correctly! This test email was sent successfully using Microsoft 365 SMTP.
+        </p>
+      </div>
+      
+      <div style="background-color: #f8f9fa; padding: 25px; border-radius: 8px; margin: 25px 0;">
+        <h3 style="margin-top: 0; color: #495057;">📋 Configuration Details</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 12px 0; font-weight: bold; width: 140px; color: #495057; border-bottom: 1px solid #e9ecef;">SMTP Host:</td>
+            <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">${process.env.SMTP_HOST || 'Not configured'}</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">SMTP Port:</td>
+            <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">${process.env.SMTP_PORT || 'Not configured'}</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">From Name:</td>
+            <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">${data.fromName}</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 0; font-weight: bold; color: #495057;">From Email:</td>
+            <td style="padding: 12px 0; color: #212529;">${data.fromEmail}</td>
+          </tr>
+        </table>
+      </div>
+      
+      <div style="background-color: #e7f3ff; border: 1px solid #b3d9ff; padding: 20px; border-radius: 8px; margin: 25px 0;">
+        <h3 style="margin-top: 0; color: #0056b3;">✨ What This Means</h3>
+        <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+          <li>Your SMTP server connection is working properly</li>
+          <li>Email authentication is configured correctly</li>
+          <li>The platform can send emails successfully</li>
+          <li>All email notifications will be delivered</li>
+        </ul>
+      </div>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <p style="font-size: 16px; color: #495057; margin: 0;">
+          Your email system is ready to use!
+        </p>
+      </div>
+      
+      <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #dee2e6; font-size: 12px; color: #6c757d; text-align: center;">
+        <p style="margin: 5px 0;">This is a test email from the Infinity Weekends Training Platform.</p>
+        <p style="margin: 5px 0;">Sent on ${new Date().toLocaleDateString('en-GB', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        })}</p>
+        <p style="margin: 5px 0;">© ${new Date().getFullYear()} Infinity Weekends. All rights reserved.</p>
+      </div>
+    </div>
+  `;
+
+  const mailOptions = {
+    from: `"${data.fromName}" <${process.env.SMTP_USER}>`,
+    to: data.toEmail,
+    subject,
+    html,
+  };
+
+  try {
+    validateEmailData(mailOptions);
+    const transporterInstance = getTransporter();
+    const info = await sendEmailWithRetry(mailOptions, 3, 1000);
+    console.log(`Test email sent successfully to ${data.toEmail}:`, info.messageId);
+    return {
+      success: true,
+      messageId: info.messageId,
+      timestamp: new Date().toISOString(),
+    };
+  } catch (error) {
+    console.error('Failed to send test email:', error);
+    throw new EmailDeliveryError(
+      `Failed to send test email: ${(error as Error).message}`
     );
   }
 }

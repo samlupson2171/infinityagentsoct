@@ -8,6 +8,13 @@ export interface IContractSignature extends Document {
   ipAddress: string;
   userAgent: string;
   signatureType: 'digital' | 'checkbox' | 'electronic';
+  metadata?: {
+    hasReadContract?: boolean;
+    digitalSignatureConsent?: boolean;
+    sessionId?: string;
+    contractVersion?: string;
+    [key: string]: any;
+  };
 
   // Audit trail fields
   createdAt: Date;
@@ -68,6 +75,10 @@ const ContractSignatureSchema = new Schema<IContractSignature>(
       required: [true, 'IP address is required'],
       validate: {
         validator: function (value: string) {
+          // Allow 'unknown' for cases where IP cannot be determined
+          if (value === 'unknown') {
+            return true;
+          }
           // Basic IP validation (IPv4 and IPv6)
           const ipv4Regex =
             /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -88,6 +99,11 @@ const ContractSignatureSchema = new Schema<IContractSignature>(
       enum: ['digital', 'checkbox', 'electronic'],
       required: [true, 'Signature type is required'],
       default: 'checkbox',
+    },
+    metadata: {
+      type: Schema.Types.Mixed,
+      required: false,
+      default: {},
     },
   },
   {

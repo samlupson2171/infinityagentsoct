@@ -149,30 +149,22 @@ export default function SettingsManager() {
                 </h4>
                 <p className="text-gray-600">
                   Configure email settings for sending emails from the platform
-                  using Resend.
+                  using SMTP.
                 </p>
 
                 <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <h5 className="text-sm font-medium text-blue-900 mb-2">
-                    📧 Using Resend Email Service
+                    📧 Using Microsoft 365 SMTP
                   </h5>
                   <p className="text-sm text-blue-800 mb-2">
-                    This platform now uses Resend for reliable email delivery.
-                    You'll need:
+                    This platform uses Microsoft 365 SMTP for reliable email delivery.
+                    Current configuration:
                   </p>
                   <ul className="text-sm text-blue-800 list-disc list-inside space-y-1">
-                    <li>A Resend account (free tier available)</li>
-                    <li>Your Resend API key set in environment variables</li>
-                    <li>A verified sending domain or email address</li>
+                    <li>SMTP Host: smtp.office365.com</li>
+                    <li>SMTP Port: 587 (TLS)</li>
+                    <li>Configured in environment variables</li>
                   </ul>
-                  <a
-                    href="https://resend.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block mt-2 text-sm text-blue-600 hover:text-blue-800 underline"
-                  >
-                    Get started with Resend →
-                  </a>
                 </div>
               </div>
 
@@ -266,7 +258,7 @@ export default function SettingsManager() {
                   disabled={testEmailLoading || !emailSettings.fromEmail}
                   className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-md font-medium transition-colors"
                 >
-                  {testEmailLoading ? 'Testing...' : 'Test Email with Resend'}
+                  {testEmailLoading ? 'Testing...' : 'Send Test Email'}
                 </button>
               </div>
             </div>

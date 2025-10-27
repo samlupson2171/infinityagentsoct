@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth-middleware';
-import { sendTestEmail } from '@/lib/resend-email';
+import { sendTestEmail } from '@/lib/email';
 import { z } from 'zod';
 
 
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const emailSettings = emailSettingsSchema.parse(body);
 
-    // Send test email using Resend
+    // Send test email using SMTP
     await sendTestEmail({
       toEmail: emailSettings.fromEmail, // Send test email to the from address
       fromEmail: emailSettings.fromEmail,
@@ -59,29 +59,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Handle Resend API errors
-    if (error.message?.includes('API key')) {
+    // Handle SMTP errors
+    if (error.message?.includes('authentication') || error.message?.includes('auth')) {
       return NextResponse.json(
         {
           success: false,
           error: {
-            code: 'RESEND_API_ERROR',
+            code: 'SMTP_AUTH_ERROR',
             message:
-              'Invalid Resend API key. Please check your RESEND_API_KEY environment variable.',
+              'SMTP authentication failed. Please check your SMTP_USER and SMTP_PASS environment variables.',
           },
         },
         { status: 400 }
       );
     }
 
-    if (error.message?.includes('domain')) {
+    if (error.message?.includes('connection') || error.message?.includes('ECONNREFUSED')) {
       return NextResponse.json(
         {
           success: false,
           error: {
-            code: 'RESEND_DOMAIN_ERROR',
+            code: 'SMTP_CONNECTION_ERROR',
             message:
-              'Email domain not verified in Resend. Please verify your domain or use a verified sending address.',
+              'Could not connect to SMTP server. Please check your SMTP_HOST and SMTP_PORT settings.',
           },
         },
         { status: 400 }

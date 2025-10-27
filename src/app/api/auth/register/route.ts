@@ -5,7 +5,7 @@ import { connectDB } from '@/lib/mongodb';
 import {
   sendAdminNotificationEmail,
   sendRegistrationConfirmationEmail,
-} from '@/lib/resend-email';
+} from '@/lib/email';
 import { enhancedRegistrationSchema } from '@/lib/validation/user-schemas';
 import {
   withErrorHandling,
