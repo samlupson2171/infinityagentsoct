@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { connectDB } from '@/lib/mongodb';
 import Enquiry from '@/models/Enquiry';
-import Event from '@/models/Event'; // Import Event model to register it with Mongoose
 
 
 export const dynamic = 'force-dynamic';

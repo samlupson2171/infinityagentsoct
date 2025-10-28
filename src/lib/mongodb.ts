@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { StartupValidator } from './startup-validator';
+import { ensureModelsLoaded } from './load-models';
 
 // Skip validation during Vercel builds or CI
 const isVercelBuild = process.env.VERCEL === '1' || process.env.VERCEL_ENV !== undefined;
@@ -46,6 +47,11 @@ if (!cached) {
 }
 
 async function connectDB() {
+  // Ensure all models are loaded before connecting
+  // This is critical for serverless environments where models
+  // need to be registered before populate operations
+  ensureModelsLoaded();
+
   if (cached.conn) {
     return cached.conn;
   }
