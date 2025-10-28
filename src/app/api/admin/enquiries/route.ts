@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
         { leadName: { $regex: search, $options: 'i' } },
         { resort: { $regex: search, $options: 'i' } },
         { agentEmail: { $regex: search, $options: 'i' } },
-        { departureAirport: { $regex: search, $options: 'i' } },
+        { arrivalAirport: { $regex: search, $options: 'i' } },
       ];
     }
 

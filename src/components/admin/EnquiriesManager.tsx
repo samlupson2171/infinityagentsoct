@@ -795,10 +795,12 @@ export default function EnquiriesManager({
                       <span className="font-medium">Travel Date:</span>{' '}
                       {formatDateTime(selectedEnquiry.travelDate)}
                     </div>
-                    <div>
-                      <span className="font-medium">Departure:</span>{' '}
-                      {selectedEnquiry.departureAirport}
-                    </div>
+                    {selectedEnquiry.arrivalAirport && (
+                      <div>
+                        <span className="font-medium">Arrival Airport:</span>{' '}
+                        {selectedEnquiry.arrivalAirport}
+                      </div>
+                    )}
                     <div>
                       <span className="font-medium">Duration:</span>{' '}
                       {selectedEnquiry.numberOfNights} night

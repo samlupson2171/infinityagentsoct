@@ -493,7 +493,7 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
                     htmlFor="arrivalAirport"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                    Arrival Airport *
+                    Arrival Airport (Optional)
                   </label>
                   <input
                     type="text"
@@ -501,7 +501,6 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
                     name="arrivalAirport"
                     value={formData.arrivalAirport}
                     onChange={handleInputChange}
-                    required
                     maxLength={100}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="e.g., Alicante, Palma de Mallorca"

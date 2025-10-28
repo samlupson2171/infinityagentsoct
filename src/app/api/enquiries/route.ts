@@ -37,10 +37,10 @@ const createEnquirySchema = z.object({
     const parsedDate = new Date(date);
     return !isNaN(parsedDate.getTime()) && parsedDate > new Date();
   }, 'Travel date must be a valid future date'),
-  departureAirport: z
+  arrivalAirport: z
     .string()
-    .min(1, 'Departure airport is required')
-    .max(100, 'Airport name too long'),
+    .max(100, 'Airport name too long')
+    .optional(),
   numberOfNights: z
     .number()
     .int()
@@ -57,6 +57,9 @@ const createEnquirySchema = z.object({
   ),
   accommodationType: z.enum(['hotel', 'apartments'], {
     required_error: 'Accommodation type is required',
+  }),
+  starRating: z.enum(['2', '3', '4', '5'], {
+    required_error: 'Star rating is required',
   }),
   boardType: z
     .string()
@@ -174,7 +177,7 @@ export async function POST(request: NextRequest) {
         thirdChoiceDestination: enquiry.thirdChoiceDestination,
         resort: enquiry.resort,
         travelDate: enquiry.travelDate,
-        departureAirport: enquiry.departureAirport,
+        arrivalAirport: enquiry.arrivalAirport,
         numberOfNights: enquiry.numberOfNights,
         numberOfGuests: enquiry.numberOfGuests,
         eventsRequested: (enquiry.eventsRequested as any[]).map((e: any) => e.name || e),

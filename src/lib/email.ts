@@ -725,7 +725,7 @@ export async function sendEnquiryNotificationEmail(data: {
   thirdChoiceDestination?: string;
   resort?: string;
   travelDate: Date;
-  departureAirport: string;
+  arrivalAirport?: string;
   numberOfNights: number;
   numberOfGuests: number;
   eventsRequested: string[];
@@ -805,10 +805,10 @@ export async function sendEnquiryNotificationEmail(data: {
             <td style="padding: 8px 0; font-weight: bold; vertical-align: top;">Travel Date:</td>
             <td style="padding: 8px 0;">${formatDate(data.travelDate)}</td>
           </tr>
-          <tr>
-            <td style="padding: 8px 0; font-weight: bold; vertical-align: top;">Departure Airport:</td>
-            <td style="padding: 8px 0;">${data.departureAirport}</td>
-          </tr>
+          ${data.arrivalAirport ? `<tr>
+            <td style="padding: 8px 0; font-weight: bold; vertical-align: top;">Arrival Airport:</td>
+            <td style="padding: 8px 0;">${data.arrivalAirport}</td>
+          </tr>` : ''}
           <tr>
             <td style="padding: 8px 0; font-weight: bold; vertical-align: top;">Duration:</td>
             <td style="padding: 8px 0;">${data.numberOfNights} night${data.numberOfNights !== 1 ? 's' : ''}</td>

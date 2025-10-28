@@ -8,7 +8,7 @@ export interface IEnquiry extends Document {
   secondChoiceDestination?: string;
   resort?: string;
   travelDate: Date;
-  arrivalAirport: string;
+  arrivalAirport?: string;
   numberOfNights: number;
   numberOfGuests: number;
   eventsRequested: mongoose.Types.ObjectId[];
@@ -96,9 +96,8 @@ const EnquirySchema = new Schema<IEnquiry>(
     },
     arrivalAirport: {
       type: String,
-      required: [true, 'Arrival airport is required'],
+      required: false,
       trim: true,
-      minlength: [3, 'Arrival airport must be at least 3 characters long'],
       maxlength: [100, 'Arrival airport cannot exceed 100 characters'],
     },
     numberOfNights: {
