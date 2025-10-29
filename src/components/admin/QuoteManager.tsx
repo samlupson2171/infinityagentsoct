@@ -715,9 +715,11 @@ export default function QuoteManager({
                   </h5>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {bookingAnalytics.breakdowns.urgency.map((item: any) => (
-                      <div key={item._id} className="bg-gray-50 p-3 rounded-lg">
+                      <div key={typeof item._id === 'string' ? item._id : JSON.stringify(item._id)} className="bg-gray-50 p-3 rounded-lg">
                         <div className="text-sm font-medium text-gray-900 capitalize">
-                          {item._id?.replace('-', ' ') || 'Not specified'}
+                          {typeof item._id === 'string' 
+                            ? item._id.replace('-', ' ') 
+                            : 'Not specified'}
                         </div>
                         <div className="text-lg font-bold text-gray-700">
                           {item.count}
@@ -822,10 +824,14 @@ export default function QuoteManager({
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {quote.enquiryId.leadName}
+                          {typeof quote.enquiryId === 'object' && quote.enquiryId?.leadName
+                            ? quote.enquiryId.leadName
+                            : 'N/A'}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {quote.enquiryId.agentEmail}
+                          {typeof quote.enquiryId === 'object' && quote.enquiryId?.agentEmail
+                            ? quote.enquiryId.agentEmail
+                            : 'N/A'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -869,7 +875,11 @@ export default function QuoteManager({
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div>{formatDate(quote.createdAt)}</div>
-                        <div className="text-xs">{quote.createdBy.name}</div>
+                        <div className="text-xs">
+                          {typeof quote.createdBy === 'object' && quote.createdBy?.name
+                            ? quote.createdBy.name
+                            : 'Unknown'}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center space-x-2">
@@ -1234,7 +1244,9 @@ export default function QuoteManager({
             </div>
             <QuoteForm
               initialData={{
-                enquiryId: selectedQuote.enquiryId._id,
+                enquiryId: typeof selectedQuote.enquiryId === 'object' 
+                  ? selectedQuote.enquiryId._id 
+                  : selectedQuote.enquiryId,
                 leadName: selectedQuote.leadName,
                 hotelName: selectedQuote.hotelName,
                 numberOfPeople: selectedQuote.numberOfPeople,
@@ -1393,7 +1405,7 @@ export default function QuoteManager({
                           Group Size Tier:
                         </span>
                         <div className="text-indigo-800 mt-1">
-                          {selectedQuote.linkedPackage.selectedTier.tierLabel}
+                          {selectedQuote.linkedPackage.selectedTier?.tierLabel || 'Not specified'}
                         </div>
                       </div>
                       <div>
@@ -1401,7 +1413,7 @@ export default function QuoteManager({
                           Duration:
                         </span>
                         <div className="text-indigo-800 mt-1">
-                          {selectedQuote.linkedPackage.selectedNights} nights
+                          {selectedQuote.linkedPackage.selectedNights || 'N/A'} nights
                         </div>
                       </div>
                       <div>
@@ -1409,7 +1421,7 @@ export default function QuoteManager({
                           Pricing Period:
                         </span>
                         <div className="text-indigo-800 mt-1">
-                          {selectedQuote.linkedPackage.selectedPeriod}
+                          {selectedQuote.linkedPackage.selectedPeriod || 'Not specified'}
                         </div>
                       </div>
                       <div>
@@ -1421,7 +1433,7 @@ export default function QuoteManager({
                             <span className="text-orange-600 font-medium">
                               ON REQUEST (Manual Entry)
                             </span>
-                          ) : (
+                          ) : selectedQuote.linkedPackage.calculatedPrice && typeof selectedQuote.linkedPackage.calculatedPrice === 'number' ? (
                             selectedQuote.linkedPackage.calculatedPrice.toLocaleString(
                               'en-GB',
                               {
@@ -1429,6 +1441,8 @@ export default function QuoteManager({
                                 currency: selectedQuote.currency,
                               }
                             )
+                          ) : (
+                            'Not calculated'
                           )}
                         </div>
                       </div>
@@ -1539,7 +1553,9 @@ export default function QuoteManager({
                   <div>
                     <dt className="font-medium text-gray-700">Created By:</dt>
                     <dd className="text-gray-900">
-                      {selectedQuote.createdBy.name}
+                      {typeof selectedQuote.createdBy === 'object' && selectedQuote.createdBy?.name
+                        ? selectedQuote.createdBy.name
+                        : 'Unknown'}
                     </dd>
                   </div>
                   <div>

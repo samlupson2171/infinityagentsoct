@@ -113,12 +113,12 @@ export class QuoteLinker {
     const { linkedPackage } = quote;
 
     return `
-Package: ${linkedPackage.packageName}
-Version: ${linkedPackage.packageVersion}
-Tier: ${linkedPackage.selectedTier.tierLabel}
-Duration: ${linkedPackage.selectedNights} nights
-Period: ${linkedPackage.selectedPeriod}
-${linkedPackage.priceWasOnRequest ? 'Price: ON REQUEST' : `Price: ${linkedPackage.calculatedPrice}`}
+Package: ${linkedPackage.packageName || 'N/A'}
+Version: ${linkedPackage.packageVersion || 'N/A'}
+Tier: ${linkedPackage.selectedTier?.tierLabel || 'Not specified'}
+Duration: ${linkedPackage.selectedNights || 'N/A'} nights
+Period: ${linkedPackage.selectedPeriod || 'Not specified'}
+${linkedPackage.priceWasOnRequest ? 'Price: ON REQUEST' : `Price: ${linkedPackage.calculatedPrice || 'N/A'}`}
     `.trim();
   }
 }

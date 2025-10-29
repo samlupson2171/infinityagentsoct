@@ -327,6 +327,9 @@ export async function PUT(
 
       // Update tier info if provided
       if (priceCalculation.tierUsed) {
+        if (!quote.linkedPackage.selectedTier) {
+          quote.linkedPackage.selectedTier = { tierIndex: 0, tierLabel: '' };
+        }
         quote.linkedPackage.selectedTier.tierLabel = priceCalculation.tierUsed;
         quote.linkedPackage.selectedTier.tierIndex = priceCalculation.tierIndex;
       }

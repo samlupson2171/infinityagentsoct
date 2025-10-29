@@ -195,7 +195,7 @@ export async function POST(
               ? {
                   packageName: quote.linkedPackage.packageName,
                   packageVersion: quote.linkedPackage.packageVersion,
-                  selectedTier: quote.linkedPackage.selectedTier.tierLabel,
+                  selectedTier: quote.linkedPackage.selectedTier?.tierLabel || 'Not specified',
                   selectedPeriod: quote.linkedPackage.selectedPeriod,
                   calculatedPrice: quote.linkedPackage.calculatedPrice,
                 }

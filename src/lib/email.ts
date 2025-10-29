@@ -56,6 +56,14 @@ function getTransporter(): nodemailer.Transporter {
   return transporter;
 }
 
+// Reset transporter (useful when credentials change or connection issues occur)
+export function resetTransporter(): void {
+  if (transporter) {
+    transporter.close();
+    transporter = null;
+  }
+}
+
 // Verify transporter configuration with enhanced logging
 export async function verifyEmailConfig(): Promise<boolean> {
   try {
@@ -107,6 +115,12 @@ async function sendEmailWithRetry(
     } catch (error) {
       lastError = error as Error;
       console.error(`Email delivery attempt ${attempt} failed:`, error);
+
+      // Reset transporter on authentication errors to force reconnection
+      if ((error as any).code === 'EAUTH' || (error as any).responseCode === 535) {
+        console.log('Authentication error detected, resetting transporter...');
+        resetTransporter();
+      }
 
       if (attempt < maxRetries) {
         // Exponential backoff: wait longer between each retry
@@ -706,7 +720,7 @@ export async function sendRejectionNotificationEmail(data: {
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
+    const info = await sendEmailWithRetry(mailOptions, 3, 1000);
     console.log('Rejection notification email sent:', info.messageId);
     return info;
   } catch (error) {
@@ -893,7 +907,7 @@ export async function sendEnquiryNotificationEmail(data: {
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
+    const info = await sendEmailWithRetry(mailOptions, 3, 1000);
     console.log('Enquiry notification email sent:', info.messageId);
     return info;
   } catch (error) {
@@ -1023,7 +1037,7 @@ export async function sendEnquiryConfirmationEmail(data: {
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
+    const info = await sendEmailWithRetry(mailOptions, 3, 1000);
     console.log('Enquiry confirmation email sent:', info.messageId);
     return info;
   } catch (error) {

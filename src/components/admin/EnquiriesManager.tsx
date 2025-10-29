@@ -859,7 +859,7 @@ export default function EnquiriesManager({
                         key={index}
                         className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
                       >
-                        {event}
+                        {typeof event === 'string' ? event : event.name || 'Unknown Event'}
                       </span>
                     ))}
                   </div>
@@ -1045,7 +1045,9 @@ export default function EnquiriesManager({
                 whatsIncluded: `${selectedEnquiryForQuote.accommodationType === 'hotel' ? 'Hotel' : 'Apartment'} accommodation, ${selectedEnquiryForQuote.boardType}`,
                 transferIncluded: false,
                 activitiesIncluded:
-                  selectedEnquiryForQuote.eventsRequested.join(', '),
+                  selectedEnquiryForQuote.eventsRequested
+                    .map((event: any) => typeof event === 'string' ? event : event.name || 'Unknown Event')
+                    .join(', '),
                 totalPrice:
                   selectedEnquiryForQuote.budgetPerPerson *
                   selectedEnquiryForQuote.numberOfGuests,
