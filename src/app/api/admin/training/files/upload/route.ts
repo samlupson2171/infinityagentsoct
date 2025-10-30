@@ -4,20 +4,40 @@ import { authOptions } from '@/lib/auth';
 import { FileManager } from '@/lib/file-manager';
 import { connectDB } from '@/lib/mongodb';
 import mongoose from 'mongoose';
-
+import {
+  FileErrorCode,
+  createFileErrorResponse,
+  createFileSuccessResponse,
+  FileOperationLogger,
+} from '@/lib/errors/file-operation-errors';
 
 export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+  let uploadedFileId: string | undefined;
+
   try {
     // Check authentication
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        createFileErrorResponse(
+          FileErrorCode.UNAUTHORIZED,
+          'Authentication required'
+        ),
+        { status: 401 }
+      );
     }
 
     // Check if user is admin
     if (session.user.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return NextResponse.json(
+        createFileErrorResponse(
+          FileErrorCode.FORBIDDEN,
+          'Admin access required'
+        ),
+        { status: 403 }
+      );
     }
 
     await connectDB();
@@ -27,7 +47,13 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file') as File;
 
     if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+      return NextResponse.json(
+        createFileErrorResponse(
+          FileErrorCode.NO_FILE,
+          'No file provided in request'
+        ),
+        { status: 400 }
+      );
     }
 
     // Convert file to buffer
@@ -43,10 +69,64 @@ export async function POST(request: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
+      return NextResponse.json(
+        createFileErrorResponse(
+          FileErrorCode.UPLOAD_FAILED,
+          result.error || 'File upload failed',
+          { details: result.error }
+        ),
+        { status: 400 }
+      );
     }
 
-    // Return file information
+    uploadedFileId = result.file!.id;
+
+    // CRITICAL: Verify file exists on filesystem after upload
+    const fileExists = await FileManager.verifyFileExists(result.file!.filePath);
+    
+    if (!fileExists) {
+      // Rollback: Delete FileStorage document
+      FileOperationLogger.logRollback(
+        'File Upload',
+        'File verification failed',
+        { fileId: result.file!.id, filePath: result.file!.filePath }
+      );
+      
+      try {
+        const { FileStorage } = await import('@/models');
+        await FileStorage.deleteOne({ id: result.file!.id });
+      } catch (rollbackError) {
+        FileOperationLogger.logRollback(
+          'File Upload',
+          'Rollback failed',
+          {
+            fileId: result.file!.id,
+            error: rollbackError instanceof Error ? rollbackError.message : 'Unknown error',
+          }
+        );
+      }
+
+      return NextResponse.json(
+        createFileErrorResponse(
+          FileErrorCode.FILE_VERIFICATION_FAILED,
+          'File upload verification failed - file not found after write',
+          {
+            fileId: result.file!.id,
+            filePath: result.file!.filePath,
+          }
+        ),
+        { status: 500 }
+      );
+    }
+
+    const uploadDuration = Date.now() - startTime;
+    FileOperationLogger.logUploadSuccess(
+      result.file!.id,
+      result.file!.originalName,
+      uploadDuration
+    );
+
+    // Return complete file information (backward compatible format)
     return NextResponse.json({
       success: true,
       file: {
@@ -60,9 +140,39 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('File upload error:', error);
+    const uploadDuration = Date.now() - startTime;
+    
+    // Attempt rollback if we have a file ID
+    if (uploadedFileId) {
+      FileOperationLogger.logRollback(
+        'File Upload',
+        'Emergency rollback due to critical error',
+        { fileId: uploadedFileId, durationMs: uploadDuration }
+      );
+      
+      try {
+        const { FileStorage } = await import('@/models');
+        await FileStorage.deleteOne({ id: uploadedFileId });
+      } catch (rollbackError) {
+        FileOperationLogger.logRollback(
+          'File Upload',
+          'Emergency rollback failed',
+          {
+            fileId: uploadedFileId,
+            error: rollbackError instanceof Error ? rollbackError.message : 'Unknown error',
+          }
+        );
+      }
+    }
+
     return NextResponse.json(
-      { error: 'Internal server error' },
+      createFileErrorResponse(
+        FileErrorCode.INTERNAL_ERROR,
+        'Internal server error during file upload',
+        {
+          details: error instanceof Error ? error.message : 'Unknown error',
+        }
+      ),
       { status: 500 }
     );
   }
@@ -74,12 +184,24 @@ export async function GET(request: NextRequest) {
     // Check authentication
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        createFileErrorResponse(
+          FileErrorCode.UNAUTHORIZED,
+          'Authentication required'
+        ),
+        { status: 401 }
+      );
     }
 
     // Check if user is admin
     if (session.user.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return NextResponse.json(
+        createFileErrorResponse(
+          FileErrorCode.FORBIDDEN,
+          'Admin access required'
+        ),
+        { status: 403 }
+      );
     }
 
     await connectDB();
@@ -103,6 +225,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({
+      success: true,
       files: files.map((file: any) => ({
         id: file.id,
         originalName: file.originalName,
@@ -115,9 +238,14 @@ export async function GET(request: NextRequest) {
       })),
     });
   } catch (error) {
-    console.error('File list error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      createFileErrorResponse(
+        FileErrorCode.INTERNAL_ERROR,
+        'Failed to retrieve file list',
+        {
+          details: error instanceof Error ? error.message : 'Unknown error',
+        }
+      ),
       { status: 500 }
     );
   }

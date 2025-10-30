@@ -4,7 +4,11 @@ import { authOptions } from '@/lib/auth';
 import { FileManager } from '@/lib/file-manager';
 import { connectToDatabase } from '@/lib/mongodb';
 import mongoose from 'mongoose';
-
+import {
+  FileErrorCode,
+  createFileErrorResponse,
+  createFileSuccessResponse,
+} from '@/lib/errors/file-operation-errors';
 
 export const dynamic = 'force-dynamic';
 interface RouteParams {
@@ -19,12 +23,26 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     // Check authentication
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        createFileErrorResponse(
+          FileErrorCode.UNAUTHORIZED,
+          'Authentication required',
+          { fileId: params.id }
+        ),
+        { status: 401 }
+      );
     }
 
     // Check if user is admin
     if (session.user.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return NextResponse.json(
+        createFileErrorResponse(
+          FileErrorCode.FORBIDDEN,
+          'Admin access required',
+          { fileId: params.id }
+        ),
+        { status: 403 }
+      );
     }
 
     await connectToDatabase();
@@ -36,16 +54,29 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     if (!success) {
       return NextResponse.json(
-        { error: 'File not found or permission denied' },
+        createFileErrorResponse(
+          FileErrorCode.FILE_NOT_FOUND,
+          'File not found or permission denied',
+          { fileId: params.id }
+        ),
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      fileId: params.id,
+    });
   } catch (error) {
-    console.error('File deletion error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      createFileErrorResponse(
+        FileErrorCode.INTERNAL_ERROR,
+        'Failed to delete file',
+        {
+          fileId: params.id,
+          details: error instanceof Error ? error.message : 'Unknown error',
+        }
+      ),
       { status: 500 }
     );
   }
@@ -57,7 +88,14 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // Check authentication
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        createFileErrorResponse(
+          FileErrorCode.UNAUTHORIZED,
+          'Authentication required',
+          { fileId: params.id }
+        ),
+        { status: 401 }
+      );
     }
 
     await connectToDatabase();
@@ -66,7 +104,14 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const file = await FileStorage.findOne({ id: params.id });
 
     if (!file) {
-      return NextResponse.json({ error: 'File not found' }, { status: 404 });
+      return NextResponse.json(
+        createFileErrorResponse(
+          FileErrorCode.FILE_NOT_FOUND,
+          'File not found',
+          { fileId: params.id }
+        ),
+        { status: 404 }
+      );
     }
 
     // Check if user has access to this file
@@ -76,23 +121,39 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const isAdmin = session.user.role === 'admin';
 
     if (!isOwner && !isAdmin) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return NextResponse.json(
+        createFileErrorResponse(
+          FileErrorCode.FORBIDDEN,
+          'Access denied',
+          { fileId: params.id }
+        ),
+        { status: 403 }
+      );
     }
 
     return NextResponse.json({
-      id: file.id,
-      originalName: file.originalName,
-      fileName: file.fileName,
-      mimeType: file.mimeType,
-      size: file.size,
-      uploadedAt: file.createdAt,
-      isOrphaned: file.isOrphaned,
-      associatedMaterial: file.associatedMaterial,
+      success: true,
+      file: {
+        id: file.id,
+        originalName: file.originalName,
+        fileName: file.fileName,
+        mimeType: file.mimeType,
+        size: file.size,
+        uploadedAt: file.createdAt,
+        isOrphaned: file.isOrphaned,
+        associatedMaterial: file.associatedMaterial,
+      },
     });
   } catch (error) {
-    console.error('File info error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      createFileErrorResponse(
+        FileErrorCode.INTERNAL_ERROR,
+        'Failed to retrieve file information',
+        {
+          fileId: params.id,
+          details: error instanceof Error ? error.message : 'Unknown error',
+        }
+      ),
       { status: 500 }
     );
   }

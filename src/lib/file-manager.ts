@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import { FileStorage } from '@/models';
 import type { IFileStorage } from '@/models';
 import mongoose from 'mongoose';
+import { FileOperationLogger } from '@/lib/errors/file-operation-errors';
 
 export interface FileUploadOptions {
   maxSize?: number; // in bytes
@@ -13,7 +14,16 @@ export interface FileUploadOptions {
 
 export interface FileUploadResult {
   success: boolean;
-  file?: IFileStorage;
+  file?: {
+    id: string;
+    originalName: string;
+    fileName: string;
+    filePath: string;
+    fullPath: string;
+    mimeType: string;
+    size: number;
+    createdAt: Date;
+  };
   error?: string;
 }
 
@@ -59,6 +69,32 @@ export class FileManager {
   };
 
   /**
+   * Get full filesystem path from relative path
+   */
+  static getFileFullPath(filePath: string): string {
+    return path.join(process.cwd(), 'public', filePath);
+  }
+
+  /**
+   * Verify that a file exists on the filesystem
+   */
+  static async verifyFileExists(filePath: string): Promise<boolean> {
+    try {
+      FileOperationLogger.logVerificationStart(filePath);
+      const fullPath = this.getFileFullPath(filePath);
+      await fs.access(fullPath);
+      FileOperationLogger.logVerificationSuccess(filePath);
+      return true;
+    } catch (error) {
+      FileOperationLogger.logVerificationError(
+        filePath,
+        error instanceof Error ? error.message : 'Unknown error'
+      );
+      return false;
+    }
+  }
+
+  /**
    * Upload a file with validation and security checks
    */
   static async uploadFile(
@@ -68,7 +104,15 @@ export class FileManager {
     uploadedBy: mongoose.Types.ObjectId,
     options: FileUploadOptions = {}
   ): Promise<FileUploadResult> {
+    const startTime = Date.now();
+    
     try {
+      FileOperationLogger.logUploadStart(
+        originalName,
+        fileBuffer.length,
+        uploadedBy.toString()
+      );
+      
       // Validate file
       const validation = await this.validateFile(
         fileBuffer,
@@ -77,6 +121,7 @@ export class FileManager {
         options
       );
       if (!validation.isValid) {
+        FileOperationLogger.logUploadError(originalName, validation.error || 'Validation failed');
         return { success: false, error: validation.error };
       }
 
@@ -94,12 +139,27 @@ export class FileManager {
       const filePath = path.join(fullUploadPath, fileName);
       await fs.writeFile(filePath, fileBuffer);
 
+      // Verify file was written successfully
+      const relativeFilePath = path.join(uploadPath, fileName);
+      const fileExists = await this.verifyFileExists(relativeFilePath);
+      if (!fileExists) {
+        const error = 'File upload verification failed - file not found after write';
+        FileOperationLogger.logUploadError(originalName, error, {
+          fileId,
+          filePath: relativeFilePath,
+        });
+        return {
+          success: false,
+          error,
+        };
+      }
+
       // Create file record in database
       const fileRecord = new FileStorage({
         id: fileId,
         originalName,
         fileName,
-        filePath: path.join(uploadPath, fileName),
+        filePath: relativeFilePath,
         mimeType: validation.detectedMimeType || mimeType,
         size: fileBuffer.length,
         uploadedBy,
@@ -107,13 +167,32 @@ export class FileManager {
       });
 
       await fileRecord.save();
+      
+      const duration = Date.now() - startTime;
+      FileOperationLogger.logUploadSuccess(fileId, originalName, duration);
 
-      return { success: true, file: fileRecord };
+      // Return complete file information
+      return {
+        success: true,
+        file: {
+          id: fileRecord.id,
+          originalName: fileRecord.originalName,
+          fileName: fileRecord.fileName,
+          filePath: fileRecord.filePath,
+          fullPath: this.getFileFullPath(fileRecord.filePath),
+          mimeType: fileRecord.mimeType,
+          size: fileRecord.size,
+          createdAt: fileRecord.createdAt,
+        },
+      };
     } catch (error) {
-      console.error('File upload error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown upload error';
+      FileOperationLogger.logUploadError(originalName, errorMessage, {
+        error: error instanceof Error ? error.stack : undefined,
+      });
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown upload error',
+        error: errorMessage,
       };
     }
   }
@@ -196,31 +275,51 @@ export class FileManager {
     userId: mongoose.Types.ObjectId
   ): Promise<boolean> {
     try {
+      FileOperationLogger.logDeletionStart(fileId, userId.toString());
+      
       const fileRecord = await FileStorage.findOne({ id: fileId });
       if (!fileRecord) {
+        FileOperationLogger.logDeletionError(fileId, 'File not found in database');
         return false;
       }
 
       // Check if user has permission to delete (owner or admin)
       if (!fileRecord.uploadedBy.equals(userId)) {
+        FileOperationLogger.logDeletionError(
+          fileId,
+          'Permission denied',
+          { userId: userId.toString() }
+        );
         // TODO: Add admin role check here
         return false;
       }
 
       // Delete physical file
-      const fullPath = path.join(process.cwd(), 'public', fileRecord.filePath);
+      const fullPath = this.getFileFullPath(fileRecord.filePath);
       try {
         await fs.unlink(fullPath);
       } catch (error) {
-        console.warn('Failed to delete physical file:', error);
+        FileOperationLogger.logDeletionError(
+          fileId,
+          'Failed to delete physical file',
+          {
+            filePath: fullPath,
+            error: error instanceof Error ? error.message : 'Unknown error',
+          }
+        );
         // Continue with database deletion even if physical file deletion fails
       }
 
       // Delete database record
       await FileStorage.deleteOne({ id: fileId });
+      FileOperationLogger.logDeletionSuccess(fileId, fileRecord.originalName);
       return true;
     } catch (error) {
-      console.error('File deletion error:', error);
+      FileOperationLogger.logDeletionError(
+        fileId,
+        error instanceof Error ? error.message : 'Unknown error',
+        { error: error instanceof Error ? error.stack : undefined }
+      );
       return false;
     }
   }
@@ -233,6 +332,8 @@ export class FileManager {
     materialId: mongoose.Types.ObjectId
   ): Promise<boolean> {
     try {
+      FileOperationLogger.logAssociationStart(fileId, materialId.toString());
+      
       const result = await FileStorage.updateOne(
         { id: fileId },
         {
@@ -240,9 +341,24 @@ export class FileManager {
           isOrphaned: false,
         }
       );
-      return result.modifiedCount > 0;
+      
+      if (result.modifiedCount > 0) {
+        FileOperationLogger.logAssociationSuccess(fileId, materialId.toString());
+        return true;
+      } else {
+        FileOperationLogger.logAssociationError(
+          fileId,
+          materialId.toString(),
+          'No documents modified'
+        );
+        return false;
+      }
     } catch (error) {
-      console.error('File association error:', error);
+      FileOperationLogger.logAssociationError(
+        fileId,
+        materialId.toString(),
+        error instanceof Error ? error.message : 'Unknown error'
+      );
       return false;
     }
   }
@@ -268,19 +384,24 @@ export class FileManager {
   static async cleanupOrphanedFiles(
     olderThanDays: number = 7
   ): Promise<number> {
+    const startTime = Date.now();
+    
     try {
+      FileOperationLogger.logCleanupStart(olderThanDays);
+      
       const orphanedFiles = await FileStorage.findOrphanedFiles(olderThanDays);
+      
       let deletedCount = 0;
 
       for (const file of orphanedFiles) {
         // Delete physical file
-        const fullPath = path.join(process.cwd(), 'public', file.filePath);
+        const fullPath = this.getFileFullPath(file.filePath);
         try {
           await fs.unlink(fullPath);
         } catch (error) {
-          console.warn(
-            `Failed to delete orphaned file ${file.filePath}:`,
-            error
+          FileOperationLogger.logCleanupError(
+            `Failed to delete physical file: ${file.filePath}`,
+            { error: error instanceof Error ? error.message : 'Unknown error' }
           );
         }
 
@@ -289,9 +410,14 @@ export class FileManager {
         deletedCount++;
       }
 
+      const duration = Date.now() - startTime;
+      FileOperationLogger.logCleanupSuccess(deletedCount, duration);
       return deletedCount;
     } catch (error) {
-      console.error('Orphaned file cleanup error:', error);
+      FileOperationLogger.logCleanupError(
+        error instanceof Error ? error.message : 'Unknown error',
+        { error: error instanceof Error ? error.stack : undefined }
+      );
       return 0;
     }
   }

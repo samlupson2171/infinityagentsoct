@@ -9,7 +9,12 @@ import {
 } from '@/lib/content-sanitizer';
 import mongoose from 'mongoose';
 import { z } from 'zod';
-
+import {
+  FileErrorCode,
+  createFileErrorResponse,
+  createFileSuccessResponse,
+  FileOperationLogger,
+} from '@/lib/errors/file-operation-errors';
 
 export const dynamic = 'force-dynamic';
 const uploadedFileSchema = z.object({
@@ -55,23 +60,25 @@ const createTrainingMaterialSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('Training API: Starting POST request');
-
     // Verify admin authorization
-    console.log('Training API: Verifying admin authorization');
     const adminToken = await requireAdmin(request);
-    console.log('Training API: Admin authorized:', adminToken.sub);
+    const userId = adminToken.sub || 'unknown';
+    
+    FileOperationLogger.logMaterialCreationStart(
+      'unknown',
+      userId
+    );
 
     // Parse and validate request body
-    console.log('Training API: Parsing request body');
     const body = await request.json();
-    console.log('Training API: Request body:', body);
-
     const materialData = createTrainingMaterialSchema.parse(body);
-    console.log('Training API: Validated material data:', materialData);
+    
+    FileOperationLogger.logMaterialCreationStart(
+      materialData.type,
+      userId
+    );
 
     // Validate content using comprehensive validator
-    console.log('Training API: Validating content');
     const contentValidation = validateTrainingContent(materialData.type, {
       title: materialData.title,
       description: materialData.description,
@@ -82,28 +89,77 @@ export async function POST(request: NextRequest) {
     });
 
     if (!contentValidation.isValid) {
-      console.log(
-        'Training API: Content validation failed:',
-        contentValidation.errors
+      FileOperationLogger.logMaterialCreationError(
+        materialData.type,
+        'Content validation failed',
+        { errors: contentValidation.errors }
       );
       return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: contentValidation.errors.join(', '),
-            details: contentValidation.errors,
-            warnings: contentValidation.warnings,
-          },
-        },
+        createFileErrorResponse(
+          FileErrorCode.VALIDATION_ERROR,
+          contentValidation.errors.join(', '),
+          {
+            details: {
+              errors: contentValidation.errors,
+              warnings: contentValidation.warnings,
+            },
+          }
+        ),
         { status: 400 }
       );
     }
 
     // Connect to database
-    console.log('Training API: Connecting to database');
     await connectDB();
-    console.log('Training API: Database connected');
+
+    // CRITICAL: Verify all uploaded files exist before creating material
+    if (materialData.type === 'download' && materialData.uploadedFiles?.length > 0) {
+      for (const file of materialData.uploadedFiles) {
+        // Validate file path doesn't contain path traversal attempts
+        if (file.filePath.includes('..') || file.filePath.includes('\\..') || 
+            file.filePath.startsWith('/') || file.filePath.includes('\\')) {
+          FileOperationLogger.logMaterialCreationError(
+            materialData.type,
+            'Invalid file path detected',
+            { fileId: file.id, filePath: file.filePath }
+          );
+          return NextResponse.json(
+            createFileErrorResponse(
+              FileErrorCode.INVALID_FILE_PATH,
+              `Invalid file path detected: ${file.originalName}`,
+              {
+                fileId: file.id,
+                filePath: file.filePath,
+                details: 'File path contains invalid characters or path traversal attempts',
+              }
+            ),
+            { status: 400 }
+          );
+        }
+
+        // Verify file exists on filesystem
+        const fileExists = await FileManager.verifyFileExists(file.filePath);
+        if (!fileExists) {
+          FileOperationLogger.logMaterialCreationError(
+            materialData.type,
+            'File not found on filesystem',
+            { fileId: file.id, filePath: file.filePath }
+          );
+          return NextResponse.json(
+            createFileErrorResponse(
+              FileErrorCode.FILE_NOT_FOUND,
+              `Uploaded file not found: ${file.originalName}`,
+              {
+                fileId: file.id,
+                filePath: file.filePath,
+                details: 'File does not exist on filesystem',
+              }
+            ),
+            { status: 400 }
+          );
+        }
+      }
+    }
 
     // Prepare material data
     const materialToSave: any = {
@@ -123,15 +179,17 @@ export async function POST(request: NextRequest) {
           materialData.richContent
         );
         if (!sanitizationResult.isValid) {
+          FileOperationLogger.logMaterialCreationError(
+            materialData.type,
+            'Content sanitization failed',
+            { errors: sanitizationResult.errors }
+          );
           return NextResponse.json(
-            {
-              success: false,
-              error: {
-                code: 'CONTENT_SANITIZATION_ERROR',
-                message: sanitizationResult.errors.join(', '),
-                details: sanitizationResult.errors,
-              },
-            },
+            createFileErrorResponse(
+              FileErrorCode.CONTENT_SANITIZATION_ERROR,
+              sanitizationResult.errors.join(', '),
+              { details: sanitizationResult.errors }
+            ),
             { status: 400 }
           );
         }
@@ -148,7 +206,6 @@ export async function POST(request: NextRequest) {
             uploadedAt: new Date(file.uploadedAt),
           })
         );
-        // Note: File association will happen after material is saved
       } else {
         materialToSave.fileUrl = materialData.fileUrl;
       }
@@ -158,15 +215,52 @@ export async function POST(request: NextRequest) {
     const material = new TrainingMaterial(materialToSave);
     await material.save();
 
-    // Update file associations with actual material ID
+    // CRITICAL: Associate files immediately after material creation
     if (materialData.type === 'download' && materialData.uploadedFiles) {
-      for (const file of materialData.uploadedFiles) {
-        await FileManager.associateFileWithMaterial(file.id, material._id);
+      const associationResults = await Promise.all(
+        materialData.uploadedFiles.map(file =>
+          FileManager.associateFileWithMaterial(file.id, material._id)
+        )
+      );
+
+      // Verify all associations succeeded
+      const failedAssociations = associationResults.filter(result => !result);
+      if (failedAssociations.length > 0) {
+        FileOperationLogger.logRollback(
+          'Material Creation',
+          'File association failed',
+          {
+            materialId: material._id.toString(),
+            failedCount: failedAssociations.length,
+            totalCount: materialData.uploadedFiles.length,
+          }
+        );
+        
+        // Rollback: delete the material
+        await TrainingMaterial.deleteOne({ _id: material._id });
+        
+        return NextResponse.json(
+          createFileErrorResponse(
+            FileErrorCode.FILE_ASSOCIATION_FAILED,
+            'Failed to associate files with material',
+            {
+              materialId: material._id.toString(),
+              details: `${failedAssociations.length} of ${materialData.uploadedFiles.length} file associations failed`,
+            }
+          ),
+          { status: 500 }
+        );
       }
     }
 
     // Populate creator info for response
     await material.populate('createdBy', 'name contactEmail');
+
+    FileOperationLogger.logMaterialCreationSuccess(
+      material._id.toString(),
+      materialData.type,
+      materialData.uploadedFiles?.length || 0
+    );
 
     return NextResponse.json(
       {
@@ -176,9 +270,6 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error: any) {
-    console.error('Training API: Error creating training material:', error);
-    console.error('Training API: Error stack:', error.stack);
-
     // Handle auth errors
     if (error instanceof NextResponse) {
       return error;
@@ -186,29 +277,33 @@ export async function POST(request: NextRequest) {
 
     // Handle validation errors
     if (error instanceof z.ZodError) {
-      console.error('Training API: Zod validation error:', error.errors);
+      FileOperationLogger.logMaterialCreationError(
+        'unknown',
+        'Validation error',
+        { errors: error.errors }
+      );
       return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: 'Invalid request data',
-            details: error.errors,
-          },
-        },
+        createFileErrorResponse(
+          FileErrorCode.VALIDATION_ERROR,
+          'Invalid request data',
+          { details: error.errors }
+        ),
         { status: 400 }
       );
     }
 
+    FileOperationLogger.logMaterialCreationError(
+      'unknown',
+      error.message || 'Unknown error',
+      { stack: error.stack }
+    );
+
     return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: 'INTERNAL_ERROR',
-          message: 'Failed to create training material',
-          details: error.message,
-        },
-      },
+      createFileErrorResponse(
+        FileErrorCode.INTERNAL_ERROR,
+        'Failed to create training material',
+        { details: error.message }
+      ),
       { status: 500 }
     );
   }

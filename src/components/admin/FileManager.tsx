@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import FileUpload, { type UploadedFile } from './FileUpload';
 import FilePreview from './FilePreview';
-import { Folder, Search, Filter, Grid, List } from 'lucide-react';
+import { Folder, Search, Filter, Grid, List, AlertCircle, X, RefreshCw } from 'lucide-react';
 
 interface FileManagerProps {
   materialId?: string;
@@ -14,6 +14,15 @@ interface FileManagerProps {
   showSearch?: boolean;
   viewMode?: 'grid' | 'list';
   className?: string;
+}
+
+interface ErrorState {
+  message: string;
+  type: 'error' | 'warning' | 'info';
+  action?: {
+    label: string;
+    handler: () => void;
+  };
 }
 
 export default function FileManager({
@@ -31,6 +40,9 @@ export default function FileManager({
   const [filterType, setFilterType] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>(initialViewMode);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<ErrorState | null>(null);
+  const [deletingFileId, setDeletingFileId] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState<Record<string, number>>({});
 
   // Load files when materialId changes
   useEffect(() => {
@@ -50,6 +62,7 @@ export default function FileManager({
     if (!materialId) return;
 
     setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch(
         `/api/admin/training/files/upload?materialId=${materialId}`
@@ -57,9 +70,27 @@ export default function FileManager({
       if (response.ok) {
         const data = await response.json();
         setFiles(data.files || []);
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        setError({
+          message: errorData.error || 'Failed to load files',
+          type: 'error',
+          action: {
+            label: 'Retry',
+            handler: loadFiles,
+          },
+        });
       }
     } catch (error) {
       console.error('Failed to load files:', error);
+      setError({
+        message: error instanceof Error ? error.message : 'Network error while loading files',
+        type: 'error',
+        action: {
+          label: 'Retry',
+          handler: loadFiles,
+        },
+      });
     } finally {
       setIsLoading(false);
     }
@@ -89,8 +120,14 @@ export default function FileManager({
     });
   };
 
-  // Handle file removal
-  const handleFileRemoved = async (fileId: string) => {
+  // Handle file removal with retry mechanism
+  const handleFileRemoved = async (fileId: string, isRetry: boolean = false) => {
+    const currentRetries = retryCount[fileId] || 0;
+    const maxRetries = 3;
+
+    setDeletingFileId(fileId);
+    setError(null);
+
     try {
       const response = await fetch(`/api/admin/training/files/${fileId}`, {
         method: 'DELETE',
@@ -98,11 +135,77 @@ export default function FileManager({
 
       if (response.ok) {
         setFiles((prev) => prev.filter((file) => file.id !== fileId));
+        // Clear retry count on success
+        setRetryCount((prev) => {
+          const updated = { ...prev };
+          delete updated[fileId];
+          return updated;
+        });
+        setError({
+          message: 'File deleted successfully',
+          type: 'info',
+        });
+        // Auto-dismiss success message after 3 seconds
+        setTimeout(() => setError(null), 3000);
       } else {
-        console.error('Failed to delete file');
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = errorData.error || 'Failed to delete file';
+        
+        if (currentRetries < maxRetries) {
+          setError({
+            message: `${errorMessage}. Attempt ${currentRetries + 1} of ${maxRetries}`,
+            type: 'warning',
+            action: {
+              label: 'Retry',
+              handler: () => {
+                setRetryCount((prev) => ({ ...prev, [fileId]: currentRetries + 1 }));
+                handleFileRemoved(fileId, true);
+              },
+            },
+          });
+        } else {
+          setError({
+            message: `${errorMessage}. Maximum retry attempts reached.`,
+            type: 'error',
+          });
+          // Reset retry count after max attempts
+          setRetryCount((prev) => {
+            const updated = { ...prev };
+            delete updated[fileId];
+            return updated;
+          });
+        }
       }
     } catch (error) {
       console.error('Error deleting file:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Network error while deleting file';
+      
+      if (currentRetries < maxRetries) {
+        setError({
+          message: `${errorMessage}. Attempt ${currentRetries + 1} of ${maxRetries}`,
+          type: 'warning',
+          action: {
+            label: 'Retry',
+            handler: () => {
+              setRetryCount((prev) => ({ ...prev, [fileId]: currentRetries + 1 }));
+              handleFileRemoved(fileId, true);
+            },
+          },
+        });
+      } else {
+        setError({
+          message: `${errorMessage}. Maximum retry attempts reached.`,
+          type: 'error',
+        });
+        // Reset retry count after max attempts
+        setRetryCount((prev) => {
+          const updated = { ...prev };
+          delete updated[fileId];
+          return updated;
+        });
+      }
+    } finally {
+      setDeletingFileId(null);
     }
   };
 
@@ -139,6 +242,71 @@ export default function FileManager({
 
   return (
     <div className={`file-manager ${className}`}>
+      {/* Error Display */}
+      {error && (
+        <div
+          className={`mb-4 p-4 rounded-md border ${
+            error.type === 'error'
+              ? 'bg-red-50 border-red-200'
+              : error.type === 'warning'
+                ? 'bg-yellow-50 border-yellow-200'
+                : 'bg-blue-50 border-blue-200'
+          }`}
+        >
+          <div className="flex items-start">
+            <AlertCircle
+              className={`h-5 w-5 mt-0.5 mr-3 flex-shrink-0 ${
+                error.type === 'error'
+                  ? 'text-red-600'
+                  : error.type === 'warning'
+                    ? 'text-yellow-600'
+                    : 'text-blue-600'
+              }`}
+            />
+            <div className="flex-1">
+              <p
+                className={`text-sm font-medium ${
+                  error.type === 'error'
+                    ? 'text-red-800'
+                    : error.type === 'warning'
+                      ? 'text-yellow-800'
+                      : 'text-blue-800'
+                }`}
+              >
+                {error.message}
+              </p>
+              {error.action && (
+                <button
+                  onClick={error.action.handler}
+                  className={`mt-2 text-sm font-medium underline ${
+                    error.type === 'error'
+                      ? 'text-red-700 hover:text-red-800'
+                      : error.type === 'warning'
+                        ? 'text-yellow-700 hover:text-yellow-800'
+                        : 'text-blue-700 hover:text-blue-800'
+                  }`}
+                >
+                  {error.action.label}
+                </button>
+              )}
+            </div>
+            <button
+              onClick={() => setError(null)}
+              className={`ml-3 flex-shrink-0 ${
+                error.type === 'error'
+                  ? 'text-red-600 hover:text-red-800'
+                  : error.type === 'warning'
+                    ? 'text-yellow-600 hover:text-yellow-800'
+                    : 'text-blue-600 hover:text-blue-800'
+              }`}
+              title="Dismiss"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
@@ -146,6 +314,9 @@ export default function FileManager({
           <h3 className="text-lg font-medium text-gray-900">
             File Manager ({files.length}/{maxFiles})
           </h3>
+          {isLoading && (
+            <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />
+          )}
         </div>
 
         <div className="flex items-center space-x-2">
@@ -155,6 +326,7 @@ export default function FileManager({
               onClick={() => setViewMode('list')}
               className={`p-2 ${viewMode === 'list' ? 'bg-gray-100 text-gray-900' : 'text-gray-500'}`}
               title="List view"
+              disabled={isLoading}
             >
               <List className="h-4 w-4" />
             </button>
@@ -162,6 +334,7 @@ export default function FileManager({
               onClick={() => setViewMode('grid')}
               className={`p-2 ${viewMode === 'grid' ? 'bg-gray-100 text-gray-900' : 'text-gray-500'}`}
               title="Grid view"
+              disabled={isLoading}
             >
               <Grid className="h-4 w-4" />
             </button>
@@ -211,6 +384,7 @@ export default function FileManager({
             onFileRemoved={handleFileRemoved}
             existingFiles={files}
             maxFiles={maxFiles}
+            disabled={isLoading || deletingFileId !== null}
           />
         </div>
       )}
@@ -232,13 +406,22 @@ export default function FileManager({
         `}
         >
           {filteredFiles.map((file) => (
-            <FilePreview
-              key={file.id}
-              file={file}
-              onRemove={allowUpload ? handleFileRemoved : undefined}
-              compact={viewMode === 'list'}
-              className={viewMode === 'grid' ? 'h-full' : ''}
-            />
+            <div key={file.id} className="relative">
+              {deletingFileId === file.id && (
+                <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-md">
+                  <div className="flex flex-col items-center">
+                    <RefreshCw className="h-6 w-6 text-blue-500 animate-spin" />
+                    <p className="mt-2 text-xs text-gray-600">Deleting...</p>
+                  </div>
+                </div>
+              )}
+              <FilePreview
+                file={file}
+                onRemove={allowUpload && deletingFileId !== file.id ? handleFileRemoved : undefined}
+                compact={viewMode === 'list'}
+                className={viewMode === 'grid' ? 'h-full' : ''}
+              />
+            </div>
           ))}
         </div>
       ) : files.length === 0 ? (

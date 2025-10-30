@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth-middleware';
 import { connectDB } from '@/lib/mongodb';
 import TrainingMaterial from '@/models/TrainingMaterial';
+import { FileStorage } from '@/models';
 import { FileManager } from '@/lib/file-manager';
 import {
   ContentSanitizer,
@@ -16,6 +17,7 @@ const uploadedFileSchema = z.object({
   id: z.string(),
   originalName: z.string(),
   fileName: z.string(),
+  filePath: z.string(),
   mimeType: z.string(),
   size: z.number(),
   uploadedAt: z.date().or(z.string()),
@@ -133,26 +135,75 @@ export async function PUT(
       }
     } else if (materialType === 'download') {
       if (updateData.uploadedFiles !== undefined) {
-        // Update file associations
-        const oldFileIds = material.uploadedFiles?.map((f: any) => f.id) || [];
-        const newFileIds = updateData.uploadedFiles.map((f: any) => f.id);
-
-        // Remove old associations
-        for (const oldId of oldFileIds) {
-          if (!newFileIds.includes(oldId)) {
-            // File was removed, mark as orphaned
-            await FileManager.associateFileWithMaterial(
-              oldId,
-              new mongoose.Types.ObjectId()
+        // CRITICAL: Verify all uploaded files exist before updating
+        for (const file of updateData.uploadedFiles) {
+          const fileExists = await FileManager.verifyFileExists(file.filePath);
+          if (!fileExists) {
+            console.error(`File not found during update: ${file.filePath} (${file.id})`);
+            return NextResponse.json(
+              {
+                success: false,
+                error: {
+                  code: 'FILE_NOT_FOUND',
+                  message: `Uploaded file not found: ${file.originalName}`,
+                  fileId: file.id,
+                  filePath: file.filePath,
+                },
+              },
+              { status: 400 }
             );
           }
         }
 
-        // Add new associations
-        for (const file of updateData.uploadedFiles) {
-          await FileManager.associateFileWithMaterial(file.id, material._id);
+        // Get existing file IDs to maintain associations
+        const oldFileIds = material.uploadedFiles?.map((f: any) => f.id) || [];
+        const newFileIds = updateData.uploadedFiles.map((f: any) => f.id);
+
+        // Remove old associations for files that are no longer in the list
+        for (const oldId of oldFileIds) {
+          if (!newFileIds.includes(oldId)) {
+            // File was removed, mark as orphaned
+            console.log(`Marking file ${oldId} as orphaned (removed from material)`);
+            await FileStorage.updateOne(
+              { id: oldId },
+              {
+                associatedMaterial: null,
+                isOrphaned: true,
+              }
+            );
+          }
         }
 
+        // Add new file associations for newly uploaded files
+        for (const file of updateData.uploadedFiles) {
+          if (!oldFileIds.includes(file.id)) {
+            // This is a new file, associate it with the material
+            console.log(`Associating new file ${file.id} with material ${material._id}`);
+            const associationResult = await FileManager.associateFileWithMaterial(
+              file.id,
+              material._id
+            );
+            if (!associationResult) {
+              console.error(`Failed to associate file ${file.id} with material ${material._id}`);
+              return NextResponse.json(
+                {
+                  success: false,
+                  error: {
+                    code: 'FILE_ASSOCIATION_FAILED',
+                    message: `Failed to associate file: ${file.originalName}`,
+                    fileId: file.id,
+                  },
+                },
+                { status: 500 }
+              );
+            }
+          } else {
+            // File already exists, maintain the association
+            console.log(`Maintaining existing association for file ${file.id}`);
+          }
+        }
+
+        // Update the material's uploadedFiles array
         material.uploadedFiles = updateData.uploadedFiles.map((file) => ({
           ...file,
           uploadedAt: new Date(file.uploadedAt),
@@ -242,8 +293,8 @@ export async function DELETE(
     // Connect to database
     await connectDB();
 
-    // Find and delete the training material
-    const material = await TrainingMaterial.findByIdAndDelete(params.id);
+    // Find the training material first to get associated files
+    const material = await TrainingMaterial.findById(params.id);
     if (!material) {
       return NextResponse.json(
         {
@@ -257,11 +308,42 @@ export async function DELETE(
       );
     }
 
+    // CRITICAL: Mark associated files as orphaned before deleting material
+    if (material.uploadedFiles && material.uploadedFiles.length > 0) {
+      console.log(`Marking ${material.uploadedFiles.length} files as orphaned for material ${params.id}`);
+      
+      for (const file of material.uploadedFiles) {
+        try {
+          const result = await FileStorage.updateOne(
+            { id: file.id },
+            {
+              associatedMaterial: null,
+              isOrphaned: true,
+            }
+          );
+          
+          if (result.modifiedCount > 0) {
+            console.log(`File ${file.id} (${file.originalName}) marked as orphaned`);
+          } else {
+            console.warn(`File ${file.id} not found in database or already orphaned`);
+          }
+        } catch (error) {
+          console.error(`Error marking file ${file.id} as orphaned:`, error);
+          // Continue with other files even if one fails
+        }
+      }
+    }
+
+    // Delete the training material
+    await TrainingMaterial.deleteOne({ _id: params.id });
+    console.log(`Training material ${params.id} deleted successfully`);
+
     return NextResponse.json({
       success: true,
       data: {
         materialId: params.id,
         message: 'Training material deleted successfully',
+        orphanedFiles: material.uploadedFiles?.length || 0,
       },
     });
   } catch (error: any) {
