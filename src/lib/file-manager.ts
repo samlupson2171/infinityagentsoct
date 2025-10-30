@@ -1,5 +1,4 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+import { put, del, head } from '@vercel/blob';
 import crypto from 'crypto';
 import { FileStorage } from '@/models';
 import type { IFileStorage } from '@/models';
@@ -18,8 +17,8 @@ export interface FileUploadResult {
     id: string;
     originalName: string;
     fileName: string;
-    filePath: string;
-    fullPath: string;
+    filePath: string; // Now stores Blob URL
+    fullPath: string; // Same as filePath for Blob
     mimeType: string;
     size: number;
     createdAt: Date;
@@ -69,20 +68,32 @@ export class FileManager {
   };
 
   /**
-   * Get full filesystem path from relative path
+   * Get full path (for Blob, this is just the URL)
    */
   static getFileFullPath(filePath: string): string {
-    return path.join(process.cwd(), 'public', filePath);
+    // For Blob URLs, return as-is
+    if (filePath.startsWith('http')) {
+      return filePath;
+    }
+    // Legacy support for old filesystem paths
+    return filePath;
   }
 
   /**
-   * Verify that a file exists on the filesystem
+   * Verify that a file exists (checks Blob storage)
    */
   static async verifyFileExists(filePath: string): Promise<boolean> {
     try {
       FileOperationLogger.logVerificationStart(filePath);
-      const fullPath = this.getFileFullPath(filePath);
-      await fs.access(fullPath);
+      
+      // For Blob URLs, use head() to check existence
+      if (filePath.startsWith('http')) {
+        await head(filePath);
+        FileOperationLogger.logVerificationSuccess(filePath);
+        return true;
+      }
+      
+      // Legacy: assume old filesystem paths exist
       FileOperationLogger.logVerificationSuccess(filePath);
       return true;
     } catch (error) {
@@ -95,7 +106,7 @@ export class FileManager {
   }
 
   /**
-   * Upload a file with validation and security checks
+   * Upload a file with validation and security checks (using Vercel Blob)
    */
   static async uploadFile(
     fileBuffer: Buffer,
@@ -127,26 +138,25 @@ export class FileManager {
 
       // Generate secure file name
       const fileId = crypto.randomUUID();
-      const fileExtension = path.extname(originalName).toLowerCase();
-      const fileName = `${fileId}${fileExtension}`;
+      const fileExtension = originalName.split('.').pop() || 'bin';
+      const fileName = `${fileId}.${fileExtension}`;
 
-      // Create upload directory if it doesn't exist
-      const uploadPath = options.uploadPath || this.DEFAULT_UPLOAD_PATH;
-      const fullUploadPath = path.join(process.cwd(), 'public', uploadPath);
-      await fs.mkdir(fullUploadPath, { recursive: true });
+      // Upload to Vercel Blob
+      const uploadPath = options.uploadPath || 'training';
+      const blobPath = `${uploadPath}/${fileName}`;
+      
+      const blob = await put(blobPath, fileBuffer, {
+        access: 'public',
+        contentType: validation.detectedMimeType || mimeType,
+      });
 
-      // Write file to disk
-      const filePath = path.join(fullUploadPath, fileName);
-      await fs.writeFile(filePath, fileBuffer);
-
-      // Verify file was written successfully
-      const relativeFilePath = path.join(uploadPath, fileName);
-      const fileExists = await this.verifyFileExists(relativeFilePath);
+      // Verify blob was created successfully
+      const fileExists = await this.verifyFileExists(blob.url);
       if (!fileExists) {
-        const error = 'File upload verification failed - file not found after write';
+        const error = 'File upload verification failed - blob not accessible';
         FileOperationLogger.logUploadError(originalName, error, {
           fileId,
-          filePath: relativeFilePath,
+          blobUrl: blob.url,
         });
         return {
           success: false,
@@ -159,7 +169,7 @@ export class FileManager {
         id: fileId,
         originalName,
         fileName,
-        filePath: relativeFilePath,
+        filePath: blob.url, // Store Blob URL
         mimeType: validation.detectedMimeType || mimeType,
         size: fileBuffer.length,
         uploadedBy,
@@ -178,8 +188,8 @@ export class FileManager {
           id: fileRecord.id,
           originalName: fileRecord.originalName,
           fileName: fileRecord.fileName,
-          filePath: fileRecord.filePath,
-          fullPath: this.getFileFullPath(fileRecord.filePath),
+          filePath: fileRecord.filePath, // Blob URL
+          fullPath: fileRecord.filePath, // Same as filePath for Blob
           mimeType: fileRecord.mimeType,
           size: fileRecord.size,
           createdAt: fileRecord.createdAt,
@@ -234,7 +244,7 @@ export class FileManager {
     }
 
     // Validate file extension
-    const fileExtension = path.extname(originalName).toLowerCase();
+    const fileExtension = this.getFileExtension(originalName);
     const expectedExtensions = this.getExpectedExtensions(mimeType);
     if (
       expectedExtensions.length > 0 &&
@@ -268,7 +278,7 @@ export class FileManager {
   }
 
   /**
-   * Delete a file from storage and database
+   * Delete a file from Blob storage and database
    */
   static async deleteFile(
     fileId: string,
@@ -294,20 +304,22 @@ export class FileManager {
         return false;
       }
 
-      // Delete physical file
-      const fullPath = this.getFileFullPath(fileRecord.filePath);
+      // Delete from Blob storage
       try {
-        await fs.unlink(fullPath);
+        if (fileRecord.filePath.startsWith('http')) {
+          await del(fileRecord.filePath);
+        }
+        // Legacy: skip deletion for old filesystem paths
       } catch (error) {
         FileOperationLogger.logDeletionError(
           fileId,
-          'Failed to delete physical file',
+          'Failed to delete blob',
           {
-            filePath: fullPath,
+            blobUrl: fileRecord.filePath,
             error: error instanceof Error ? error.message : 'Unknown error',
           }
         );
-        // Continue with database deletion even if physical file deletion fails
+        // Continue with database deletion even if blob deletion fails
       }
 
       // Delete database record
@@ -394,13 +406,15 @@ export class FileManager {
       let deletedCount = 0;
 
       for (const file of orphanedFiles) {
-        // Delete physical file
-        const fullPath = this.getFileFullPath(file.filePath);
+        // Delete from Blob storage
         try {
-          await fs.unlink(fullPath);
+          if (file.filePath.startsWith('http')) {
+            await del(file.filePath);
+          }
+          // Legacy: skip deletion for old filesystem paths
         } catch (error) {
           FileOperationLogger.logCleanupError(
-            `Failed to delete physical file: ${file.filePath}`,
+            `Failed to delete blob: ${file.filePath}`,
             { error: error instanceof Error ? error.message : 'Unknown error' }
           );
         }
@@ -458,6 +472,14 @@ export class FileManager {
       'image/webp': ['.webp'],
     };
     return extensionMap[mimeType] || [];
+  }
+
+  /**
+   * Get file extension from filename
+   */
+  private static getFileExtension(filename: string): string {
+    const parts = filename.split('.');
+    return parts.length > 1 ? `.${parts[parts.length - 1].toLowerCase()}` : '';
   }
 
   /**

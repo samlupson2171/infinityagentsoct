@@ -119,20 +119,16 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // Use FileManager helper to get consistent full path
-    const fullPath = FileManager.getFileFullPath(file.filePath);
-
-    // Verify file exists before attempting to read
+    // Verify file exists before attempting to download
     const fileExists = await FileManager.verifyFileExists(file.filePath);
     if (!fileExists) {
-      errorMessage = 'File not found on filesystem';
+      errorMessage = 'File not found';
       FileOperationLogger.logDownloadError(params.id, errorMessage, {
         filePath: file.filePath,
-        fullPath,
       });
       return NextResponse.json(
         createFileErrorResponse(
-          FileErrorCode.FILE_NOT_FOUND_ON_FILESYSTEM,
+          FileErrorCode.FILE_NOT_FOUND,
           errorMessage,
           {
             fileId: params.id,
@@ -144,7 +140,23 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     try {
-      const fileBuffer = await fs.readFile(fullPath);
+      // For Blob URLs, fetch the file
+      let fileBuffer: Buffer;
+      
+      if (file.filePath.startsWith('http')) {
+        // Fetch from Blob storage
+        const response = await fetch(file.filePath);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch blob: ${response.statusText}`);
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        fileBuffer = Buffer.from(arrayBuffer);
+      } else {
+        // Legacy: read from filesystem (for old files)
+        const { promises: fs } = await import('fs');
+        const fullPath = FileManager.getFileFullPath(file.filePath);
+        fileBuffer = await fs.readFile(fullPath);
+      }
 
       // Mark download as successful
       downloadSuccess = true;
@@ -152,7 +164,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       // Set appropriate headers
       const headers = new Headers();
       headers.set('Content-Type', file.mimeType);
-      headers.set('Content-Length', file.size.toString());
+      headers.set('Content-Length', fileBuffer.length.toString());
       headers.set(
         'Content-Disposition',
         `attachment; filename="${encodeURIComponent(file.originalName)}"`
@@ -188,10 +200,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         headers,
       });
     } catch (fileError) {
-      errorMessage = 'Failed to read file from filesystem';
+      errorMessage = 'Failed to download file';
       FileOperationLogger.logDownloadError(params.id, errorMessage, {
         filePath: file.filePath,
-        fullPath,
         error: fileError instanceof Error ? fileError.message : 'Unknown error',
       });
       return NextResponse.json(
