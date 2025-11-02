@@ -20,6 +20,32 @@ import { calculationRateLimiter } from '@/lib/middleware/rate-limiter';
 import { calculatePriceSchema } from '@/lib/validation/super-package-validation';
 import { z } from 'zod';
 
+/**
+ * POST /api/admin/super-packages/calculate-price
+ * 
+ * Calculate the price for a super package based on parameters.
+ * 
+ * Request Body:
+ * - packageId: string - ID of the package
+ * - numberOfPeople: number - Number of people in the booking
+ * - numberOfNights: number - Number of nights
+ * - arrivalDate: string - Arrival date in ISO format
+ * 
+ * Response:
+ * - calculation.pricePerPerson: number | 'ON_REQUEST' - Per-person price from database (base rate)
+ * - calculation.totalPrice: number | 'ON_REQUEST' - Total price for entire group (pricePerPerson × numberOfPeople)
+ * - calculation.price: number | 'ON_REQUEST' - @deprecated Use totalPrice instead. Kept for backward compatibility.
+ * - calculation.numberOfPeople: number - Number of people used in calculation
+ * - calculation.tier: object - Pricing tier information
+ * - calculation.period: object - Pricing period information
+ * - calculation.nights: number - Number of nights
+ * - calculation.currency: string - Currency code
+ * - calculation.packageName: string - Package name
+ * - calculation.packageId: string - Package ID
+ * - calculation.packageVersion: number - Package version
+ * 
+ * @returns {Promise<NextResponse>} Price calculation result with new structure
+ */
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
   
@@ -106,15 +132,20 @@ export async function POST(request: NextRequest) {
 
     logger.success('CALCULATE_PRICE', 'Price calculated successfully', {
       packageId,
+      pricePerPerson: result.pricePerPerson,
       totalPrice: result.totalPrice,
-      isOnRequest: result.isOnRequest,
-      numberOfPeople,
+      numberOfPeople: result.numberOfPeople,
       numberOfNights,
     });
 
     const duration = Date.now() - startTime;
     logApiResponse('POST', '/api/admin/super-packages/calculate-price', 200, duration);
 
+    // Return calculation result with new price structure:
+    // - pricePerPerson: per-person price from database (base rate)
+    // - totalPrice: total price for entire group (pricePerPerson × numberOfPeople)
+    // - price: deprecated, equals totalPrice (for backward compatibility)
+    // - numberOfPeople: number of people used in calculation
     return successResponse({
       calculation: result,
       message: 'Price calculated successfully',

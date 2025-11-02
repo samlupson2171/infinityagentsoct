@@ -16,6 +16,8 @@ interface Quote {
     resort?: string;
     departureDate: string;
   };
+  title?: string;
+  destination?: string;
   leadName: string;
   hotelName: string;
   numberOfPeople: number;
@@ -805,11 +807,21 @@ export default function QuoteManager({
                         <div>
                           <div className="text-sm font-medium text-gray-900">
                             {quote.quoteReference}
+                            {quote.title && (
+                              <span className="ml-2 text-gray-600">
+                                • {quote.title}
+                              </span>
+                            )}
                           </div>
                           <div className="text-sm text-gray-500">
                             {quote.leadName} • {quote.hotelName}
                           </div>
                           <div className="text-xs text-gray-400">
+                            {quote.destination && (
+                              <span className="mr-2">
+                                📍 {quote.destination} •
+                              </span>
+                            )}
                             {quote.numberOfPeople} people •{' '}
                             {quote.numberOfNights} nights
                           </div>
@@ -1324,6 +1336,22 @@ export default function QuoteManager({
                     Lead Information
                   </h5>
                   <dl className="space-y-2 text-sm">
+                    {selectedQuote.title && (
+                      <div>
+                        <dt className="font-medium text-gray-700">Quote Title:</dt>
+                        <dd className="text-gray-900">
+                          {selectedQuote.title}
+                        </dd>
+                      </div>
+                    )}
+                    {selectedQuote.destination && (
+                      <div>
+                        <dt className="font-medium text-gray-700">Destination:</dt>
+                        <dd className="text-gray-900">
+                          📍 {selectedQuote.destination}
+                        </dd>
+                      </div>
+                    )}
                     <div>
                       <dt className="font-medium text-gray-700">Lead Name:</dt>
                       <dd className="text-gray-900">

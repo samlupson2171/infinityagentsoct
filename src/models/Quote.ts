@@ -5,6 +5,8 @@ export interface IQuote extends Document {
   enquiryId: mongoose.Types.ObjectId;
 
   // Quote details
+  title?: string;
+  destination?: string;
   leadName: string;
   hotelName: string;
   numberOfPeople: number;
@@ -83,6 +85,19 @@ const QuoteSchema = new Schema<IQuote>(
       ref: 'Enquiry',
       required: true,
       index: true,
+    },
+
+    // Quote Information
+    title: {
+      type: String,
+      trim: true,
+      maxlength: 200,
+    },
+
+    destination: {
+      type: String,
+      trim: true,
+      maxlength: 100,
     },
 
     // Lead Information

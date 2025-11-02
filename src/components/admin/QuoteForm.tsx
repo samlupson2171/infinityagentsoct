@@ -54,6 +54,8 @@ export default function QuoteForm({
     resolver: zodResolver(quoteFormValidationSchema),
     defaultValues: {
       enquiryId: enquiryId || initialData?.enquiryId || '',
+      title: initialData?.title || '',
+      destination: initialData?.destination || '',
       leadName: initialData?.leadName || '',
       hotelName: initialData?.hotelName || '',
       numberOfPeople: initialData?.numberOfPeople || 1,
@@ -108,12 +110,15 @@ export default function QuoteForm({
         tierLabel: linkedPkg.selectedTier?.tierLabel || '',
         periodUsed: linkedPkg.selectedPeriod || '',
         tierIndex: linkedPkg.selectedTier?.tierIndex || 0,
-        originalPrice: linkedPkg.calculatedPrice || linkedPkg.originalPrice || 0,
+        originalPrice: linkedPkg.calculatedPrice || linkedPkg.originalPrice || 0, // This is the total price
+        pricePerPerson: linkedPkg.pricePerPerson, // Load per-person price if available
       });
     }
   }, [initialData]);
 
   // Watch specific fields instead of entire formData object
+  const title = watch('title');
+  const destination = watch('destination');
   const numberOfPeople = watch('numberOfPeople');
   const numberOfRooms = watch('numberOfRooms');
   const numberOfNights = watch('numberOfNights');
@@ -261,7 +266,8 @@ export default function QuoteForm({
             },
             selectedNights: data.numberOfNights,
             selectedPeriod: linkedPackageInfo.periodUsed,
-            calculatedPrice: typeof linkedPackageInfo.originalPrice === 'number' ? linkedPackageInfo.originalPrice : data.totalPrice,
+            calculatedPrice: typeof linkedPackageInfo.originalPrice === 'number' ? linkedPackageInfo.originalPrice : data.totalPrice, // Total price
+            pricePerPerson: linkedPackageInfo.pricePerPerson, // Include per-person price
             priceWasOnRequest: linkedPackageInfo.originalPrice === 'ON_REQUEST',
           },
         }),
@@ -308,9 +314,10 @@ export default function QuoteForm({
           setValue('whatsIncluded', inclusionsText);
         }
         
-        // Set price if calculated (not ON_REQUEST)
-        if (selection.priceCalculation.price !== 'ON_REQUEST') {
-          setValue('totalPrice', selection.priceCalculation.price);
+        // IMPORTANT: Use totalPrice from calculation (not price field)
+        // The totalPrice is already calculated as pricePerPerson × numberOfPeople
+        if (selection.priceCalculation.totalPrice !== 'ON_REQUEST') {
+          setValue('totalPrice', selection.priceCalculation.totalPrice);
         }
         
         // Add accommodation examples to internal notes
@@ -320,6 +327,7 @@ export default function QuoteForm({
         }
 
         // Store linked package info for price synchronization
+        // Store both pricePerPerson and originalPrice (total) for proper tracking
         setLinkedPackageInfo({
           packageId: selection.packageId,
           packageName: selection.packageName,
@@ -327,7 +335,8 @@ export default function QuoteForm({
           tierIndex: selection.priceCalculation.tierIndex,
           tierLabel: selection.priceCalculation.tierUsed,
           periodUsed: selection.priceCalculation.periodUsed,
-          originalPrice: selection.priceCalculation.price,
+          originalPrice: selection.priceCalculation.totalPrice, // Store total price
+          pricePerPerson: selection.priceCalculation.pricePerPerson, // Store per-person price
         });
       } catch (error) {
         setSubmitError(
@@ -363,8 +372,10 @@ export default function QuoteForm({
     const newPrice = parseFloat(e.target.value) || 0;
     setValue('totalPrice', newPrice);
     
-    // If there's a linked package and price differs from calculated, mark as custom
+    // If there's a linked package and price differs from calculated total, mark as custom
+    // The calculatedPrice from useQuotePrice hook should already be the total price
     if (linkedPackageInfo && calculatedPrice && calculatedPrice !== 'ON_REQUEST') {
+      // Compare with a small tolerance for floating point precision
       if (Math.abs(newPrice - calculatedPrice) > 0.01) {
         markAsCustomPrice();
       }
@@ -479,6 +490,64 @@ export default function QuoteForm({
               <h3 className="text-lg font-medium text-gray-900 mb-4">
                 Lead Information
               </h3>
+              
+              {/* Quote Title - Full Width */}
+              <div className="mb-4">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Quote Title (Optional)
+                </label>
+                <input
+                  type="text"
+                  id="title"
+                  {...register('title')}
+                  maxLength={200}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.title ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="Enter a descriptive title for this quote..."
+                />
+                {errors.title && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.title.message}
+                  </p>
+                )}
+                <p className="text-sm text-gray-500 mt-1">
+                  {title?.length || 0}/200 characters
+                </p>
+              </div>
+
+              {/* Destination - Full Width */}
+              <div className="mb-4">
+                <label
+                  htmlFor="destination"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Destination (Optional)
+                </label>
+                <input
+                  type="text"
+                  id="destination"
+                  {...register('destination')}
+                  maxLength={100}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.destination ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="e.g., Benidorm, Albufeira, Marbella..."
+                />
+                {errors.destination && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.destination.message}
+                  </p>
+                )}
+                <p className="text-sm text-gray-500 mt-1">
+                  {destination?.length || 0}/100 characters
+                </p>
+              </div>
+
+              {/* Lead Name and Hotel Name - Two Columns */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label
@@ -908,7 +977,7 @@ export default function QuoteForm({
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <div className="flex items-center justify-between mb-1">
+                  <div className="flex flex-col gap-2 mb-1">
                     <label
                       htmlFor="totalPrice"
                       className="block text-sm font-medium text-gray-700"
@@ -916,13 +985,39 @@ export default function QuoteForm({
                       Total Price *
                     </label>
                     {linkedPackageInfo && (
-                      <PriceSyncIndicator
-                        status={syncStatus}
-                        priceBreakdown={priceBreakdown || undefined}
-                        error={priceError || undefined}
-                        onRecalculate={recalculatePrice}
-                        onResetToCalculated={resetToCalculated}
-                      />
+                      <div className="flex items-center gap-2">
+                        <PriceSyncIndicator
+                          status={syncStatus}
+                          priceBreakdown={priceBreakdown || undefined}
+                          error={priceError || undefined}
+                          onRecalculate={async () => {
+                            try {
+                              console.log('Recalculating price...', { linkedPackageInfo, numberOfPeople, numberOfNights, arrivalDate });
+                              await recalculatePrice();
+                              console.log('Price recalculated successfully');
+                            } catch (error) {
+                              console.error('Failed to recalculate price:', error);
+                              setSubmitError(error instanceof Error ? error.message : 'Failed to recalculate price');
+                            }
+                          }}
+                          onResetToCalculated={() => {
+                            try {
+                              console.log('Resetting to calculated price...', { calculatedPrice, priceBreakdown });
+                              resetToCalculated();
+                              console.log('Price reset successfully');
+                            } catch (error) {
+                              console.error('Failed to reset price:', error);
+                              setSubmitError(error instanceof Error ? error.message : 'Failed to reset price');
+                            }
+                          }}
+                        />
+                        {/* Debug info - remove in production */}
+                        {process.env.NODE_ENV === 'development' && (
+                          <span className="text-xs text-gray-500">
+                            Status: {syncStatus} | Calc: {calculatedPrice?.toString() || 'null'} | Current: {totalPrice}
+                          </span>
+                        )}
+                      </div>
                     )}
                   </div>
                   <input

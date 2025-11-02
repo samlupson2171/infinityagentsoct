@@ -8,6 +8,8 @@ import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
 const createQuoteFromEnquirySchema = z.object({
+  title: z.string().max(200).optional(),
+  destination: z.string().max(100).optional(),
   leadName: z.string().min(1, 'Lead name is required').max(100).optional(),
   hotelName: z.string().min(1, 'Hotel name is required').max(200),
   numberOfPeople: z
@@ -41,6 +43,20 @@ const createQuoteFromEnquirySchema = z.object({
     .max(1000000),
   currency: z.enum(['GBP', 'EUR', 'USD']).default('GBP'),
   internalNotes: z.string().max(1000).optional(),
+  linkedPackage: z.object({
+    packageId: z.string(),
+    packageName: z.string(),
+    packageVersion: z.number(),
+    selectedTier: z.object({
+      tierIndex: z.number(),
+      tierLabel: z.string(),
+    }),
+    selectedNights: z.number(),
+    selectedPeriod: z.string(),
+    calculatedPrice: z.number(),
+    pricePerPerson: z.number(),
+    priceWasOnRequest: z.boolean().optional(),
+  }).optional(),
 });
 
 export async function GET(
@@ -164,7 +180,7 @@ export async function POST(
     }
 
     // Pre-populate quote data from enquiry where not provided
-    const quotePayload = {
+    const quotePayload: any = {
       enquiryId: params.id,
       leadName: quoteData.leadName || enquiry.leadName,
       hotelName: quoteData.hotelName,
@@ -184,6 +200,11 @@ export async function POST(
       createdBy: user.sub || user.id,
       status: 'draft' as const,
     };
+
+    // Include linkedPackage data if provided
+    if (quoteData.linkedPackage) {
+      quotePayload.linkedPackage = quoteData.linkedPackage;
+    }
 
     // Create the quote
     const quote = new Quote(quotePayload);

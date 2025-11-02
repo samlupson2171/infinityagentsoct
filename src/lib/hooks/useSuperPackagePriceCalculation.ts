@@ -4,7 +4,8 @@
  */
 
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { parseApiError, withTimeout } from '@/lib/errors/quote-price-error-handler';
+import { withTimeout } from '@/lib/errors/quote-price-error-handler';
+import { parseApiError } from '@/lib/errors/quote-price-errors';
 import { startTiming } from '@/lib/performance/quote-price-performance';
 
 export interface PriceCalculationParams {
@@ -56,31 +57,49 @@ async function calculatePrice(params: PriceCalculationParams): Promise<PriceCalc
         },
       };
       
-      endTiming({ 
-        success: false, 
-        status: response.status,
-        packageId: params.packageId,
-      });
+      endTiming();
       
       throw parseApiError(error);
     }
 
-    const result = await response.json();
+    const responseData = await response.json();
     
-    endTiming({ 
-      success: true, 
-      packageId: params.packageId,
-      price: result.price,
-      wasOnRequest: result.price === 'ON_REQUEST',
-    });
+    // Log the response for debugging
+    console.log('[useSuperPackagePriceCalculation] API Response:', responseData);
+    
+    // The API wraps the response in { success: true, data: { calculation: {...}, message: "..." } }
+    // So we need to access responseData.data.calculation
+    const result = responseData.data?.calculation || responseData.calculation;
+    
+    // Validate that we have the calculation data
+    if (!result) {
+      console.error('[useSuperPackagePriceCalculation] Missing calculation in response:', responseData);
+      console.error('[useSuperPackagePriceCalculation] Response structure:', {
+        hasData: 'data' in responseData,
+        hasCalculation: 'calculation' in responseData,
+        dataKeys: responseData.data ? Object.keys(responseData.data) : [],
+        topKeys: Object.keys(responseData),
+      });
+      throw new Error('Invalid API response: missing calculation data');
+    }
+    
+    console.log('[useSuperPackagePriceCalculation] Extracted calculation:', result);
+    
+    endTiming();
 
-    return result;
+    // Return the calculation with proper structure
+    return {
+      price: result.totalPrice || result.price, // Use totalPrice, fallback to price for backward compatibility
+      tierUsed: result.tier?.label || '',
+      periodUsed: result.period?.period || '', // Extract period string from period object
+      breakdown: {
+        pricePerPerson: result.pricePerPerson || 0,
+        numberOfPeople: result.numberOfPeople || 0,
+        totalPrice: result.totalPrice || result.price || 0,
+      },
+    };
   } catch (error) {
-    endTiming({ 
-      success: false, 
-      packageId: params.packageId,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    });
+    endTiming();
     
     // Parse and throw structured error
     throw parseApiError(error);

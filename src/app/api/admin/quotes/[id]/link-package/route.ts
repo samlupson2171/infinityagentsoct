@@ -8,6 +8,26 @@ import { PricingCalculator } from '@/lib/pricing-calculator';
 import { QuoteLinker } from '@/lib/quote-linker';
 import mongoose from 'mongoose';
 
+/**
+ * POST /api/admin/quotes/[id]/link-package
+ * 
+ * Links a super package to a quote and calculates the price.
+ * 
+ * Request Body:
+ * - packageId: string - ID of the package to link
+ * - numberOfPeople: number - Number of people
+ * - numberOfNights: number - Number of nights
+ * - arrivalDate: string - Arrival date in ISO format
+ * 
+ * Response:
+ * - calculation.pricePerPerson: number | 'ON_REQUEST' - Per-person price from database
+ * - calculation.totalPrice: number | 'ON_REQUEST' - Total price (pricePerPerson × numberOfPeople)
+ * - calculation.price: number | 'ON_REQUEST' - @deprecated Use totalPrice
+ * - calculation.numberOfPeople: number - Number of people used in calculation
+ * - quote: object - Updated quote with linked package
+ * 
+ * @returns {Promise<NextResponse>} Updated quote and price calculation
+ */
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }

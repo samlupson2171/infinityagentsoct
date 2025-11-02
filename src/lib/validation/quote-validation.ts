@@ -15,6 +15,8 @@ export const QUOTE_BUSINESS_RULES = {
   MAX_WHATS_INCLUDED_LENGTH: 2000,
   MAX_ACTIVITIES_LENGTH: 1000,
   MAX_INTERNAL_NOTES_LENGTH: 1000,
+  MAX_TITLE_LENGTH: 200,
+  MAX_DESTINATION_LENGTH: 100,
   SUPPORTED_CURRENCIES: ['GBP', 'EUR', 'USD'] as const,
   QUOTE_STATUSES: ['draft', 'sent', 'updated'] as const,
   EMAIL_DELIVERY_STATUSES: ['pending', 'delivered', 'failed'] as const,
@@ -109,6 +111,30 @@ export const quoteFormValidationSchema = z
       .string()
       .min(1, 'Enquiry ID is required')
       .regex(/^[0-9a-fA-F]{24}$/, 'Invalid enquiry ID format'),
+
+    title: z
+      .string()
+      .max(
+        QUOTE_BUSINESS_RULES.MAX_TITLE_LENGTH,
+        `Title must be ${QUOTE_BUSINESS_RULES.MAX_TITLE_LENGTH} characters or less`
+      )
+      .refine(
+        (text) => !text || !quoteValidationHelpers.containsHarmfulContent(text),
+        'Title contains invalid content'
+      )
+      .optional(),
+
+    destination: z
+      .string()
+      .max(
+        QUOTE_BUSINESS_RULES.MAX_DESTINATION_LENGTH,
+        `Destination must be ${QUOTE_BUSINESS_RULES.MAX_DESTINATION_LENGTH} characters or less`
+      )
+      .refine(
+        (text) => !text || !quoteValidationHelpers.containsHarmfulContent(text),
+        'Destination contains invalid content'
+      )
+      .optional(),
 
     leadName: z
       .string()
@@ -356,6 +382,30 @@ export const quoteUpdateValidationSchema = z.object({
     .string()
     .min(1, 'Enquiry ID is required')
     .regex(/^[0-9a-fA-F]{24}$/, 'Invalid enquiry ID format')
+    .optional(),
+
+  title: z
+    .string()
+    .max(
+      QUOTE_BUSINESS_RULES.MAX_TITLE_LENGTH,
+      `Title must be ${QUOTE_BUSINESS_RULES.MAX_TITLE_LENGTH} characters or less`
+    )
+    .refine(
+      (text) => !text || !quoteValidationHelpers.containsHarmfulContent(text),
+      'Title contains invalid content'
+    )
+    .optional(),
+
+  destination: z
+    .string()
+    .max(
+      QUOTE_BUSINESS_RULES.MAX_DESTINATION_LENGTH,
+      `Destination must be ${QUOTE_BUSINESS_RULES.MAX_DESTINATION_LENGTH} characters or less`
+    )
+    .refine(
+      (text) => !text || !quoteValidationHelpers.containsHarmfulContent(text),
+      'Destination contains invalid content'
+    )
     .optional(),
 
   leadName: z

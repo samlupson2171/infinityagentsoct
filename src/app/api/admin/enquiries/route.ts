@@ -77,9 +77,10 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    // Get enquiries with pagination and populate events
+    // Get enquiries with pagination and populate events and submittedBy user
     const enquiries = await Enquiry.find(query)
       .populate('eventsRequested', 'name')
+      .populate('submittedBy', 'name companyName contactEmail')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

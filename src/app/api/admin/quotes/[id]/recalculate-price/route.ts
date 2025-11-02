@@ -124,7 +124,7 @@ export async function POST(
       }
 
       // Check if price is ON_REQUEST
-      if (result.price === 'ON_REQUEST') {
+      if (result.totalPrice === 'ON_REQUEST') {
         return NextResponse.json(
           {
             success: false,
@@ -141,9 +141,9 @@ export async function POST(
         );
       }
 
-      // Build comparison data
+      // Build comparison data using new price structure
       const oldPrice = quote.totalPrice;
-      const newPrice = result.price;
+      const newPrice = result.totalPrice; // Use totalPrice from new structure
       const priceDifference = newPrice - oldPrice;
       const percentageChange =
         oldPrice > 0 ? ((priceDifference / oldPrice) * 100).toFixed(2) : '0';
@@ -163,6 +163,8 @@ export async function POST(
           priceDifference,
           percentageChange,
           packageVersionChanged,
+          pricePerPerson: result.pricePerPerson, // Log per-person price
+          numberOfPeople: result.numberOfPeople,
           parameters: {
             numberOfPeople: quote.numberOfPeople,
             numberOfNights: quote.numberOfNights,
@@ -183,14 +185,16 @@ export async function POST(
             currency: quote.currency,
           },
           priceCalculation: {
-            price: newPrice,
+            pricePerPerson: result.pricePerPerson, // Use pricePerPerson from calculation
+            totalPrice: result.totalPrice, // Use totalPrice from calculation
+            price: result.totalPrice, // For backward compatibility
             tierUsed: result.tier.label,
             tierIndex: result.tier.index,
             periodUsed: result.period.period,
             breakdown: {
-              pricePerPerson: newPrice / quote.numberOfPeople,
-              numberOfPeople: quote.numberOfPeople,
-              totalPrice: newPrice,
+              pricePerPerson: result.pricePerPerson, // Use from calculation, not division
+              numberOfPeople: result.numberOfPeople,
+              totalPrice: result.totalPrice,
             },
           },
           packageInfo: {

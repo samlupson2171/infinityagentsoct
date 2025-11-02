@@ -5,7 +5,9 @@ import { ISuperOfferPackage } from '@/models/SuperOfferPackage';
 import { PackageSelection, PackageSelectorProps } from '@/types/quote-price-sync';
 
 interface PriceCalculation {
-  price: number | 'ON_REQUEST';
+  pricePerPerson: number | 'ON_REQUEST';  // Per-person price from database
+  totalPrice: number | 'ON_REQUEST';      // Total price for the group
+  price: number | 'ON_REQUEST';           // Deprecated: kept for backward compatibility
   tierUsed: string;
   tierIndex: number;
   periodUsed: string;
@@ -133,16 +135,19 @@ export default function PackageSelector({
       const apiResult = data.data?.calculation || data.calculation || data;
       
       // Map API response to PriceCalculation format
+      // Use pricePerPerson and totalPrice directly from API (no division needed!)
       const calculation: PriceCalculation = {
-        price: apiResult.price,
+        pricePerPerson: apiResult.pricePerPerson,
+        totalPrice: apiResult.totalPrice,
+        price: apiResult.totalPrice,  // Use totalPrice for backward compatibility
         tierUsed: apiResult.tier.label,
         tierIndex: apiResult.tier.index,
         periodUsed: apiResult.period.period,
         currency: apiResult.currency,
-        breakdown: apiResult.price !== 'ON_REQUEST' ? {
-          pricePerPerson: apiResult.price / numberOfPeople,
-          numberOfPeople: numberOfPeople,
-          totalPrice: apiResult.price,
+        breakdown: apiResult.totalPrice !== 'ON_REQUEST' ? {
+          pricePerPerson: apiResult.pricePerPerson,  // Use from API directly
+          numberOfPeople: apiResult.numberOfPeople,
+          totalPrice: apiResult.totalPrice,          // Use from API directly
         } : undefined,
       };
       
@@ -181,13 +186,20 @@ export default function PackageSelector({
 
       // Pricing details (from calculation)
       priceCalculation: {
-        price: priceCalculation.price,
+        price: priceCalculation.totalPrice,  // Use totalPrice for backward compatibility
         tierUsed: priceCalculation.tierUsed,
         tierIndex: priceCalculation.tierIndex,
         periodUsed: priceCalculation.periodUsed,
         currency: priceCalculation.currency,
         breakdown: priceCalculation.breakdown,
-      },
+        // Include new fields for components that support them
+        ...(priceCalculation.pricePerPerson !== undefined && {
+          pricePerPerson: priceCalculation.pricePerPerson,
+        }),
+        ...(priceCalculation.totalPrice !== undefined && {
+          totalPrice: priceCalculation.totalPrice,
+        }),
+      } as any,  // Type assertion to allow extended properties until task 4 updates type definitions
 
       // Package content
       inclusions: selectedPackage.inclusions.map((inc) => ({
@@ -444,7 +456,7 @@ export default function PackageSelector({
                         </div>
                       ) : priceCalculation ? (
                         <div className="space-y-2">
-                          {priceCalculation.price === 'ON_REQUEST' ? (
+                          {priceCalculation.totalPrice === 'ON_REQUEST' ? (
                             <div className="bg-amber-50 border border-amber-200 rounded-md p-3">
                               <p className="text-sm font-medium text-amber-800">
                                 Price on Request
@@ -457,13 +469,13 @@ export default function PackageSelector({
                             <>
                               <div className="bg-green-50 border border-green-200 rounded-md p-3">
                                 <p className="text-lg font-bold text-green-800">
-                                  {formatCurrency(priceCalculation.price, selectedPackage.currency)}
+                                  {formatCurrency(priceCalculation.totalPrice as number, selectedPackage.currency)}
                                 </p>
-                                <p className="text-xs text-green-600 mt-1">Total Price</p>
+                                <p className="text-xs text-green-600 mt-1">Total Price for Group</p>
                               </div>
                               
                               {priceCalculation.breakdown && (
-                                <div className="text-sm text-gray-600 space-y-1">
+                                <div className="text-sm text-gray-600 space-y-1 bg-gray-50 rounded-md p-3">
                                   <div className="flex justify-between">
                                     <span>Price per person:</span>
                                     <span className="font-medium">
@@ -473,6 +485,12 @@ export default function PackageSelector({
                                   <div className="flex justify-between">
                                     <span>Number of people:</span>
                                     <span className="font-medium">{priceCalculation.breakdown.numberOfPeople}</span>
+                                  </div>
+                                  <div className="flex justify-between pt-1 border-t border-gray-300">
+                                    <span className="font-medium">Total:</span>
+                                    <span className="font-medium">
+                                      {formatCurrency(priceCalculation.breakdown.totalPrice, selectedPackage.currency)}
+                                    </span>
                                   </div>
                                 </div>
                               )}

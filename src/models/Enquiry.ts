@@ -241,7 +241,8 @@ EnquirySchema.methods.addQuote = function (quoteId: mongoose.Types.ObjectId) {
     this.hasQuotes = true;
     this.latestQuoteDate = new Date();
   }
-  return this.save();
+  // Skip validation to avoid issues with old enquiries that have past dates
+  return this.save({ validateBeforeSave: false });
 };
 
 EnquirySchema.methods.removeQuote = function (
