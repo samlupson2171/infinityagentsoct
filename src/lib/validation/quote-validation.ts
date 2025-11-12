@@ -32,7 +32,7 @@ export const QUOTE_BUSINESS_RULES = {
   MAX_ADVANCE_BOOKING_DAYS: 365, // Maximum days in advance for booking
   REASONABLE_PRICE_PER_PERSON_MIN: 50, // Minimum reasonable price per person
   REASONABLE_PRICE_PER_PERSON_MAX: 10000, // Maximum reasonable price per person
-  REASONABLE_ROOMS_PER_PERSON_RATIO: 0.5, // Minimum rooms per person ratio
+  // Removed REASONABLE_ROOMS_PER_PERSON_RATIO - no restriction on people per room
 };
 
 // Custom validation functions
@@ -54,16 +54,13 @@ export const quoteValidationHelpers = {
     return arrivalDate >= minDate && arrivalDate <= maxDate;
   },
 
-  // Validate room to people ratio makes sense
+  // Validate room to people ratio makes sense - removed restriction, any ratio is acceptable
   isReasonableRoomRatio: (
     numberOfPeople: number,
     numberOfRooms: number
   ): boolean => {
-    const ratio = numberOfRooms / numberOfPeople;
-    return (
-      ratio >= QUOTE_BUSINESS_RULES.REASONABLE_ROOMS_PER_PERSON_RATIO &&
-      ratio <= 1
-    );
+    // Allow any ratio - rooms can have 1 to many people (e.g., 2-5+ people per room)
+    return numberOfRooms > 0 && numberOfPeople > 0;
   },
 
   // Validate price per person is reasonable
@@ -307,18 +304,7 @@ export const quoteFormValidationSchema = z
       )
       .optional(),
   })
-  .refine(
-    (data) =>
-      quoteValidationHelpers.isReasonableRoomRatio(
-        data.numberOfPeople,
-        data.numberOfRooms
-      ),
-    {
-      message:
-        'Room to people ratio seems unreasonable. Consider adjusting the number of rooms.',
-      path: ['numberOfRooms'],
-    }
-  )
+  // Removed room ratio validation - allow any number of people per room
   .refine(
     (data) =>
       quoteValidationHelpers.isReasonablePricePerPerson(
@@ -603,13 +589,7 @@ export const serverSideQuoteValidation = {
       errors.push('Price per night seems unusually low');
     }
 
-    // Check if room configuration makes sense
-    const maxPeoplePerRoom = 4; // Business rule
-    if (quoteData.numberOfPeople > quoteData.numberOfRooms * maxPeoplePerRoom) {
-      errors.push(
-        `Too many people for ${quoteData.numberOfRooms} rooms (max ${maxPeoplePerRoom} per room)`
-      );
-    }
+    // Removed room configuration check - allow any number of people per room (can be 2-5+ people)
 
     return {
       isValid: errors.length === 0,

@@ -284,10 +284,8 @@ export default function QuoteForm({
     }
   };
 
-  // Calculate estimated rooms based on people
-  const estimatedRooms = Math.ceil(numberOfPeople / 2);
-  // Removed auto-update of rooms to prevent infinite loop
-  // Users can manually adjust rooms as needed
+  // Removed automatic room calculation - users can have any number of people per room
+  // Users can manually adjust rooms as needed based on their specific requirements
 
   // Handle package selection with atomic updates
   const handlePackageSelect = (selection: PackageSelection) => {
@@ -298,7 +296,7 @@ export default function QuoteForm({
         setValue('numberOfPeople', selection.numberOfPeople);
         setValue('numberOfNights', selection.numberOfNights);
         setValue('arrivalDate', selection.arrivalDate);
-        setValue('numberOfRooms', Math.ceil(selection.numberOfPeople / 2));
+        // Don't auto-set rooms - let user specify based on their needs (can be 2-5+ people per room)
         // Only set currency if it's a valid option
         const validCurrency = ['GBP', 'EUR', 'USD'].includes(selection.priceCalculation.currency);
         if (validCurrency) {
@@ -654,12 +652,6 @@ export default function QuoteForm({
                   {errors.numberOfRooms && (
                     <p className="text-red-600 text-sm mt-1">
                       {errors.numberOfRooms.message}
-                    </p>
-                  )}
-                  {numberOfRooms < estimatedRooms && (
-                    <p className="text-amber-600 text-sm mt-1">
-                      Suggested: {estimatedRooms} rooms for {numberOfPeople}{' '}
-                      people
                     </p>
                   )}
                 </div>
