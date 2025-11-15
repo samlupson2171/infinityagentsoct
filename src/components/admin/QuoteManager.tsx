@@ -68,6 +68,13 @@ interface Quote {
     calculatedPrice: number;
     priceWasOnRequest: boolean;
   };
+  selectedEvents?: Array<{
+    eventId: string;
+    eventName: string;
+    eventPrice: number;
+    eventCurrency: string;
+    addedAt: string;
+  }>;
 }
 
 interface PaginationData {
@@ -832,6 +839,13 @@ export default function QuoteManager({
                               </span>
                             </div>
                           )}
+                          {quote.selectedEvents && quote.selectedEvents.length > 0 && (
+                            <div className="mt-1">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                🎯 {quote.selectedEvents.length} {quote.selectedEvents.length === 1 ? 'Event' : 'Events'}
+                              </span>
+                            </div>
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -1487,6 +1501,80 @@ export default function QuoteManager({
                 </div>
               )}
 
+              {/* Selected Events */}
+              {selectedQuote.selectedEvents && selectedQuote.selectedEvents.length > 0 && (
+                <div>
+                  <h5 className="font-medium text-gray-900 mb-3">
+                    Selected Events & Activities
+                  </h5>
+                  <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
+                    <div className="space-y-3">
+                      {selectedQuote.selectedEvents.map((event, index) => (
+                        <div
+                          key={event.eventId || index}
+                          className="flex items-center justify-between bg-white p-3 rounded-lg border border-green-100"
+                        >
+                          <div className="flex-1">
+                            <div className="text-sm font-medium text-gray-900">
+                              🎯 {event.eventName || 'Event name unavailable'}
+                            </div>
+                            {event.addedAt && (
+                              <div className="text-xs text-gray-500 mt-1">
+                                Added: {formatDate(event.addedAt)}
+                              </div>
+                            )}
+                          </div>
+                          <div className="text-right ml-4">
+                            <div className="text-sm font-semibold text-green-700">
+                              {event.eventPrice && typeof event.eventPrice === 'number'
+                                ? event.eventPrice.toLocaleString('en-GB', {
+                                    style: 'currency',
+                                    currency: event.eventCurrency || selectedQuote.currency,
+                                  })
+                                : 'Price unavailable'}
+                            </div>
+                            {event.eventCurrency && event.eventCurrency !== selectedQuote.currency && (
+                              <div className="text-xs text-orange-600 mt-1">
+                                ⚠️ Currency mismatch
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Events Total */}
+                    <div className="mt-4 pt-3 border-t border-green-200">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-green-900">
+                          Events Total ({selectedQuote.selectedEvents.length} {selectedQuote.selectedEvents.length === 1 ? 'event' : 'events'}):
+                        </span>
+                        <span className="text-base font-bold text-green-700">
+                          {selectedQuote.selectedEvents
+                            .reduce((total, event) => {
+                              // Only sum events with matching currency
+                              if (event.eventCurrency === selectedQuote.currency && typeof event.eventPrice === 'number') {
+                                return total + event.eventPrice;
+                              }
+                              return total;
+                            }, 0)
+                            .toLocaleString('en-GB', {
+                              style: 'currency',
+                              currency: selectedQuote.currency,
+                            })}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 pt-3 border-t border-green-200">
+                      <p className="text-xs text-green-700">
+                        💡 These events are included in the total quote price.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Package Details */}
               <div>
                 <h5 className="font-medium text-gray-900 mb-3">
@@ -1518,12 +1606,17 @@ export default function QuoteManager({
                         Linked to Package
                       </span>
                     )}
+                    {selectedQuote.selectedEvents && selectedQuote.selectedEvents.length > 0 && (
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        {selectedQuote.selectedEvents.length} {selectedQuote.selectedEvents.length === 1 ? 'Event' : 'Events'} Added
+                      </span>
+                    )}
                   </div>
 
                   {selectedQuote.activitiesIncluded && (
                     <div className="mt-3">
                       <span className="text-sm font-medium text-gray-700">
-                        Activities:
+                        Activities (Legacy):
                       </span>
                       <p className="text-sm text-gray-900 mt-1">
                         {selectedQuote.activitiesIncluded}
@@ -1537,18 +1630,75 @@ export default function QuoteManager({
               <div>
                 <h5 className="font-medium text-gray-900 mb-3">Pricing</h5>
                 <div className="bg-blue-50 p-4 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-900">
-                    {selectedQuote.formattedPrice}
-                  </div>
-                  <div className="text-sm text-blue-700 mt-1">
-                    {(
-                      selectedQuote.totalPrice / selectedQuote.numberOfPeople
-                    ).toLocaleString('en-GB', {
-                      style: 'currency',
-                      currency: selectedQuote.currency,
-                    })}{' '}
-                    per person
-                  </div>
+                  {selectedQuote.selectedEvents && selectedQuote.selectedEvents.length > 0 ? (
+                    <>
+                      {/* Price Breakdown with Events */}
+                      <div className="space-y-2 mb-3">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-blue-800">Base Price:</span>
+                          <span className="font-medium text-blue-900">
+                            {(() => {
+                              const eventsTotal = selectedQuote.selectedEvents
+                                .filter(event => event.eventCurrency === selectedQuote.currency)
+                                .reduce((sum, event) => sum + (event.eventPrice || 0), 0);
+                              const basePrice = selectedQuote.totalPrice - eventsTotal;
+                              return basePrice.toLocaleString('en-GB', {
+                                style: 'currency',
+                                currency: selectedQuote.currency,
+                              });
+                            })()}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-blue-800">
+                            Events ({selectedQuote.selectedEvents.length}):
+                          </span>
+                          <span className="font-medium text-blue-900">
+                            {selectedQuote.selectedEvents
+                              .filter(event => event.eventCurrency === selectedQuote.currency)
+                              .reduce((sum, event) => sum + (event.eventPrice || 0), 0)
+                              .toLocaleString('en-GB', {
+                                style: 'currency',
+                                currency: selectedQuote.currency,
+                              })}
+                          </span>
+                        </div>
+                        <div className="border-t border-blue-200 pt-2 mt-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-blue-900">Total Price:</span>
+                            <span className="text-2xl font-bold text-blue-900">
+                              {selectedQuote.formattedPrice}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-sm text-blue-700 mt-2">
+                        {(
+                          selectedQuote.totalPrice / selectedQuote.numberOfPeople
+                        ).toLocaleString('en-GB', {
+                          style: 'currency',
+                          currency: selectedQuote.currency,
+                        })}{' '}
+                        per person
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* Simple Price Display */}
+                      <div className="text-2xl font-bold text-blue-900">
+                        {selectedQuote.formattedPrice}
+                      </div>
+                      <div className="text-sm text-blue-700 mt-1">
+                        {(
+                          selectedQuote.totalPrice / selectedQuote.numberOfPeople
+                        ).toLocaleString('en-GB', {
+                          style: 'currency',
+                          currency: selectedQuote.currency,
+                        })}{' '}
+                        per person
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 

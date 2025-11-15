@@ -25,6 +25,10 @@ import {
   up as createEventsCollection,
   down as rollbackEventsCollection,
 } from './009-create-events-collection';
+import {
+  up as addEventsToQuotes,
+  down as rollbackEventsToQuotes,
+} from './010-add-events-to-quotes';
 
 // Register all migrations
 migrationRunner.addMigration({
@@ -71,6 +75,14 @@ migrationRunner.addMigration({
     'Create events and categories collections with predefined categories and migrate hardcoded events',
   up: createEventsCollection,
   down: rollbackEventsCollection,
+});
+
+migrationRunner.addMigration({
+  version: '010',
+  description:
+    'Add selectedEvents field to quotes and migrate activitiesIncluded to internalNotes',
+  up: addEventsToQuotes,
+  down: rollbackEventsToQuotes,
 });
 
 // Note: Migrations 002, 003, and 005 are temporarily disabled due to interface inconsistencies

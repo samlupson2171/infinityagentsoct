@@ -30,8 +30,8 @@ class QuotePricePerformanceMonitor {
   /**
    * Start timing an operation
    */
-  startTiming(operation: string): () => void {
-    if (!this.enabled) return () => {};
+  startTiming(operation: string): (metadata?: Record<string, any>) => number {
+    if (!this.enabled) return () => 0;
 
     const startTime = performance.now();
     const startMark = `${operation}-start-${Date.now()}`;

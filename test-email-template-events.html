@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Email Template with Events - Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; }
+        .header { background: #2c5aa0; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; }
+        .quote-details { background: #f8f9fa; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        .price-highlight { background: #e8f5e8; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; color: #2c5aa0; margin: 20px 0; border-radius: 5px; }
+        .cta-button { display: inline-block; background: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #666; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f8f9fa; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Infinity Weekends</h1>
+            <p>Your Holiday Quote</p>
+        </div>
+        
+        <div class="content">
+            <h2>Dear John Smith,</h2>
+            
+            <p>Thank you for your enquiry. We're delighted to provide you with a personalized quote for your upcoming holiday.</p>
+            
+            <div class="quote-details">
+                <h3>Quote Details</h3>
+                <table>
+                    <tr><th>Hotel</th><td>Hotel Benidorm Palace</td></tr>
+                    <tr><th>Number of People</th><td>12</td></tr>
+                    <tr><th>Number of Rooms</th><td>6</td></tr>
+                    <tr><th>Number of Nights</th><td>3</td></tr>
+                    <tr><th>Arrival Date</th><td>Friday, 15 March 2024</td></tr>
+                    <tr><th>Package Type</th><td>Super Package</td></tr>
+                    <tr><th>Transfer Included</th><td>Yes</td></tr>
+                </table>
+            </div>
+            
+            <div class="quote-details">
+                <h3>What's Included</h3>
+                <div>
+                    <ul>
+                        <li>3 nights accommodation</li>
+                        <li>Breakfast included</li>
+                        <li>Airport transfers</li>
+                        <li>Welcome drinks</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- NEW: Selected Events Section -->
+            <div class="quote-details" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+                <h3 style="color: #856404;">🎉 Selected Events & Activities</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th style="text-align: right;">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Jet Skiing Adventure</td>
+                            <td style="text-align: right; font-weight: bold; color: #007bff;">£50.00</td>
+                        </tr>
+                        <tr>
+                            <td>Parasailing Experience</td>
+                            <td style="text-align: right; font-weight: bold; color: #007bff;">£75.00</td>
+                        </tr>
+                        <tr>
+                            <td>Beach Club VIP Access</td>
+                            <td style="text-align: right; font-weight: bold; color: #007bff;">£35.00</td>
+                        </tr>
+                        <tr style="border-top: 2px solid #ffc107;">
+                            <td style="font-weight: bold; color: #856404;">Events Subtotal:</td>
+                            <td style="text-align: right; font-weight: bold; color: #856404;">£160.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- NEW: Price Breakdown -->
+            <div class="price-highlight">
+                <div style="font-size: 16px; margin-bottom: 10px; color: #666;">
+                    Base Price: £1,200.00 + Events: £160.00
+                </div>
+                Total Price: £1,360.00
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="#" class="cta-button">
+                    I'd like to book this package
+                </a>
+            </div>
+            
+            <p>If you have any questions or would like to make changes to this quote, please don't hesitate to contact us.</p>
+            
+            <p>We look forward to helping you create unforgettable memories!</p>
+            
+            <p>Best regards,<br>
+            The Infinity Weekends Team</p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Infinity Weekends</strong></p>
+            <p>Email: info@infinityweekends.co.uk | Phone: +44 123 456 7890</p>
+            <p>Website: <a href="https://infinityweekends.com">infinityweekends.com</a></p>
+            <p><small>This email was sent regarding your enquiry. If you did not request this quote, please ignore this email.</small></p>
+        </div>
+    </div>
+
+    <div style="max-width: 600px; margin: 40px auto; padding: 20px; background: white; border-radius: 8px;">
+        <h2>✅ Email Template Features Implemented:</h2>
+        <ul style="line-height: 2;">
+            <li>✓ <strong>Events Section</strong> - Displays selected events with names and prices</li>
+            <li>✓ <strong>Event Table</strong> - Clean table layout with proper formatting</li>
+            <li>✓ <strong>Events Subtotal</strong> - Shows total cost of all events</li>
+            <li>✓ <strong>Price Breakdown</strong> - Base price + Events = Total</li>
+            <li>✓ <strong>Visual Styling</strong> - Yellow/gold theme for events section</li>
+            <li>✓ <strong>Proper Formatting</strong> - Currency symbols and decimal places</li>
+            <li>✓ <strong>Responsive Design</strong> - Works on all email clients</li>
+        </ul>
+
+        <h3>📋 Requirements Met:</h3>
+        <ul style="line-height: 2;">
+            <li>✓ <strong>Requirement 3.1</strong> - Display list of selected events with names and prices</li>
+            <li>✓ <strong>Requirement 3.5</strong> - Persist selected events when saving quote</li>
+            <li>✓ Event names displayed clearly</li>
+            <li>✓ Event prices shown with currency</li>
+            <li>✓ Events included in price breakdown</li>
+            <li>✓ Proper formatting and styling applied</li>
+            <li>✓ XSS protection via sanitization</li>
+        </ul>
+    </div>
+</body>
+</html>

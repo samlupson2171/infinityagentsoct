@@ -89,6 +89,81 @@ async function postHandler(request: NextRequest) {
       };
     }
 
+    // Handle selectedEvents with validation and proper date conversion
+    if (quoteData.selectedEvents && quoteData.selectedEvents.length > 0) {
+      // Validate events exist and are active
+      const Event = (await import('@/models/Event')).default;
+      const eventIds = quoteData.selectedEvents.map((e) => e.eventId);
+      const events = await Event.find({
+        _id: { $in: eventIds },
+      });
+
+      // Check if all events exist
+      const foundEventIds = events.map((e) => e._id.toString());
+      const missingEvents = quoteData.selectedEvents.filter(
+        (e) => !foundEventIds.includes(e.eventId)
+      );
+
+      if (missingEvents.length > 0) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'INVALID_EVENTS',
+              message: 'Some selected events do not exist',
+              details: missingEvents.map((e) => ({
+                eventId: e.eventId,
+                eventName: e.eventName,
+              })),
+            },
+          },
+          { status: 400 }
+        );
+      }
+
+      // Check for inactive events and provide warning
+      const inactiveEvents = events.filter((e) => !e.isActive);
+      const warnings: string[] = [];
+      
+      if (inactiveEvents.length > 0) {
+        warnings.push(
+          `Warning: ${inactiveEvents.length} event(s) are currently inactive and may not be available: ${inactiveEvents.map((e) => e.name).join(', ')}`
+        );
+      }
+
+      // Check for event price changes and provide warnings
+      const eventPriceWarnings = quoteData.selectedEvents
+        .map((selectedEvent) => {
+          const event = events.find((e) => e._id.toString() === selectedEvent.eventId);
+          if (event && event.pricing?.estimatedCost !== undefined) {
+            if (event.pricing.estimatedCost !== selectedEvent.eventPrice) {
+              return {
+                eventName: selectedEvent.eventName,
+                storedPrice: selectedEvent.eventPrice,
+                currentPrice: event.pricing.estimatedCost,
+              };
+            }
+          }
+          return null;
+        })
+        .filter((change) => change !== null);
+
+      if (eventPriceWarnings.length > 0) {
+        warnings.push(
+          `Note: ${eventPriceWarnings.length} event(s) have different current prices than the prices being saved. The quote will use the prices you specified.`
+        );
+      }
+
+      // Store warnings in payload context (will be added to response later)
+      (quotePayload as any)._warnings = warnings;
+
+      // Convert selectedEvents with proper date handling
+      quotePayload.selectedEvents = quoteData.selectedEvents.map((event) => ({
+        ...event,
+        addedAt: event.addedAt ? new Date(event.addedAt) : new Date(),
+      }));
+    }
+
     // Handle priceHistory with proper date conversion and user ID
     if (quoteData.priceHistory && quoteData.priceHistory.length > 0) {
       quotePayload.priceHistory = quoteData.priceHistory.map((entry) => ({
@@ -127,15 +202,22 @@ async function postHandler(request: NextRequest) {
     await quote.populate([
       { path: 'enquiryId', select: 'leadName agentEmail resort' },
       { path: 'createdBy', select: 'name email' },
+      { path: 'selectedEvents.eventId', select: 'name isActive pricing destinations' },
     ]);
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: quote,
-      },
-      { status: 201 }
-    );
+    // Extract warnings if any
+    const warnings = (quotePayload as any)._warnings;
+
+    const response: any = {
+      success: true,
+      data: quote,
+    };
+
+    if (warnings && warnings.length > 0) {
+      response.warnings = warnings;
+    }
+
+    return NextResponse.json(response, { status: 201 });
   } catch (error: any) {
     console.error('Error creating quote:', error);
 
@@ -239,6 +321,7 @@ async function getHandler(request: NextRequest) {
       Quote.find(query)
         .populate('enquiryId', 'leadName agentEmail resort')
         .populate('createdBy', 'name email')
+        .populate('selectedEvents.eventId', 'name isActive pricing')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),

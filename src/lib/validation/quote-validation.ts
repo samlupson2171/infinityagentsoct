@@ -17,6 +17,7 @@ export const QUOTE_BUSINESS_RULES = {
   MAX_INTERNAL_NOTES_LENGTH: 1000,
   MAX_TITLE_LENGTH: 200,
   MAX_DESTINATION_LENGTH: 100,
+  MAX_EVENTS: 20, // Maximum number of events per quote
   SUPPORTED_CURRENCIES: ['GBP', 'EUR', 'USD'] as const,
   QUOTE_STATUSES: ['draft', 'sent', 'updated'] as const,
   EMAIL_DELIVERY_STATUSES: ['pending', 'delivered', 'failed'] as const,
@@ -293,14 +294,42 @@ export const quoteFormValidationSchema = z
       .array(
         z.object({
           price: z.number().min(0, 'Price must be a positive number'),
-          reason: z.enum(['package_selection', 'recalculation', 'manual_override'], {
+          reason: z.enum(['package_selection', 'recalculation', 'manual_override', 'event_added', 'event_removed'], {
             errorMap: () => ({
-              message: 'Reason must be one of: package_selection, recalculation, manual_override',
+              message: 'Reason must be one of: package_selection, recalculation, manual_override, event_added, event_removed',
             }),
           }),
           timestamp: z.string().datetime().optional(),
           userId: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ID format'),
         })
+      )
+      .optional(),
+
+    selectedEvents: z
+      .array(
+        z.object({
+          eventId: z
+            .string()
+            .regex(/^[0-9a-fA-F]{24}$/, 'Invalid event ID format'),
+          eventName: z.string().min(1, 'Event name is required'),
+          eventPrice: z
+            .number()
+            .min(0, 'Event price must be non-negative')
+            .refine(
+              (price) => Number.isFinite(price),
+              'Event price must be a valid number'
+            ),
+          eventCurrency: z.enum(QUOTE_BUSINESS_RULES.SUPPORTED_CURRENCIES, {
+            errorMap: () => ({
+              message: `Event currency must be one of: ${QUOTE_BUSINESS_RULES.SUPPORTED_CURRENCIES.join(', ')}`,
+            }),
+          }),
+          addedAt: z.string().datetime().optional(),
+        })
+      )
+      .max(
+        QUOTE_BUSINESS_RULES.MAX_EVENTS,
+        `Cannot add more than ${QUOTE_BUSINESS_RULES.MAX_EVENTS} events to a quote`
       )
       .optional(),
   })
@@ -535,14 +564,42 @@ export const quoteUpdateValidationSchema = z.object({
     .array(
       z.object({
         price: z.number().min(0, 'Price must be a positive number'),
-        reason: z.enum(['package_selection', 'recalculation', 'manual_override'], {
+        reason: z.enum(['package_selection', 'recalculation', 'manual_override', 'event_added', 'event_removed'], {
           errorMap: () => ({
-            message: 'Reason must be one of: package_selection, recalculation, manual_override',
+            message: 'Reason must be one of: package_selection, recalculation, manual_override, event_added, event_removed',
           }),
         }),
         timestamp: z.string().datetime().optional(),
         userId: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ID format'),
       })
+    )
+    .optional(),
+
+  selectedEvents: z
+    .array(
+      z.object({
+        eventId: z
+          .string()
+          .regex(/^[0-9a-fA-F]{24}$/, 'Invalid event ID format'),
+        eventName: z.string().min(1, 'Event name is required'),
+        eventPrice: z
+          .number()
+          .min(0, 'Event price must be non-negative')
+          .refine(
+            (price) => Number.isFinite(price),
+            'Event price must be a valid number'
+          ),
+        eventCurrency: z.enum(QUOTE_BUSINESS_RULES.SUPPORTED_CURRENCIES, {
+          errorMap: () => ({
+            message: `Event currency must be one of: ${QUOTE_BUSINESS_RULES.SUPPORTED_CURRENCIES.join(', ')}`,
+          }),
+        }),
+        addedAt: z.string().datetime().optional(),
+      })
+    )
+    .max(
+      QUOTE_BUSINESS_RULES.MAX_EVENTS,
+      `Cannot add more than ${QUOTE_BUSINESS_RULES.MAX_EVENTS} events to a quote`
     )
     .optional(),
 });

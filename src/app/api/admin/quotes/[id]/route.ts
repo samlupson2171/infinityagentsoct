@@ -34,6 +34,7 @@ export async function GET(
     const quote = await Quote.findById(params.id).populate([
       { path: 'enquiryId', select: 'leadName agentEmail resort departureDate' },
       { path: 'createdBy', select: 'name email' },
+      { path: 'selectedEvents.eventId', select: 'name isActive pricing destinations' },
     ]);
 
     if (!quote) {
@@ -154,6 +155,77 @@ export async function PUT(
                         updateData.totalPrice !== quote.totalPrice;
     const oldPrice = quote.totalPrice;
 
+    // Handle selectedEvents with validation
+    if (updateData.selectedEvents !== undefined) {
+      if (updateData.selectedEvents && updateData.selectedEvents.length > 0) {
+        // Validate events exist and are active
+        const Event = (await import('@/models/Event')).default;
+        const eventIds = updateData.selectedEvents.map((e) => e.eventId);
+        const events = await Event.find({
+          _id: { $in: eventIds },
+        });
+
+        // Check if all events exist
+        const foundEventIds = events.map((e) => e._id.toString());
+        const missingEvents = updateData.selectedEvents.filter(
+          (e) => !foundEventIds.includes(e.eventId)
+        );
+
+        if (missingEvents.length > 0) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: {
+                code: 'INVALID_EVENTS',
+                message: 'Some selected events are not available',
+                details: missingEvents.map((e) => ({
+                  eventId: e.eventId,
+                  eventName: e.eventName,
+                })),
+              },
+            },
+            { status: 400 }
+          );
+        }
+
+        // Check for inactive events and provide warning
+        const inactiveEvents = events.filter((e) => !e.isActive);
+        const warnings: string[] = [];
+        
+        if (inactiveEvents.length > 0) {
+          warnings.push(
+            `Warning: ${inactiveEvents.length} event(s) are currently inactive: ${inactiveEvents.map((e) => e.name).join(', ')}`
+          );
+        }
+
+        // Check for event price changes
+        const eventPriceChanges = updateData.selectedEvents
+          .map((selectedEvent) => {
+            const event = events.find((e) => e._id.toString() === selectedEvent.eventId);
+            if (event && event.pricing?.estimatedCost !== undefined) {
+              if (event.pricing.estimatedCost !== selectedEvent.eventPrice) {
+                return {
+                  eventName: selectedEvent.eventName,
+                  storedPrice: selectedEvent.eventPrice,
+                  currentPrice: event.pricing.estimatedCost,
+                };
+              }
+            }
+            return null;
+          })
+          .filter((change) => change !== null);
+
+        if (eventPriceChanges.length > 0) {
+          warnings.push(
+            `Note: ${eventPriceChanges.length} event(s) have different current prices than stored prices`
+          );
+        }
+
+        // Store warnings in response context (will be added to response later)
+        (quote as any)._warnings = warnings;
+      }
+    }
+
     // Update quote fields
     Object.keys(updateData).forEach((key) => {
       if (updateData[key as keyof typeof updateData] !== undefined) {
@@ -174,7 +246,13 @@ export async function PUT(
             timestamp: entry.timestamp ? new Date(entry.timestamp) : new Date(),
             userId: entry.userId,
           })) as any;
-        } else if (key !== 'linkedPackage' && key !== 'priceHistory') {
+        } else if (key === 'selectedEvents' && updateData.selectedEvents) {
+          // Handle selectedEvents with proper date conversion
+          quote.selectedEvents = updateData.selectedEvents.map((event) => ({
+            ...event,
+            addedAt: event.addedAt ? new Date(event.addedAt) : new Date(),
+          })) as any;
+        } else if (key !== 'linkedPackage' && key !== 'priceHistory' && key !== 'selectedEvents') {
           (quote as any)[key] = updateData[key as keyof typeof updateData];
         }
       }
@@ -187,7 +265,7 @@ export async function PUT(
       }
 
       // Determine the reason for price change
-      let reason: 'package_selection' | 'recalculation' | 'manual_override' = 'manual_override';
+      let reason: 'package_selection' | 'recalculation' | 'manual_override' | 'event_added' | 'event_removed' = 'manual_override';
       
       // Check if this is from a recalculation (linkedPackage updated with new lastRecalculatedAt)
       if (updateData.linkedPackage?.lastRecalculatedAt) {
@@ -195,6 +273,16 @@ export async function PUT(
       } else if (updateData.linkedPackage && !quote.linkedPackage) {
         // New package selection
         reason = 'package_selection';
+      } else if (updateData.selectedEvents !== undefined) {
+        // Events were added or removed
+        const oldEventCount = quote.selectedEvents?.length || 0;
+        const newEventCount = updateData.selectedEvents?.length || 0;
+        
+        if (newEventCount > oldEventCount) {
+          reason = 'event_added';
+        } else if (newEventCount < oldEventCount) {
+          reason = 'event_removed';
+        }
       } else if (quote.linkedPackage?.customPriceApplied) {
         // Manual override when custom price is applied
         reason = 'manual_override';
@@ -247,12 +335,23 @@ export async function PUT(
     await quote.populate([
       { path: 'enquiryId', select: 'leadName agentEmail resort departureDate' },
       { path: 'createdBy', select: 'name email' },
+      { path: 'selectedEvents.eventId', select: 'name isActive pricing destinations' },
     ]);
 
-    return NextResponse.json({
+    // Extract warnings if any
+    const warnings = (quote as any)._warnings;
+    delete (quote as any)._warnings;
+
+    const response: any = {
       success: true,
       data: quote,
-    });
+    };
+
+    if (warnings && warnings.length > 0) {
+      response.warnings = warnings;
+    }
+
+    return NextResponse.json(response);
   } catch (error: any) {
     console.error('Error updating quote:', error);
 

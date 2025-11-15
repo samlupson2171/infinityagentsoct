@@ -13,6 +13,9 @@ import {
 import PackageSelector from './PackageSelector';
 import PriceSyncIndicator from './PriceSyncIndicator';
 import PriceRecalculationModal from './PriceRecalculationModal';
+import EventSelector from '@/components/enquiries/EventSelector';
+import SelectedEventsList from './SelectedEventsList';
+import PriceBreakdown from './PriceBreakdown';
 import { useQuotePrice } from '@/lib/hooks/useQuotePrice';
 import { PackageSelection, LinkedPackageInfo } from '@/types/quote-price-sync';
 
@@ -39,6 +42,18 @@ export default function QuoteForm({
   const [isRecalculationModalOpen, setIsRecalculationModalOpen] = useState(false);
   const [linkedPackageInfo, setLinkedPackageInfo] = useState<LinkedPackageInfo | null>(null);
   const [isPending, startTransition] = useTransition();
+  
+  // Event selection state
+  const [selectedEvents, setSelectedEvents] = useState<Array<{
+    eventId: string;
+    eventName: string;
+    eventPrice: number;
+    eventCurrency: string;
+    pricePerPerson?: boolean;
+    addedAt: Date;
+  }>>([]);
+  const [basePrice, setBasePrice] = useState<number>(0);
+  const [eventsTotal, setEventsTotal] = useState<number>(0);
 
   // Form setup with react-hook-form and zod validation
   const {
@@ -65,7 +80,6 @@ export default function QuoteForm({
       isSuperPackage: initialData?.isSuperPackage || false,
       whatsIncluded: initialData?.whatsIncluded || '',
       transferIncluded: initialData?.transferIncluded || false,
-      activitiesIncluded: initialData?.activitiesIncluded || '',
       totalPrice: initialData?.totalPrice || 0,
       currency: initialData?.currency || 'GBP',
       internalNotes: initialData?.internalNotes || '',
@@ -93,6 +107,7 @@ export default function QuoteForm({
     numberOfNights: watch('numberOfNights'),
     arrivalDate: watch('arrivalDate'),
     currentPrice: watch('totalPrice'),
+    eventsTotal: eventsTotal, // Include events total in price calculation
     onPriceUpdate: (price) => {
       setValue('totalPrice', price);
     },
@@ -114,6 +129,18 @@ export default function QuoteForm({
         pricePerPerson: linkedPkg.pricePerPerson, // Load per-person price if available
       });
     }
+    
+    // Load selected events from initialData when editing
+    if (initialData && (initialData as any).selectedEvents) {
+      const events = (initialData as any).selectedEvents.map((event: any) => ({
+        eventId: event.eventId?.toString() || event.eventId,
+        eventName: event.eventName,
+        eventPrice: event.eventPrice,
+        eventCurrency: event.eventCurrency,
+        addedAt: event.addedAt ? new Date(event.addedAt) : new Date(),
+      }));
+      setSelectedEvents(events);
+    }
   }, [initialData]);
 
   // Watch specific fields instead of entire formData object
@@ -127,6 +154,70 @@ export default function QuoteForm({
   const arrivalDate = watch('arrivalDate');
   const whatsIncluded = watch('whatsIncluded');
   const transferIncluded = watch('transferIncluded');
+  
+  // Calculate events total when selectedEvents, currency, or numberOfPeople changes
+  useEffect(() => {
+    const total = selectedEvents.reduce((sum, event) => {
+      // Only add if currency matches
+      if (event.eventCurrency === currency) {
+        const eventCost = event.pricePerPerson 
+          ? event.eventPrice * numberOfPeople 
+          : event.eventPrice;
+        return sum + eventCost;
+      }
+      return sum;
+    }, 0);
+    setEventsTotal(total);
+    
+    // Check for currency mismatches and add warnings
+    const mismatchedEvents = selectedEvents.filter(
+      (event) => event.eventCurrency !== currency
+    );
+    
+    if (mismatchedEvents.length > 0) {
+      const mismatchWarning = `${mismatchedEvents.length} event(s) have different currency (${mismatchedEvents[0].eventCurrency}) and are excluded from total. Consider changing quote currency or removing these events.`;
+      
+      // Add warning if not already present
+      setValidationWarnings((prev) => {
+        if (!prev.includes(mismatchWarning)) {
+          return [...prev, mismatchWarning];
+        }
+        return prev;
+      });
+    } else {
+      // Remove currency mismatch warnings if all currencies match
+      setValidationWarnings((prev) =>
+        prev.filter((w) => !w.includes('have different currency'))
+      );
+    }
+  }, [selectedEvents, currency, numberOfPeople]);
+
+  // Update basePrice when package is selected or calculated price changes
+  useEffect(() => {
+    if (linkedPackageInfo && calculatedPrice && calculatedPrice !== 'ON_REQUEST') {
+      // Set basePrice to the calculated package price (without events)
+      setBasePrice(calculatedPrice);
+    } else if (!linkedPackageInfo && basePrice === 0) {
+      // Only initialize basePrice if it's not set yet
+      // This allows the price breakdown to show base vs events correctly
+      const calculatedBase = Math.max(0, totalPrice - eventsTotal);
+      if (calculatedBase > 0) {
+        setBasePrice(calculatedBase);
+      }
+    }
+  }, [linkedPackageInfo, calculatedPrice, basePrice, totalPrice, eventsTotal]);
+
+  // Update total price when basePrice or eventsTotal changes
+  useEffect(() => {
+    // Only auto-update if we're not in custom price mode
+    if (syncStatus !== 'custom' && basePrice > 0) {
+      const newTotal = basePrice + eventsTotal;
+      // Only update if the value actually changed to avoid infinite loops
+      if (Math.abs(totalPrice - newTotal) > 0.01) {
+        setValue('totalPrice', newTotal);
+      }
+    }
+  }, [basePrice, eventsTotal, syncStatus, setValue, totalPrice]);
 
   // Real-time validation warnings with specific dependencies
   useEffect(() => {
@@ -252,7 +343,91 @@ export default function QuoteForm({
     setSubmitError(null);
 
     try {
-      // Include linkedPackage data if available
+      // Validate selected events before submission
+      const eventValidationErrors: string[] = [];
+      
+      // Check for maximum events limit (20)
+      if (selectedEvents.length > 20) {
+        eventValidationErrors.push('Cannot add more than 20 events to a quote');
+      }
+      
+      // Validate each event
+      selectedEvents.forEach((event, index) => {
+        // Validate event ID format
+        if (!event.eventId || typeof event.eventId !== 'string') {
+          eventValidationErrors.push(`Event ${index + 1}: Invalid event ID`);
+        }
+        
+        // Validate event name
+        if (!event.eventName || event.eventName.trim().length === 0) {
+          eventValidationErrors.push(`Event ${index + 1}: Event name is required`);
+        }
+        
+        // Validate event price is non-negative
+        if (typeof event.eventPrice !== 'number' || event.eventPrice < 0) {
+          eventValidationErrors.push(`Event ${index + 1}: Event price must be a non-negative number`);
+        }
+        
+        // Validate event currency
+        if (!event.eventCurrency || !['GBP', 'EUR', 'USD'].includes(event.eventCurrency)) {
+          eventValidationErrors.push(`Event ${index + 1}: Invalid event currency`);
+        }
+        
+        // Warn about currency mismatch (non-blocking)
+        if (event.eventCurrency !== data.currency) {
+          console.warn(`Event "${event.eventName}" has currency ${event.eventCurrency} which differs from quote currency ${data.currency}`);
+        }
+      });
+      
+      // If there are validation errors, show them and stop submission
+      if (eventValidationErrors.length > 0) {
+        setSubmitError(
+          `Event validation failed:\n${eventValidationErrors.join('\n')}`
+        );
+        setIsSubmitting(false);
+        return;
+      }
+      
+      // Calculate price history entry for events if this is an edit
+      const priceHistoryEntry: any[] = [];
+      
+      // If events were added or removed, track in price history
+      if (isEditing && initialData && (initialData as any).selectedEvents) {
+        const previousEvents = (initialData as any).selectedEvents || [];
+        const previousEventIds = previousEvents.map((e: any) => e.eventId?.toString() || e.eventId);
+        const currentEventIds = selectedEvents.map((e) => e.eventId);
+        
+        // Check if events changed
+        const eventsAdded = currentEventIds.filter((id) => !previousEventIds.includes(id));
+        const eventsRemoved = previousEventIds.filter((id: string) => !currentEventIds.includes(id));
+        
+        if (eventsAdded.length > 0 || eventsRemoved.length > 0) {
+          const changeDescription = [];
+          if (eventsAdded.length > 0) {
+            const addedNames = selectedEvents
+              .filter((e) => eventsAdded.includes(e.eventId))
+              .map((e) => e.eventName)
+              .join(', ');
+            changeDescription.push(`Added: ${addedNames}`);
+          }
+          if (eventsRemoved.length > 0) {
+            const removedNames = previousEvents
+              .filter((e: any) => eventsRemoved.includes(e.eventId?.toString() || e.eventId))
+              .map((e: any) => e.eventName)
+              .join(', ');
+            changeDescription.push(`Removed: ${removedNames}`);
+          }
+          
+          priceHistoryEntry.push({
+            price: data.totalPrice,
+            reason: 'manual_override',
+            changeDescription: `Events modified: ${changeDescription.join('; ')}`,
+            timestamp: new Date().toISOString(),
+          });
+        }
+      }
+      
+      // Include linkedPackage data and selectedEvents if available
       const submitData = {
         ...data,
         ...(linkedPackageInfo && {
@@ -271,14 +446,36 @@ export default function QuoteForm({
             priceWasOnRequest: linkedPackageInfo.originalPrice === 'ON_REQUEST',
           },
         }),
+        // Include selected events with proper structure (convert Date to ISO string)
+        selectedEvents: selectedEvents.map((event) => ({
+          eventId: event.eventId,
+          eventName: event.eventName,
+          eventPrice: event.eventPrice,
+          eventCurrency: event.eventCurrency as 'GBP' | 'EUR' | 'USD',
+          addedAt: event.addedAt.toISOString(),
+        })),
+        // Include price history if events changed
+        ...(priceHistoryEntry.length > 0 && {
+          priceHistory: priceHistoryEntry,
+        }),
       };
       
       await onSubmit(submitData as QuoteFormData);
       reset(data); // Reset form state to mark as clean
     } catch (error) {
-      setSubmitError(
-        error instanceof Error ? error.message : 'Failed to save quote'
-      );
+      // Enhanced error handling for event-related failures
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save quote';
+      
+      // Check if error is related to events
+      if (errorMessage.toLowerCase().includes('event')) {
+        setSubmitError(
+          `Event-related error: ${errorMessage}\n\nPlease verify that all selected events are valid and try again.`
+        );
+      } else {
+        setSubmitError(errorMessage);
+      }
+      
+      console.error('Quote submission error:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -314,8 +511,17 @@ export default function QuoteForm({
         
         // IMPORTANT: Use totalPrice from calculation (not price field)
         // The totalPrice is already calculated as pricePerPerson × numberOfPeople
+        // Set basePrice separately from events total
+        const packagePrice = selection.priceCalculation.totalPrice !== 'ON_REQUEST' 
+          ? selection.priceCalculation.totalPrice 
+          : 0;
+        
         if (selection.priceCalculation.totalPrice !== 'ON_REQUEST') {
-          setValue('totalPrice', selection.priceCalculation.totalPrice);
+          setBasePrice(packagePrice);
+          // Total price will be auto-calculated by the useEffect that watches basePrice + eventsTotal
+        } else {
+          // For ON_REQUEST packages, set basePrice to 0 and allow manual entry
+          setBasePrice(0);
         }
         
         // Add accommodation examples to internal notes
@@ -336,6 +542,8 @@ export default function QuoteForm({
           originalPrice: selection.priceCalculation.totalPrice, // Store total price
           pricePerPerson: selection.priceCalculation.pricePerPerson, // Store per-person price
         });
+        
+        // Note: selectedEvents are preserved - they are not cleared when selecting a package
       } catch (error) {
         setSubmitError(
           error instanceof Error ? error.message : 'Failed to apply package'
@@ -370,14 +578,78 @@ export default function QuoteForm({
     const newPrice = parseFloat(e.target.value) || 0;
     setValue('totalPrice', newPrice);
     
-    // If there's a linked package and price differs from calculated total, mark as custom
-    // The calculatedPrice from useQuotePrice hook should already be the total price
-    if (linkedPackageInfo && calculatedPrice && calculatedPrice !== 'ON_REQUEST') {
+    // If there's a linked package and price differs from calculated total (base + events), mark as custom
+    if (linkedPackageInfo) {
+      const expectedTotal = basePrice + eventsTotal;
       // Compare with a small tolerance for floating point precision
-      if (Math.abs(newPrice - calculatedPrice) > 0.01) {
+      if (Math.abs(newPrice - expectedTotal) > 0.01) {
         markAsCustomPrice();
       }
     }
+  };
+  
+  // Handle event selection from EventSelector
+  const handleEventSelectionChange = async (eventIds: string[]) => {
+    try {
+      // Fetch event details for newly selected events
+      const newEventIds = eventIds.filter(
+        (id) => !selectedEvents.some((e) => e.eventId === id)
+      );
+      
+      if (newEventIds.length > 0) {
+        // Call API to get event details with prices
+        const response = await fetch('/api/admin/quotes/calculate-events-price', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ eventIds: newEventIds }),
+        });
+        
+        const data = await response.json();
+        
+        if (data.success && data.data.events) {
+          const newEvents = data.data.events.map((event: any) => ({
+            eventId: event.eventId,
+            eventName: event.eventName,
+            eventPrice: event.price,
+            eventCurrency: event.currency,
+            addedAt: new Date(),
+          }));
+          
+          // Add new events to selectedEvents
+          setSelectedEvents((prev) => [...prev, ...newEvents]);
+        }
+      }
+      
+      // Remove deselected events
+      const removedEventIds = selectedEvents
+        .map((e) => e.eventId)
+        .filter((id) => !eventIds.includes(id));
+      
+      if (removedEventIds.length > 0) {
+        setSelectedEvents((prev) =>
+          prev.filter((e) => !removedEventIds.includes(e.eventId))
+        );
+      }
+    } catch (error) {
+      console.error('Error updating event selection:', error);
+      setSubmitError('Failed to update event selection');
+    }
+  };
+  
+  // Handle removing individual event from SelectedEventsList
+  const handleRemoveEvent = (eventId: string) => {
+    setSelectedEvents((prev) => prev.filter((e) => e.eventId !== eventId));
+  };
+
+  // Handle toggling per-person pricing for an event
+  const handleTogglePricePerPerson = (eventId: string) => {
+    setSelectedEvents((prev) =>
+      prev.map((event) =>
+        event.eventId === eventId
+          ? { ...event, pricePerPerson: !event.pricePerPerson }
+          : event
+      )
+    );
   };
 
   return (
@@ -921,44 +1193,48 @@ export default function QuoteForm({
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      {...register('transferIncluded')}
-                      className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-700">
-                      Transfer Included
-                    </span>
-                  </label>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="activitiesIncluded"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Activities Included
-                  </label>
-                  <textarea
-                    id="activitiesIncluded"
-                    {...register('activitiesIncluded')}
-                    rows={2}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.activitiesIncluded
-                        ? 'border-red-500'
-                        : 'border-gray-300'
-                    }`}
-                    placeholder="List any activities included..."
+              <div className="mb-4">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    {...register('transferIncluded')}
+                    className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                   />
-                  {errors.activitiesIncluded && (
-                    <p className="text-red-600 text-sm mt-1">
-                      {errors.activitiesIncluded.message}
-                    </p>
-                  )}
-                </div>
+                  <span className="ml-2 text-sm font-medium text-gray-700">
+                    Transfer Included
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            {/* Events & Activities */}
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Events & Activities
+              </h3>
+              
+              {/* Event Selector */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Select Events
+                </label>
+                <EventSelector
+                  destination={destination}
+                  selectedEvents={selectedEvents.map((e) => e.eventId)}
+                  onChange={handleEventSelectionChange}
+                  className="mb-4"
+                />
+              </div>
+              
+              {/* Selected Events List */}
+              <div>
+                <SelectedEventsList
+                  events={selectedEvents}
+                  onRemove={handleRemoveEvent}
+                  onTogglePricePerPerson={handleTogglePricePerPerson}
+                  numberOfPeople={numberOfPeople}
+                  currency={currency}
+                />
               </div>
             </div>
 
@@ -982,6 +1258,13 @@ export default function QuoteForm({
                           status={syncStatus}
                           priceBreakdown={priceBreakdown || undefined}
                           error={priceError || undefined}
+                          eventsTotal={eventsTotal}
+                          selectedEvents={selectedEvents.map((e) => ({
+                            eventId: e.eventId,
+                            eventName: e.eventName,
+                            eventPrice: e.eventPrice,
+                            eventCurrency: e.eventCurrency,
+                          }))}
                           onRecalculate={async () => {
                             try {
                               console.log('Recalculating price...', { linkedPackageInfo, numberOfPeople, numberOfNights, arrivalDate });
@@ -1063,25 +1346,22 @@ export default function QuoteForm({
                 </div>
               </div>
 
-              {/* Price Summary */}
-              {totalPrice > 0 && (
-                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                  <div className="text-sm">
-                    <p>
-                      <span className="font-medium">Total Price:</span>{' '}
-                      {formatCurrency(totalPrice, currency)}
-                    </p>
-                    <p>
-                      <span className="font-medium">Price per Person:</span>{' '}
-                      {formatCurrency(totalPrice / numberOfPeople, currency)}
-                    </p>
-                    <p>
-                      <span className="font-medium">Price per Room:</span>{' '}
-                      {formatCurrency(totalPrice / numberOfRooms, currency)}
-                    </p>
-                  </div>
-                </div>
-              )}
+              {/* Price Breakdown */}
+              <PriceBreakdown
+                basePrice={basePrice}
+                eventsTotal={eventsTotal}
+                totalPrice={totalPrice}
+                currency={currency}
+                selectedEvents={selectedEvents}
+                numberOfPeople={numberOfPeople}
+                numberOfRooms={numberOfRooms}
+                numberOfNights={numberOfNights}
+                linkedPackageInfo={linkedPackageInfo}
+                priceBreakdown={priceBreakdown}
+                syncStatus={syncStatus}
+                className="mt-4"
+                defaultExpanded={true}
+              />
             </div>
 
             {/* Internal Notes */}

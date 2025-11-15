@@ -130,6 +130,7 @@ export interface UseQuotePriceOptions {
   currentPrice: number;
   onPriceUpdate: (price: number) => void;
   autoRecalculate?: boolean; // Default: true
+  eventsTotal?: number; // Optional: Total price of selected events to include in calculation
 }
 
 /**
@@ -167,6 +168,16 @@ export interface PriceHistoryEntry {
 }
 
 /**
+ * Selected event information for price breakdown display
+ */
+export interface SelectedEventInfo {
+  eventId: string;
+  eventName: string;
+  eventPrice: number;
+  eventCurrency: string;
+}
+
+/**
  * Props for the PriceSyncIndicator component
  */
 export interface PriceSyncIndicatorProps {
@@ -175,6 +186,8 @@ export interface PriceSyncIndicatorProps {
   error?: string;
   onRecalculate?: () => void;
   onResetToCalculated?: () => void;
+  eventsTotal?: number; // Total price of selected events
+  selectedEvents?: SelectedEventInfo[]; // List of selected events for breakdown display
 }
 
 /**

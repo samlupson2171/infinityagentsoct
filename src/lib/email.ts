@@ -1074,6 +1074,15 @@ export async function sendQuoteEmail(data: {
     selectedTier: string;
     selectedPeriod: string;
   };
+  // Selected Events
+  selectedEvents?: Array<{
+    eventId: string;
+    eventName: string;
+    eventPrice: number;
+    eventCurrency: string;
+  }>;
+  basePrice?: number; // Price before events
+  eventsTotal?: number; // Total price of all events
 }) {
   const subject = `Your Quote from Infinity Weekends - ${data.quoteReference}`;
   const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
@@ -1217,12 +1226,88 @@ export async function sendQuoteEmail(data: {
         `
             : ''
         }
+
+        ${
+          data.selectedEvents && data.selectedEvents.length > 0
+            ? `
+        <div style="margin-top: 20px; padding: 20px; background-color: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+          <h4 style="margin: 0 0 15px 0; color: #856404; font-size: 18px;">🎉 Selected Events & Activities</h4>
+          <div style="background-color: white; padding: 15px; border-radius: 6px;">
+            ${data.selectedEvents
+              .map(
+                (event, index) => `
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; ${index < data.selectedEvents!.length - 1 ? 'border-bottom: 1px solid #e9ecef;' : ''}">
+                <div style="flex: 1;">
+                  <span style="color: #212529; font-size: 15px; font-weight: 500;">${event.eventName}</span>
+                </div>
+                <div style="text-align: right;">
+                  <span style="color: #007bff; font-size: 16px; font-weight: bold;">${event.eventPrice.toLocaleString('en-GB', {
+                    style: 'currency',
+                    currency: event.eventCurrency,
+                  })}</span>
+                </div>
+              </div>
+            `
+              )
+              .join('')}
+            ${
+              data.eventsTotal
+                ? `
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #ffc107;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #856404; font-size: 16px; font-weight: bold;">Events Subtotal:</span>
+                <span style="color: #856404; font-size: 18px; font-weight: bold;">${data.eventsTotal.toLocaleString('en-GB', {
+                  style: 'currency',
+                  currency: data.currency,
+                })}</span>
+              </div>
+            </div>
+            `
+                : ''
+            }
+          </div>
+        </div>
+        `
+            : ''
+        }
       </div>
 
       <!-- Pricing -->
       <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 30px; border-radius: 12px; margin-bottom: 30px; text-align: center;">
         <h3 style="margin: 0 0 15px 0; font-size: 24px;">💰 Total Package Price</h3>
+        
+        ${
+          data.basePrice && data.eventsTotal && data.selectedEvents && data.selectedEvents.length > 0
+            ? `
+        <!-- Price Breakdown -->
+        <div style="background-color: rgba(255, 255, 255, 0.15); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-size: 16px; opacity: 0.9;">Base Package Price:</span>
+            <span style="font-size: 20px; font-weight: 600;">${data.basePrice.toLocaleString('en-GB', {
+              style: 'currency',
+              currency: data.currency,
+            })}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-size: 16px; opacity: 0.9;">Events & Activities (${data.selectedEvents.length}):</span>
+            <span style="font-size: 20px; font-weight: 600;">${data.eventsTotal.toLocaleString('en-GB', {
+              style: 'currency',
+              currency: data.currency,
+            })}</span>
+          </div>
+          <div style="border-top: 2px solid rgba(255, 255, 255, 0.3); margin: 15px 0; padding-top: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 18px; font-weight: bold;">Total Price:</span>
+              <span style="font-size: 28px; font-weight: bold;">${data.formattedPrice}</span>
+            </div>
+          </div>
+        </div>
+        `
+            : `
         <div style="font-size: 48px; font-weight: bold; margin: 20px 0;">${data.formattedPrice}</div>
+        `
+        }
+        
         <div style="font-size: 18px; opacity: 0.9; margin-bottom: 15px;">
           ${(data.totalPrice / data.numberOfPeople).toLocaleString('en-GB', {
             style: 'currency',

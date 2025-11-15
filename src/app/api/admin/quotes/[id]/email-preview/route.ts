@@ -137,7 +137,41 @@ export async function GET(
             </div>
 
             ${
-              quote.activitiesIncluded
+              quote.selectedEvents && quote.selectedEvents.length > 0
+                ? `
+            <div style="margin-top: 20px; padding: 15px; background-color: #e7f3ff; border-radius: 8px; border-left: 4px solid #007bff;">
+              <h4 style="margin: 0 0 10px 0; color: #0056b3;">🎯 Activities & Experiences</h4>
+              <ul style="margin: 10px 0; padding-left: 20px;">
+                ${quote.selectedEvents
+                  .map((event: any) => {
+                    const eventCost = event.pricePerPerson 
+                      ? event.eventPrice * quote.numberOfPeople 
+                      : event.eventPrice;
+                    const currencySymbol = event.eventCurrency === 'GBP' ? '£' : event.eventCurrency === 'EUR' ? '€' : '$';
+                    const formattedPrice = `${currencySymbol}${eventCost.toFixed(2)}`;
+                    const priceDetail = event.pricePerPerson 
+                      ? ` (${currencySymbol}${event.eventPrice.toFixed(2)} per person × ${quote.numberOfPeople})`
+                      : '';
+                    
+                    return `<li style="margin-bottom: 8px;"><strong>${event.eventName}</strong> - ${formattedPrice}${priceDetail}</li>`;
+                  })
+                  .join('')}
+              </ul>
+              <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #b8daff; font-weight: bold; color: #0056b3;">
+                Events Total: ${(() => {
+                  const eventsTotal = quote.selectedEvents.reduce((sum: number, event: any) => {
+                    const eventCost = event.pricePerPerson 
+                      ? event.eventPrice * quote.numberOfPeople 
+                      : event.eventPrice;
+                    return sum + eventCost;
+                  }, 0);
+                  const currencySymbol = quote.currency === 'GBP' ? '£' : quote.currency === 'EUR' ? '€' : '$';
+                  return `${currencySymbol}${eventsTotal.toFixed(2)}`;
+                })()}
+              </div>
+            </div>
+            `
+                : quote.activitiesIncluded
                 ? `
             <div style="margin-top: 20px; padding: 15px; background-color: #e7f3ff; border-radius: 8px; border-left: 4px solid #007bff;">
               <h4 style="margin: 0 0 10px 0; color: #0056b3;">🎯 Activities & Experiences</h4>

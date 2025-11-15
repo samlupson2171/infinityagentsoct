@@ -195,7 +195,7 @@ export class SecureEmailRenderer {
   /**
    * Create secure email context with sanitized data
    */
-  static createSecureContext(context: SecureEmailContext): SecureEmailContext {
+  static createSecureContext(context: SecureEmailContext): any {
     return {
       quote: {
         ...context.quote,
@@ -208,13 +208,18 @@ export class SecureEmailRenderer {
         internalNotes: this.sanitizeText(context.quote.internalNotes || ''),
         totalPrice: Math.abs(context.quote.totalPrice || 0),
         currency: this.sanitizeText(context.quote.currency || 'GBP'),
+        selectedEvents: context.quote.selectedEvents?.map(event => ({
+          ...event,
+          eventName: this.sanitizeText(event.eventName),
+          eventPrice: Math.abs(event.eventPrice || 0),
+          eventCurrency: this.sanitizeText(event.eventCurrency || 'GBP'),
+        })),
       },
       enquiry: {
         ...context.enquiry,
         leadName: this.sanitizeText(context.enquiry.leadName),
         agentEmail: this.sanitizeEmail(context.enquiry.agentEmail),
         resort: this.sanitizeText(context.enquiry.resort || ''),
-        message: this.sanitizeHTML(context.enquiry.message || ''),
       },
       companyInfo: {
         name: this.sanitizeText(context.companyInfo.name),
@@ -233,9 +238,8 @@ export class SecureEmailRenderer {
     const { quote, enquiry, companyInfo } = secureContext;
 
     // Generate secure tracking token (without exposing sensitive data)
-    const trackingToken = this.generateSecureTrackingToken(
-      quote._id.toString()
-    );
+    const quoteId = quote._id ? quote._id.toString() : '';
+    const trackingToken = this.generateSecureTrackingToken(quoteId);
 
     const emailHTML = `
 <!DOCTYPE html>
@@ -300,7 +304,81 @@ export class SecureEmailRenderer {
                 }
             </div>
             
+            ${
+              quote.selectedEvents && quote.selectedEvents.length > 0
+                ? `
+            <div class="quote-details" style="background: #e7f3ff; border-left: 4px solid #007bff;">
+                <h3 style="color: #0056b3; margin-top: 0;">🎯 Activities & Experiences</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th style="text-align: right;">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${quote.selectedEvents
+                          .map(
+                            (event: any) => {
+                              const eventCost = event.pricePerPerson 
+                                ? event.eventPrice * quote.numberOfPeople 
+                                : event.eventPrice;
+                              const currencySymbol = event.eventCurrency === 'GBP' ? '£' : event.eventCurrency === 'EUR' ? '€' : '$';
+                              const formattedPrice = `${currencySymbol}${eventCost.toFixed(2)}`;
+                              const priceDetail = event.pricePerPerson 
+                                ? `<br><small style="color: #666;">(${currencySymbol}${event.eventPrice.toFixed(2)} per person × ${quote.numberOfPeople})</small>`
+                                : '';
+                              
+                              return `
+                        <tr>
+                            <td><strong>${event.eventName}</strong></td>
+                            <td style="text-align: right; font-weight: bold; color: #007bff;">
+                                ${formattedPrice}${priceDetail}
+                            </td>
+                        </tr>
+                        `;
+                            }
+                          )
+                          .join('')}
+                        <tr style="border-top: 2px solid #007bff;">
+                            <td style="font-weight: bold; color: #0056b3;">Events Total:</td>
+                            <td style="text-align: right; font-weight: bold; color: #0056b3;">
+                                ${(() => {
+                                  const eventsTotal = quote.selectedEvents.reduce((sum: number, event: any) => {
+                                    const eventCost = event.pricePerPerson 
+                                      ? event.eventPrice * quote.numberOfPeople 
+                                      : event.eventPrice;
+                                    return sum + eventCost;
+                                  }, 0);
+                                  const currencySymbol = quote.currency === 'GBP' ? '£' : quote.currency === 'EUR' ? '€' : '$';
+                                  return `${currencySymbol}${eventsTotal.toFixed(2)}`;
+                                })()}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            `
+                : ''
+            }
+            
             <div class="price-highlight">
+                ${
+                  quote.selectedEvents && quote.selectedEvents.length > 0
+                    ? `
+                <div style="font-size: 16px; margin-bottom: 10px; color: #666;">
+                    Base Price: ${this.sanitizeCurrency(
+                      quote.totalPrice - quote.selectedEvents.reduce((sum: number, event: any) => sum + event.eventPrice, 0),
+                      quote.currency
+                    )} + 
+                    Events: ${this.sanitizeCurrency(
+                      quote.selectedEvents.reduce((sum: number, event: any) => sum + event.eventPrice, 0),
+                      quote.currency
+                    )}
+                </div>
+                `
+                    : ''
+                }
                 Total Price: ${this.sanitizeCurrency(quote.totalPrice, quote.currency)}
             </div>
             

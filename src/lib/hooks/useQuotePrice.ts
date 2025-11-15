@@ -36,6 +36,7 @@ import type {
  * - Custom price detection and tracking
  * - Parameter validation against package constraints
  * - Manual recalculation and reset actions
+ * - Events pricing integration
  * 
  * @param options - Configuration options for the hook
  * @returns Price sync state and actions
@@ -49,6 +50,7 @@ export function useQuotePrice(options: UseQuotePriceOptions): UseQuotePriceRetur
     currentPrice,
     onPriceUpdate,
     autoRecalculate = true,
+    eventsTotal = 0, // Optional events total to include in price calculation
   } = options;
 
   // State management
@@ -142,21 +144,25 @@ export function useQuotePrice(options: UseQuotePriceOptions): UseQuotePriceRetur
     const endTiming = startTiming('price-update-ui');
 
     if (priceQuery.data.price !== 'ON_REQUEST') {
+      // The package price is the base price (without events)
+      // Add eventsTotal to get the final total price
+      const packagePrice = priceQuery.data.price;
+      const totalWithEvents = packagePrice + eventsTotal;
+      
       // Only update if price actually changed to avoid infinite loops
-      if (currentPrice !== priceQuery.data.price) {
-        onPriceUpdate(priceQuery.data.price);
+      // Compare with a small tolerance for floating point precision
+      if (Math.abs(currentPrice - totalWithEvents) > 0.01) {
+        onPriceUpdate(totalWithEvents);
       }
       setSyncStatus('synced');
+      
+      endTiming();
     } else {
       // Price is ON_REQUEST, mark as custom to allow manual entry
       setSyncStatus('custom');
+      endTiming();
     }
-
-    endTiming({
-      price: priceQuery.data.price,
-      wasOnRequest: priceQuery.data.price === 'ON_REQUEST',
-    });
-  }, [priceQuery.data, isCustomPrice]);
+  }, [priceQuery.data, isCustomPrice, eventsTotal, currentPrice, onPriceUpdate]);
 
   // Handle loading state
   useEffect(() => {
@@ -191,15 +197,16 @@ export function useQuotePrice(options: UseQuotePriceOptions): UseQuotePriceRetur
     // Skip if price is ON_REQUEST (manual entry expected)
     if (priceQuery.data.price === 'ON_REQUEST') return;
 
-    // Check if current price differs from calculated price
-    const calculatedPrice = priceQuery.data.price;
-    const priceDiffers = Math.abs(currentPrice - calculatedPrice) > 0.01; // Allow for floating point precision
+    // Check if current price differs from calculated price (base + events)
+    const calculatedTotal = priceQuery.data.price + eventsTotal;
+    const priceDiffers = Math.abs(currentPrice - calculatedTotal) > 0.01; // Allow for floating point precision
 
+    // Only mark as custom if the price differs AND it's not the initial load
     if (priceDiffers && currentPrice !== initialPriceRef.current) {
       setIsCustomPrice(true);
       setSyncStatus('custom');
     }
-  }, [currentPrice, priceQuery.data, linkedPackage]);
+  }, [currentPrice, priceQuery.data, linkedPackage, eventsTotal]);
 
   // Validate parameters against package constraints
   useEffect(() => {
@@ -230,16 +237,17 @@ export function useQuotePrice(options: UseQuotePriceOptions): UseQuotePriceRetur
     try {
       // Trigger a refetch
       await priceQuery.refetch();
-      endTiming({ success: true, packageId: linkedPackage.packageId });
+      endTiming({ success: true, packageId: linkedPackage.packageId, eventsTotal: eventsTotal || 0 });
     } catch (error) {
       endTiming({ 
         success: false, 
         packageId: linkedPackage.packageId,
+        eventsTotal: eventsTotal || 0,
         error: error instanceof Error ? error.message : 'Unknown error',
       });
       throw error;
     }
-  }, [linkedPackage, priceQuery]);
+  }, [linkedPackage, priceQuery, eventsTotal]);
 
   // Action: Mark as custom price
   const markAsCustomPrice = useCallback(() => {
@@ -247,20 +255,24 @@ export function useQuotePrice(options: UseQuotePriceOptions): UseQuotePriceRetur
     setSyncStatus('custom');
   }, []);
 
-  // Action: Reset to calculated price
+  // Action: Reset to calculated price (including events)
   const resetToCalculated = useCallback(() => {
     setIsCustomPrice(false);
     
     if (priceQuery.data?.price !== 'ON_REQUEST' && typeof priceQuery.data?.price === 'number') {
-      onPriceUpdate(priceQuery.data.price);
+      // Reset to calculated base price + events total
+      const totalWithEvents = priceQuery.data.price + eventsTotal;
+      onPriceUpdate(totalWithEvents);
       setSyncStatus('synced');
     } else {
       setSyncStatus('calculating');
       priceQuery.refetch();
     }
-  }, [priceQuery, onPriceUpdate]);
+  }, [priceQuery, onPriceUpdate, eventsTotal]);
 
   // Build price breakdown from query data
+  // Note: totalPrice in breakdown is the BASE package price (without events)
+  // The parent component displays eventsTotal separately and adds it to get the final total
   const priceBreakdown: PriceBreakdown | null = priceQuery.data
     ? {
         pricePerPerson: priceQuery.data.breakdown?.pricePerPerson || 0,
@@ -275,7 +287,7 @@ export function useQuotePrice(options: UseQuotePriceOptions): UseQuotePriceRetur
   return {
     // State
     syncStatus: isCustomPrice ? 'custom' : syncStatus,
-    calculatedPrice: priceQuery.data?.price ?? null,
+    calculatedPrice: priceQuery.data?.price ?? null, // This is the BASE package price (without events). Parent adds eventsTotal for final price.
     priceBreakdown,
     error: priceQuery.error ? getUserFriendlyMessage(priceQuery.error) : null,
 

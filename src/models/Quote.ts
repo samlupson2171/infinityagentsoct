@@ -16,9 +16,19 @@ export interface IQuote extends Document {
   isSuperPackage: boolean;
   whatsIncluded: string;
   transferIncluded: boolean;
-  activitiesIncluded: string;
+  activitiesIncluded: string; // Deprecated: Use selectedEvents instead
   totalPrice: number;
   currency: string; // Default: 'GBP'
+
+  // Selected Events (replaces activitiesIncluded)
+  selectedEvents?: Array<{
+    eventId: mongoose.Types.ObjectId;
+    eventName: string;
+    eventPrice: number;
+    eventCurrency: string;
+    pricePerPerson?: boolean; // Whether price is per person or flat rate
+    addedAt: Date;
+  }>
 
   // Quote metadata
   version: number; // For version history
@@ -56,7 +66,12 @@ export interface IQuote extends Document {
   // Price History
   priceHistory?: Array<{
     price: number;
-    reason: 'package_selection' | 'recalculation' | 'manual_override';
+    reason:
+      | 'package_selection'
+      | 'recalculation'
+      | 'manual_override'
+      | 'event_added'
+      | 'event_removed';
     timestamp: Date;
     userId: mongoose.Types.ObjectId;
   }>;
@@ -169,6 +184,42 @@ const QuoteSchema = new Schema<IQuote>(
       type: String,
       maxlength: 1000,
     },
+
+    // Selected Events (replaces activitiesIncluded)
+    selectedEvents: [
+      {
+        eventId: {
+          type: Schema.Types.ObjectId,
+          ref: 'Event',
+          required: true,
+        },
+        eventName: {
+          type: String,
+          required: true,
+          trim: true,
+          maxlength: 200,
+        },
+        eventPrice: {
+          type: Number,
+          required: true,
+          min: 0,
+        },
+        eventCurrency: {
+          type: String,
+          required: true,
+          enum: ['GBP', 'EUR', 'USD'],
+        },
+        pricePerPerson: {
+          type: Boolean,
+          default: false,
+        },
+        addedAt: {
+          type: Date,
+          default: Date.now,
+          required: true,
+        },
+      },
+    ],
 
     // Pricing
     totalPrice: {
@@ -291,7 +342,13 @@ const QuoteSchema = new Schema<IQuote>(
         },
         reason: {
           type: String,
-          enum: ['package_selection', 'recalculation', 'manual_override'],
+          enum: [
+            'package_selection',
+            'recalculation',
+            'manual_override',
+            'event_added',
+            'event_removed',
+          ],
           required: true,
         },
         timestamp: {
@@ -357,6 +414,7 @@ QuoteSchema.index({
   'bookingInterest.expressedAt': -1,
 });
 QuoteSchema.index({ 'linkedPackage.packageId': 1 }, { sparse: true });
+QuoteSchema.index({ 'selectedEvents.eventId': 1 }, { sparse: true });
 
 // Virtual for formatted price
 QuoteSchema.virtual('formattedPrice').get(function (this: IQuote) {
