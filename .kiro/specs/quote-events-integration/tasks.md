@@ -68,7 +68,7 @@
   - Add maximum events limit (20)
   - Remove activitiesIncluded from required fields
   - _Requirements: 1.1, 1.2, 5.1_
-sur- [x] 9. Update quote API routes to handle events
+  - [x] 9. Update quote API routes to handle events
   - Update POST `/api/admin/quotes/route.ts` to save selectedEvents
   - Update PUT `/api/admin/quotes/[id]/route.ts` to update selectedEvents
   - Update GET routes to populate event details
