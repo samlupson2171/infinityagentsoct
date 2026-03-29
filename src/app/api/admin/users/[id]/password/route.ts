@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth-middleware';
 import { connectDB } from '@/lib/mongodb';
 import User from '@/models/User';
-import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 
 
@@ -41,11 +40,9 @@ export async function PUT(
       );
     }
 
-    // Hash the new password
-    const hashedPassword = await bcrypt.hash(newPassword, 12);
-
-    // Update user password
-    user.password = hashedPassword;
+    // Set the plain password — the User model's pre('save') middleware
+    // will hash it automatically via bcrypt
+    user.password = newPassword;
     user.updatedAt = new Date();
     await user.save();
 

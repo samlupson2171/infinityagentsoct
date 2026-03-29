@@ -6,11 +6,9 @@ import User from '@/models/User';
 import { connectDB } from '@/lib/mongodb';
 
 const client = new MongoClient(process.env.MONGODB_URI!, {
-  // Basic connection options for local MongoDB - no SSL
   maxPoolSize: 10,
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
-  ssl: false, // Explicitly disable SSL for local MongoDB
 });
 const clientPromise = client.connect();
 
