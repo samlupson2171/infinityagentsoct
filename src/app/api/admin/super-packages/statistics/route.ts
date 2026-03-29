@@ -5,6 +5,8 @@ import dbConnect from '@/lib/mongodb';
 import SuperOfferPackage from '@/models/SuperOfferPackage';
 import Quote from '@/models/Quote';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     // Check authentication and authorization

@@ -5,6 +5,8 @@ import connectDB from '@/lib/mongodb';
 import SuperOfferPackage from '@/models/SuperOfferPackage';
 import { SuperPackageCSVExporter } from '@/lib/super-package-csv-exporter';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/admin/super-packages/export
  * Export super packages to CSV format
