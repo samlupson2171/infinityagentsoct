@@ -23,7 +23,14 @@ interface EnquiryWithId
   };
   quotes?: Array<{
     _id: string;
-    status: 'draft' | 'sent' | 'updated';
+    title?: string;
+    destination?: string;
+    leadName?: string;
+    hotelName?: string;
+    numberOfPeople?: number;
+    numberOfNights?: number;
+    arrivalDate?: string;
+    status: 'draft' | 'sent' | 'updated' | 'booked';
     totalPrice: number;
     currency: string;
     createdAt: string;
@@ -124,6 +131,83 @@ export default function EnquiriesManager({
         );
       }
 
+      fetchEnquiries();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleConfirmBooking = async (quoteId: string) => {
+    try {
+      setActionLoading(quoteId);
+      const response = await fetch(`/api/admin/quotes/${quoteId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'booked' }),
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error?.message || 'Failed to confirm booking');
+      }
+      fetchEnquiries();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleSendQuote = async (quoteId: string) => {
+    try {
+      setActionLoading(`send-${quoteId}`);
+      const response = await fetch(`/api/admin/quotes/${quoteId}/send`, {
+        method: 'POST',
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error?.message || data.error || 'Failed to send quote');
+      }
+      fetchEnquiries();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleDeleteQuote = async (quoteId: string) => {
+    if (!confirm('Are you sure you want to delete this quote?')) return;
+    try {
+      setActionLoading(`del-${quoteId}`);
+      const response = await fetch(`/api/admin/quotes/${quoteId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error?.message || 'Failed to delete quote');
+      }
+      fetchEnquiries();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleUpdateQuoteStatus = async (quoteId: string, newStatus: string) => {
+    try {
+      setActionLoading(`status-${quoteId}`);
+      const response = await fetch(`/api/admin/quotes/${quoteId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error?.message || 'Failed to update quote status');
+      }
       fetchEnquiries();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -242,6 +326,10 @@ export default function EnquiriesManager({
         return 'bg-blue-100 text-blue-800';
       case 'updated':
         return 'bg-yellow-100 text-yellow-800';
+      case 'accepted':
+        return 'bg-orange-100 text-orange-800';
+      case 'booked':
+        return 'bg-emerald-100 text-emerald-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -456,7 +544,7 @@ export default function EnquiriesManager({
                               {formatTripType(enquiry.tripType)}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {enquiry.resort} •{' '}
+                              {enquiry.firstChoiceDestination}{enquiry.resort ? ` • ${enquiry.resort}` : ''} •{' '}
                               {formatDate(enquiry.travelDate)}
                             </div>
                             <div className="text-xs text-gray-400">
@@ -495,7 +583,7 @@ export default function EnquiriesManager({
                                 {enquiry.quotes.length !== 1 ? 's' : ''}
                               </div>
                               <div className="text-xs text-gray-500">
-                                Latest:{' '}
+                                {enquiry.quotes[0].title || enquiry.quotes[0].destination || 'Untitled'} ·{' '}
                                 {formatCurrency(
                                   enquiry.quotes[0].totalPrice,
                                   enquiry.quotes[0].currency
@@ -788,9 +876,21 @@ export default function EnquiriesManager({
                   </h4>
                   <div className="space-y-2 text-sm">
                     <div>
-                      <span className="font-medium">Destination:</span>{' '}
-                      {selectedEnquiry.resort}
+                      <span className="font-medium">1st Choice Destination:</span>{' '}
+                      {selectedEnquiry.firstChoiceDestination}
                     </div>
+                    {selectedEnquiry.secondChoiceDestination && (
+                      <div>
+                        <span className="font-medium">2nd Choice Destination:</span>{' '}
+                        {selectedEnquiry.secondChoiceDestination}
+                      </div>
+                    )}
+                    {selectedEnquiry.resort && (
+                      <div>
+                        <span className="font-medium">Specific Resort:</span>{' '}
+                        {selectedEnquiry.resort}
+                      </div>
+                    )}
                     <div>
                       <span className="font-medium">Travel Date:</span>{' '}
                       {formatDateTime(selectedEnquiry.travelDate)}
@@ -824,6 +924,10 @@ export default function EnquiriesManager({
                       {selectedEnquiry.accommodationType === 'hotel'
                         ? 'Hotel'
                         : 'Apartments'}
+                    </div>
+                    <div>
+                      <span className="font-medium">Star Rating:</span>{' '}
+                      {selectedEnquiry.starRating ? `${selectedEnquiry.starRating} Star` : 'Not specified'}
                     </div>
                     <div>
                       <span className="font-medium">Board:</span>{' '}
@@ -876,59 +980,126 @@ export default function EnquiriesManager({
                     onClick={() => handleCreateQuote(selectedEnquiry)}
                     className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-purple-700 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                   >
-                    <svg
-                      className="h-3 w-3 mr-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
+                    <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
                     Create Quote
                   </button>
                 </div>
 
                 {selectedEnquiry.quotes && selectedEnquiry.quotes.length > 0 ? (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {selectedEnquiry.quotes.map((quote) => (
-                      <div
-                        key={quote._id}
-                        className="bg-white p-3 rounded-md border border-purple-200"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="text-sm font-medium text-gray-900">
-                              {formatCurrency(quote.totalPrice, quote.currency)}
+                      <div key={quote._id} className="bg-white rounded-lg border border-purple-200 overflow-hidden">
+                        {/* Quote header */}
+                        <div className="p-4">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium text-gray-900">
+                                  {quote.title || quote.leadName || 'Untitled Quote'}
+                                </span>
+                                <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${getQuoteStatusColor(quote.status)}`}>
+                                  {quote.status}
+                                </span>
+                              </div>
+                              {quote.destination && (
+                                <p className="text-sm text-gray-500 mt-0.5">{quote.destination}</p>
+                              )}
                             </div>
-                            <div className="text-xs text-gray-500">
-                              Version {quote.version} • Created{' '}
-                              {formatDate(quote.createdAt)}
+                            <div className="text-right">
+                              <p className="text-lg font-bold text-gray-900">
+                                {formatCurrency(quote.totalPrice, quote.currency)}
+                              </p>
                             </div>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <span
-                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getQuoteStatusColor(quote.status)}`}
-                            >
-                              {quote.status}
-                            </span>
+
+                          {/* Quote details grid */}
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3 text-xs">
+                            {quote.hotelName && (
+                              <div><span className="text-gray-400">Hotel</span><p className="text-gray-700 font-medium">{quote.hotelName}</p></div>
+                            )}
+                            {quote.numberOfPeople && (
+                              <div><span className="text-gray-400">Guests</span><p className="text-gray-700 font-medium">{quote.numberOfPeople}</p></div>
+                            )}
+                            {quote.numberOfNights && (
+                              <div><span className="text-gray-400">Nights</span><p className="text-gray-700 font-medium">{quote.numberOfNights}</p></div>
+                            )}
+                            {quote.arrivalDate && (
+                              <div><span className="text-gray-400">Arrival</span><p className="text-gray-700 font-medium">{formatDate(quote.arrivalDate)}</p></div>
+                            )}
+                          </div>
+
+                          <p className="text-xs text-gray-400 mt-2">
+                            Version {quote.version} · Created {quote.createdAt ? formatDate(quote.createdAt) : 'Unknown'}
+                          </p>
+                        </div>
+
+                        {/* Quote actions bar */}
+                        <div className="bg-gray-50 border-t border-gray-100 px-4 py-3 flex flex-wrap items-center gap-2">
+                          {/* Send Quote - only for draft or updated */}
+                          {(quote.status === 'draft' || quote.status === 'updated') && (
                             <button
-                              onClick={() => {
-                                // Navigate to quote details - this would need to be implemented
-                                window.open(
-                                  `/admin/quotes?enquiry=${selectedEnquiry._id}`,
-                                  '_blank'
-                                );
-                              }}
-                              className="text-purple-600 hover:text-purple-900 text-xs"
+                              onClick={() => handleSendQuote(quote._id)}
+                              disabled={actionLoading === `send-${quote._id}`}
+                              className="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-xs font-medium px-3 py-1.5 rounded transition-colors"
                             >
-                              View
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                              {actionLoading === `send-${quote._id}` ? 'Sending...' : 'Send to Agent'}
                             </button>
-                          </div>
+                          )}
+
+                          {/* Confirm Booking - only for sent */}
+                          {quote.status === 'sent' && (
+                            <button
+                              onClick={() => handleConfirmBooking(quote._id)}
+                              disabled={actionLoading === quote._id}
+                              className="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white text-xs font-medium px-3 py-1.5 rounded transition-colors"
+                            >
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                              {actionLoading === quote._id ? 'Confirming...' : 'Confirm Booking'}
+                            </button>
+                          )}
+
+                          {/* Status changes */}
+                          {quote.status === 'sent' && (
+                            <button
+                              onClick={() => handleUpdateQuoteStatus(quote._id, 'updated')}
+                              disabled={!!actionLoading}
+                              className="inline-flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white text-xs font-medium px-3 py-1.5 rounded transition-colors"
+                            >
+                              Mark as Updated
+                            </button>
+                          )}
+
+                          {quote.status === 'booked' && (
+                            <span className="inline-flex items-center gap-1 text-emerald-700 text-xs font-medium px-3 py-1.5 bg-emerald-50 rounded">
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                              Booking Confirmed
+                            </span>
+                          )}
+
+                          {/* Edit - go to quote manager */}
+                          <button
+                            onClick={() => {
+                              closeDetailsModal();
+                              window.location.href = `/admin/quotes?enquiry=${selectedEnquiry._id}`;
+                            }}
+                            className="inline-flex items-center gap-1 text-gray-600 hover:text-gray-900 text-xs font-medium px-3 py-1.5 rounded hover:bg-gray-100 transition-colors"
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                            Edit Quote
+                          </button>
+
+                          {/* Delete */}
+                          {quote.status !== 'booked' && (
+                            <button
+                              onClick={() => handleDeleteQuote(quote._id)}
+                              disabled={actionLoading === `del-${quote._id}`}
+                              className="inline-flex items-center gap-1 text-red-600 hover:text-red-800 text-xs font-medium px-3 py-1.5 rounded hover:bg-red-50 transition-colors ml-auto"
+                            >
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                              {actionLoading === `del-${quote._id}` ? 'Deleting...' : 'Delete'}
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}

@@ -10,15 +10,13 @@ interface EnquiryFormData {
   tripType: 'stag' | 'hen' | 'other';
   firstChoiceDestination: string;
   secondChoiceDestination: string;
-  resort: string;
   travelDate: string;
   arrivalAirport: string;
   numberOfNights: number;
   numberOfGuests: number;
   eventsRequested: string[];
   accommodationType: 'hotel' | 'apartments';
-  starRating: string;
-  boardType: string;
+
   budgetPerPerson: number;
   additionalNotes: string;
   packageDetails?: {
@@ -48,15 +46,13 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
     tripType: 'stag',
     firstChoiceDestination: '',
     secondChoiceDestination: '',
-    resort: '',
     travelDate: '',
     arrivalAirport: '',
     numberOfNights: 3,
     numberOfGuests: 10,
     eventsRequested: [],
     accommodationType: 'hotel',
-    starRating: '',
-    boardType: '',
+
     budgetPerPerson: 500,
     additionalNotes: '',
   });
@@ -73,6 +69,14 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
     const twoNights = searchParams.get('twoNights');
     const threeNights = searchParams.get('threeNights');
     const fourNights = searchParams.get('fourNights');
+
+    // Pre-fill destination from any source (super packages page, etc.)
+    if (destination) {
+      setFormData((prev) => ({
+        ...prev,
+        firstChoiceDestination: destination,
+      }));
+    }
 
     if (
       destination &&
@@ -108,34 +112,27 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
   // Event options are now loaded dynamically via EventSelector component
 
   const destinationOptions = [
-    'Benidorm',
-    'Magaluf',
-    'Ibiza',
-    'Barcelona',
-    'Prague',
+    'Albufeira',
     'Amsterdam',
-    'Dublin',
-    'Budapest',
-    'Krakow',
+    'Barcelona',
+    'Benidorm',
     'Berlin',
-    'Munich',
-    'Vienna',
+    'Budapest',
+    'Dublin',
+    'Ibiza',
+    'Krakow',
     'Lisbon',
     'Madrid',
-    'Rome',
-    'Milan',
-    'Paris',
-    'Nice',
+    'Magaluf',
     'Marbella',
+    'Milan',
+    'Munich',
+    'Nice',
+    'Paris',
+    'Prague',
+    'Rome',
     'Salou',
-  ];
-
-  const boardTypeOptions = [
-    'Room Only',
-    'Bed & Breakfast',
-    'Half Board',
-    'Full Board',
-    'All Inclusive',
+    'Vienna',
   ];
 
   const handleInputChange = (
@@ -452,25 +449,6 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label
-                    htmlFor="resort"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Specific Resort/Hotel (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    id="resort"
-                    name="resort"
-                    value={formData.resort}
-                    onChange={handleInputChange}
-                    maxLength={100}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="e.g., Hotel Sol Pelicanos, Magaluf Strip"
-                  />
-                </div>
-
-                <div>
-                  <label
                     htmlFor="travelDate"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
@@ -577,7 +555,7 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
               <h3 className="text-lg font-medium text-gray-900 mb-4">
                 Accommodation
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <div>
                   <label
                     htmlFor="accommodationType"
@@ -595,53 +573,6 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
                   >
                     <option value="hotel">Hotel</option>
                     <option value="apartments">Apartments</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="starRating"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Required Star Rating *
-                  </label>
-                  <select
-                    id="starRating"
-                    name="starRating"
-                    value={formData.starRating}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">Select star rating</option>
-                    <option value="2">2 Star</option>
-                    <option value="3">3 Star</option>
-                    <option value="4">4 Star</option>
-                    <option value="5">5 Star</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="boardType"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Board Type *
-                  </label>
-                  <select
-                    id="boardType"
-                    name="boardType"
-                    value={formData.boardType}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">Select board type</option>
-                    {boardTypeOptions.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
                   </select>
                 </div>
               </div>
@@ -720,10 +651,6 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
                     ) : (
                       'Not specified'
                     )}
-                  </p>
-                  <p>
-                    <span className="font-medium">Specific Resort:</span>{' '}
-                    {formData.resort || 'Not specified'}
                   </p>
                   <p>
                     <span className="font-medium">Travel Date:</span>{' '}

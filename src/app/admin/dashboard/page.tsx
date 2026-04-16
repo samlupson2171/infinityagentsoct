@@ -12,13 +12,15 @@ import TrainingManager from '@/components/admin/TrainingManager';
 import EnquiriesManager from '@/components/admin/EnquiriesManager';
 import AgencyManagement from '@/components/admin/AgencyManagement';
 import SettingsManager from '@/components/admin/SettingsManager';
+import BookingsManager from '@/components/admin/BookingsManager';
+import AdminOverview from '@/components/admin/AdminOverview';
 import QuoteStatistics from '@/components/admin/QuoteStatistics';
 import QuoteSearchAndFilter from '@/components/admin/QuoteSearchAndFilter';
 
 export const dynamic = 'force-dynamic';
 
 export default function AdminDashboardPage() {
-  const [activeTab, setActiveTab] = useState('approvals');
+  const [activeTab, setActiveTab] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [agencyStats, setAgencyStats] = useState<{
     counts: {
@@ -48,6 +50,18 @@ export default function AdminDashboardPage() {
   };
 
   const tabs = [
+    { id: 'overview', name: 'Overview', icon: '📈' },
+    // Core workflow
+    { id: 'enquiries', name: 'Enquiries', icon: '💬' },
+    { id: 'quotes', name: 'Quotes', icon: '📊' },
+    { id: 'bookings', name: 'Bookings', icon: '✅' },
+    // Content management
+    { id: 'destinations', name: 'Destinations', icon: '🏖️' },
+    { id: 'offers', name: 'Offers', icon: '🎯' },
+    { id: 'super-packages', name: 'Super Packages', icon: '📦' },
+    { id: 'events', name: 'Events', icon: '📅' },
+    { id: 'training', name: 'Training Materials', icon: '📚' },
+    // Admin
     { id: 'approvals', name: 'User Approvals', icon: '👥' },
     { id: 'users', name: 'User Management', icon: '🔧' },
     {
@@ -56,13 +70,6 @@ export default function AdminDashboardPage() {
       icon: '🏢',
       badge: agencyStats?.counts.pending || 0,
     },
-    { id: 'destinations', name: 'Destinations', icon: '🏖️' },
-    { id: 'offers', name: 'Offers', icon: '🎯' },
-    { id: 'super-packages', name: 'Super Packages', icon: '📦' },
-    { id: 'events', name: 'Events', icon: '📅' },
-    { id: 'training', name: 'Training Materials', icon: '📚' },
-    { id: 'enquiries', name: 'Enquiries', icon: '💬' },
-    { id: 'quotes', name: 'Quote Analytics', icon: '📊' },
     { id: 'settings', name: 'Settings', icon: '⚙️' },
   ];
 
@@ -115,29 +122,45 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Navigation Menu */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  setActiveTab(tab.id);
-                  setSidebarOpen(false); // Close mobile menu
-                }}
-                className={`relative w-full flex items-center px-4 py-3 rounded-lg font-medium transition-all duration-200 text-left ${
-                  activeTab === tab.id
-                    ? 'bg-orange-500 text-white shadow-md'
-                    : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'
-                }`}
-              >
-                <span className="text-lg mr-3">{tab.icon}</span>
-                <span className="flex-1">{tab.name}</span>
-                {tab.badge && tab.badge > 0 && (
-                  <span className="bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center ml-2">
-                    {tab.badge > 99 ? '99+' : tab.badge}
-                  </span>
-                )}
-              </button>
-            ))}
+          <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+            {tabs.map((tab, index) => {
+              // Add section headers before each group
+              const sectionHeaders: Record<number, string> = {
+                1: 'Workflow',
+                4: 'Content',
+                9: 'Administration',
+              };
+              return (
+                <div key={tab.id}>
+                  {sectionHeaders[index] && (
+                    <div className={`${index > 0 ? 'mt-4 pt-4 border-t border-gray-200' : ''} mb-2`}>
+                      <span className="px-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                        {sectionHeaders[index]}
+                      </span>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => {
+                      setActiveTab(tab.id);
+                      setSidebarOpen(false);
+                    }}
+                    className={`relative w-full flex items-center px-4 py-3 rounded-lg font-medium transition-all duration-200 text-left ${
+                      activeTab === tab.id
+                        ? 'bg-orange-500 text-white shadow-md'
+                        : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'
+                    }`}
+                  >
+                    <span className="text-lg mr-3">{tab.icon}</span>
+                    <span className="flex-1">{tab.name}</span>
+                    {tab.badge && tab.badge > 0 && (
+                      <span className="bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center ml-2">
+                        {tab.badge > 99 ? '99+' : tab.badge}
+                      </span>
+                    )}
+                  </button>
+                </div>
+              );
+            })}
           </nav>
 
           {/* Sidebar Footer */}
@@ -327,6 +350,12 @@ export default function AdminDashboardPage() {
 
             {/* Main Content */}
             <div className="p-6">
+              {activeTab === 'overview' && (
+                <section>
+                  <AdminOverview onNavigate={setActiveTab} />
+                </section>
+              )}
+
               {activeTab === 'approvals' && (
                 <section>
                   <ApprovalDashboard />
@@ -385,6 +414,12 @@ export default function AdminDashboardPage() {
                 <section className="space-y-8">
                   <QuoteStatistics />
                   <QuoteSearchAndFilter />
+                </section>
+              )}
+
+              {activeTab === 'bookings' && (
+                <section>
+                  <BookingsManager />
                 </section>
               )}
 

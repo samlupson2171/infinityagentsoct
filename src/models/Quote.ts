@@ -32,7 +32,7 @@ export interface IQuote extends Document {
 
   // Quote metadata
   version: number; // For version history
-  status: 'draft' | 'sent' | 'updated';
+  status: 'draft' | 'sent' | 'updated' | 'accepted' | 'booked';
   createdBy: mongoose.Types.ObjectId; // Admin who created
   createdAt: Date;
   updatedAt: Date;
@@ -243,7 +243,7 @@ const QuoteSchema = new Schema<IQuote>(
 
     status: {
       type: String,
-      enum: ['draft', 'sent', 'updated'],
+      enum: ['draft', 'sent', 'updated', 'accepted', 'booked'],
       default: 'draft',
     },
 

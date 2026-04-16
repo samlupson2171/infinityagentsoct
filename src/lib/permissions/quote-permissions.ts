@@ -39,7 +39,7 @@ export class QuotePermissionManager {
     };
 
     // User must be approved to have any quote permissions
-    if (!user.isApproved || user.registrationStatus !== 'approved') {
+    if (!user.isApproved) {
       return permissions;
     }
 

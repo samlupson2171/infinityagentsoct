@@ -77,10 +77,11 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    // Get enquiries with pagination and populate events and submittedBy user
+    // Get enquiries with pagination and populate events, submittedBy user, and quotes
     const enquiries = await Enquiry.find(query)
       .populate('eventsRequested', 'name')
       .populate('submittedBy', 'name companyName contactEmail')
+      .populate('quotes', 'title destination totalPrice currency status version createdAt leadName hotelName numberOfPeople numberOfNights arrivalDate')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

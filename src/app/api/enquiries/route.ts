@@ -58,13 +58,11 @@ const createEnquirySchema = z.object({
   accommodationType: z.enum(['hotel', 'apartments'], {
     required_error: 'Accommodation type is required',
   }),
-  starRating: z.enum(['2', '3', '4', '5'], {
-    required_error: 'Star rating is required',
-  }),
+  starRating: z.enum(['2', '3', '4', '5']).optional(),
   boardType: z
     .string()
-    .min(1, 'Board type is required')
-    .max(50, 'Board type too long'),
+    .max(50, 'Board type too long')
+    .optional(),
   budgetPerPerson: z
     .number()
     .min(0, 'Budget must be a positive number')

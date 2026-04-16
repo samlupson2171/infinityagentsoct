@@ -12,49 +12,60 @@
   --infinity-blue-dark: #1d4ed8;
 }
 
-/* Custom scrollbar */
+/* Modern scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--infinity-orange);
-  border-radius: 4px;
+  background: #d1d5db;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--infinity-orange-dark);
+  background: #9ca3af;
 }
 
-/* Smooth transitions for all interactive elements */
-* {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+/* Smooth transitions for interactive elements */
+a, button, input, select, textarea {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
 
-/* Custom button styles */
+/* Modern button styles */
 .btn-primary {
-  @apply bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl;
+  @apply bg-orange-500 hover:bg-orange-600 text-white font-medium py-2.5 px-5 rounded-lg transition-all hover:shadow-lg hover:shadow-orange-500/20;
 }
 
 .btn-secondary {
-  @apply bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-6 rounded-lg border border-gray-300 hover:border-orange-300 transition-all duration-300;
+  @apply bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-5 rounded-lg border border-gray-200 hover:border-gray-300 transition-all;
 }
 
 /* Card hover effects */
 .card-hover {
-  @apply transition-all duration-300 hover:shadow-xl hover:border-orange-300 hover:-translate-y-1;
+  @apply transition-all duration-200 hover:shadow-lg hover:border-orange-200 hover:-translate-y-0.5;
 }
 
-/* Custom utilities */
+/* Modern focus styles */
+input:focus, select:focus, textarea:focus {
+  @apply outline-none ring-2 ring-orange-100 border-orange-300;
+}
+
+/* Utility */
 .line-clamp-3 {
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+}
+
+/* Glass effect */
+.glass {
+  @apply bg-white/80 backdrop-blur-lg;
 }

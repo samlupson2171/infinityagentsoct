@@ -13,8 +13,8 @@ export interface IEnquiry extends Document {
   numberOfGuests: number;
   eventsRequested: mongoose.Types.ObjectId[];
   accommodationType: 'hotel' | 'apartments';
-  starRating: string;
-  boardType: string;
+  starRating?: string;
+  boardType?: string;
   budgetPerPerson: number;
   additionalNotes?: string;
   status: 'new' | 'in-progress' | 'completed';
@@ -128,7 +128,6 @@ const EnquirySchema = new Schema<IEnquiry>(
     },
     starRating: {
       type: String,
-      required: [true, 'Star rating is required'],
       enum: {
         values: ['2', '3', '4', '5'],
         message: 'Star rating must be 2, 3, 4, or 5',
@@ -136,9 +135,7 @@ const EnquirySchema = new Schema<IEnquiry>(
     },
     boardType: {
       type: String,
-      required: [true, 'Board type is required'],
       trim: true,
-      minlength: [2, 'Board type must be at least 2 characters long'],
       maxlength: [50, 'Board type cannot exceed 50 characters'],
     },
     budgetPerPerson: {
@@ -259,5 +256,10 @@ EnquirySchema.methods.removeQuote = function (
   return this.save();
 };
 
-export default mongoose.models.Enquiry ||
-  mongoose.model<IEnquiry>('Enquiry', EnquirySchema);
+// Force re-registration to pick up schema changes during development
+if (mongoose.models.Enquiry) {
+  delete (mongoose.models as any).Enquiry;
+}
+
+const EnquiryModel = mongoose.model<IEnquiry>('Enquiry', EnquirySchema);
+export default EnquiryModel;
