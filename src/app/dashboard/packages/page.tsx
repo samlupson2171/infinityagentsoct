@@ -32,6 +32,7 @@ export default function AgentPackagesPage() {
   const [selectedTier, setSelectedTier] = useState<Record<string, number>>({});
   const [selectedNights, setSelectedNights] = useState<Record<string, number>>({});
   const [selectedPeriod, setSelectedPeriod] = useState<Record<string, number>>({});
+  const [selectedYear, setSelectedYear] = useState<Record<string, number>>({});
 
   useEffect(() => {
     fetchPackages();
@@ -57,6 +58,30 @@ export default function AgentPackagesPage() {
   };
 
   const sym = (c: string) => c === 'GBP' ? '£' : c === 'EUR' ? '€' : '$';
+
+  // Strip year from period display (e.g., "Easter (02/04/2025 - 06/04/2025)" → "Easter (02/04 - 06/04)")
+  const stripYear = (period: string) => {
+    // Remove 4-digit years from date patterns like dd/mm/yyyy or yyyy-mm-dd
+    return period
+      .replace(/\/(\d{4})/g, '') // removes /2025, /2026, /2027 etc.
+      .replace(/(\d{4})-/g, '') // removes 2025-, 2026- etc.
+      .replace(/\s+20\d{2}/g, '') // removes standalone years like " 2025"
+      .replace(/\s{2,}/g, ' ') // clean up double spaces
+      .trim();
+  };
+
+  // Strip year from package names (e.g., "Prague Party 2026" → "Prague Party")
+  const stripNameYear = (name: string) => {
+    return name
+      .replace(/\s*20\d{2}\s*/g, ' ') // removes years like "2026", "2027"
+      .replace(/\s*-\s*$/, '') // removes trailing dash
+      .replace(/\s{2,}/g, ' ') // clean up double spaces
+      .trim();
+  };
+
+  // Available years for the price calculator
+  const availableYears = [2026, 2027];
+  const currentYear = new Date().getFullYear();
 
   const getPrice = (pkg: SuperPackage, tierIdx: number, nights: number) => {
     if (!pkg.pricingMatrix?.length) return null;
@@ -146,7 +171,7 @@ export default function AgentPackagesPage() {
                     <div className="p-6">
                       <div className="flex items-start justify-between mb-3">
                         <div>
-                          <h3 className="font-semibold text-gray-900">{pkg.name}</h3>
+                          <h3 className="font-semibold text-gray-900">{stripNameYear(pkg.name)}</h3>
                           <p className="text-sm text-gray-500 flex items-center gap-1 mt-0.5">
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>
                             {pkg.destination} · {pkg.resort}
@@ -193,8 +218,9 @@ export default function AgentPackagesPage() {
                         const params = new URLSearchParams();
                         params.set('destination', pkg.destination);
                         params.set('month', chosenEntry?.period || '');
+                        params.set('year', String(selectedYear[pkg._id] ?? currentYear));
                         params.set('accommodation', 'hotel');
-                        params.set('packageTitle', pkg.name);
+                        params.set('packageTitle', stripNameYear(pkg.name));
 
                         // Get prices for each duration option in the selected period + tier
                         const getPriceForNights = (n: number) => {
@@ -223,6 +249,18 @@ export default function AgentPackagesPage() {
                           <div className="lg:col-span-2">
                             <h4 className="font-semibold text-gray-900 mb-4">Price Calculator</h4>
                             <div className="flex flex-wrap gap-3 mb-4">
+                              <div>
+                                <label className="text-xs text-gray-500 block mb-1">Year</label>
+                                <select
+                                  value={selectedYear[pkg._id] ?? currentYear}
+                                  onChange={e => setSelectedYear(prev => ({ ...prev, [pkg._id]: parseInt(e.target.value) }))}
+                                  className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white"
+                                >
+                                  {availableYears.map(y => (
+                                    <option key={y} value={y}>{y}</option>
+                                  ))}
+                                </select>
+                              </div>
                               <div>
                                 <label className="text-xs text-gray-500 block mb-1">Group Size</label>
                                 <select
@@ -255,7 +293,7 @@ export default function AgentPackagesPage() {
                                   className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white"
                                 >
                                   {pkg.pricingMatrix.map((entry, i) => (
-                                    <option key={i} value={i}>{entry.period}</option>
+                                    <option key={i} value={i}>{stripYear(entry.period)}</option>
                                   ))}
                                 </select>
                               </div>
@@ -267,7 +305,7 @@ export default function AgentPackagesPage() {
                                 <div className="flex items-center justify-between">
                                   <div>
                                     <p className="text-orange-100 text-xs font-medium uppercase tracking-wide">Selected Price</p>
-                                    <p className="text-sm mt-0.5">{pkg.groupSizeTiers[tierIdx]?.label} · {nights} nights · {chosenEntry.period}</p>
+                                    <p className="text-sm mt-0.5">{pkg.groupSizeTiers[tierIdx]?.label} · {nights} nights · {stripYear(chosenEntry.period)} {selectedYear[pkg._id] ?? currentYear}</p>
                                   </div>
                                   <div className="text-right">
                                     {typeof chosenPrice.price === 'number' ? (
@@ -301,7 +339,7 @@ export default function AgentPackagesPage() {
                                       >
                                         <td className="px-4 py-3 text-gray-900 flex items-center gap-2">
                                           {isSelected && <span className="w-2 h-2 rounded-full bg-orange-500 flex-shrink-0"></span>}
-                                          {entry.period}
+                                          {stripYear(entry.period)}
                                         </td>
                                         <td className="px-4 py-3 text-right font-semibold">
                                           {price ? (
@@ -348,13 +386,24 @@ export default function AgentPackagesPage() {
                             <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
                               <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Your Selection</p>
                               <div className="space-y-1 text-sm text-gray-700">
-                                <p><span className="text-gray-500">Package:</span> {pkg.name}</p>
-                                <p><span className="text-gray-500">Period:</span> {chosenEntry?.period || '—'}</p>
+                                <p><span className="text-gray-500">Package:</span> {stripNameYear(pkg.name)}</p>
+                                <p><span className="text-gray-500">Year:</span> {selectedYear[pkg._id] ?? currentYear}</p>
+                                <p><span className="text-gray-500">Period:</span> {stripYear(chosenEntry?.period || '—')}</p>
                                 <p><span className="text-gray-500">Group:</span> {pkg.groupSizeTiers[tierIdx]?.label || '—'}</p>
                                 <p><span className="text-gray-500">Nights:</span> {nights}</p>
                                 {chosenPrice && typeof chosenPrice.price === 'number' && (
                                   <p className="font-semibold text-orange-600 pt-1 border-t border-gray-100 mt-2">{sym(pkg.currency)}{chosenPrice.price} per person</p>
                                 )}
+                              </div>
+                            </div>
+
+                            {/* 8-week lead time notice */}
+                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                              <div className="flex items-start gap-2">
+                                <svg className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" /></svg>
+                                <p className="text-xs text-amber-800">
+                                  <span className="font-semibold">Minimum 8 weeks notice required.</span> Package prices apply to trips departing 8+ weeks from today. Trips within 8 weeks will require a separate bespoke quote.
+                                </p>
                               </div>
                             </div>
 

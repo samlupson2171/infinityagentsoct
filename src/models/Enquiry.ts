@@ -3,6 +3,8 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IEnquiry extends Document {
   leadName: string;
   tripType: 'stag' | 'hen' | 'other';
+  agentName: string;
+  agentCompanyName: string;
   agentEmail: string;
   firstChoiceDestination: string;
   secondChoiceDestination?: string;
@@ -45,6 +47,18 @@ const EnquirySchema = new Schema<IEnquiry>(
         values: ['stag', 'hen', 'other'],
         message: 'Trip type must be stag, hen, or other',
       },
+    },
+    agentName: {
+      type: String,
+      required: [true, 'Agent name is required'],
+      trim: true,
+      maxlength: [100, 'Agent name cannot exceed 100 characters'],
+    },
+    agentCompanyName: {
+      type: String,
+      required: [true, 'Company name is required'],
+      trim: true,
+      maxlength: [200, 'Company name cannot exceed 200 characters'],
     },
     agentEmail: {
       type: String,
@@ -147,7 +161,7 @@ const EnquirySchema = new Schema<IEnquiry>(
     additionalNotes: {
       type: String,
       trim: true,
-      maxlength: [1000, 'Additional notes cannot exceed 1000 characters'],
+      maxlength: [2000, 'Additional notes cannot exceed 2000 characters'],
     },
     status: {
       type: String,

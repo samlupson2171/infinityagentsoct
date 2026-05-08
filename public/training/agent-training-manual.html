@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Weekends - Agent Training Manual</title>
+    <style>
+        @media print {
+            body { margin: 0; }
+            .page-break { page-break-before: always; }
+            .no-print { display: none; }
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+        .cover-page {
+            text-align: center;
+            padding: 100px 20px;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .cover-page h1 {
+            font-size: 42px;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+        .cover-page .subtitle {
+            font-size: 24px;
+            color: #f97316;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+        .cover-page .version {
+            font-size: 14px;
+            color: #666;
+            margin-top: 40px;
+        }
+        .brand-bar {
+            width: 80px;
+            height: 4px;
+            background: #f97316;
+            margin: 20px auto;
+        }
+        h1 { font-size: 28px; color: #1a1a2e; margin: 30px 0 15px; border-bottom: 2px solid #f97316; padding-bottom: 8px; }
+        h2 { font-size: 22px; color: #1a1a2e; margin: 25px 0 12px; }
+        h3 { font-size: 18px; color: #444; margin: 20px 0 10px; }
+        p { margin-bottom: 12px; }
+        ul, ol { margin: 10px 0 15px 25px; }
+        li { margin-bottom: 8px; }
+        .tip-box {
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip-box strong { color: #c2410c; }
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .info-box strong { color: #1d4ed8; }
+        .warning-box {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .warning-box strong { color: #dc2626; }
+        .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: #f97316;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .step { margin: 15px 0; padding-left: 5px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 10px 14px;
+            text-align: left;
+        }
+        th { background: #f9fafb; font-weight: 600; color: #374151; }
+        .toc { margin: 20px 0; }
+        .toc a { color: #1a1a2e; text-decoration: none; display: block; padding: 6px 0; border-bottom: 1px dotted #ddd; }
+        .toc a:hover { color: #f97316; }
+        .footer { text-align: center; margin-top: 60px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #999; }
+    </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover-page">
+    <h1>Infinity Weekends</h1>
+    <div class="brand-bar"></div>
+    <div class="subtitle">Agent Training Manual</div>
+    <p style="font-size: 16px; color: #555; max-width: 500px;">
+        Your complete guide to using the Infinity Weekends Agent Portal — from registration to managing bookings.
+    </p>
+    <div class="version">
+        <p>Version 1.0</p>
+        <p>Last Updated: May 2026</p>
+        <p>&copy; Infinity Weekends. All rights reserved.</p>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- TABLE OF CONTENTS -->
+<h1>Table of Contents</h1>
+<div class="toc">
+    <a href="#section1">1. Introduction</a>
+    <a href="#section2">2. Getting Started — Registration</a>
+    <a href="#section3">3. Logging In</a>
+    <a href="#section4">4. Your Agent Dashboard</a>
+    <a href="#section5">5. Submitting Enquiries</a>
+    <a href="#section6">6. Viewing & Managing Quotes</a>
+    <a href="#section7">7. Accepting Quotes & Bookings</a>
+    <a href="#section8">8. Browsing Super Packages</a>
+    <a href="#section9">9. Using the Price Calculator</a>
+    <a href="#section10">10. Email Notifications</a>
+    <a href="#section11">11. Troubleshooting & FAQs</a>
+    <a href="#section12">12. Support & Contact</a>
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 1 -->
+<h1 id="section1">1. Introduction</h1>
+<p>Welcome to the <strong>Infinity Weekends Agent Portal</strong> — your dedicated platform for submitting client enquiries, receiving tailored quotes, and managing bookings for stag, hen, and group travel packages.</p>
+
+<h3>What You Can Do</h3>
+<ul>
+    <li>Submit detailed enquiries for your clients' trips</li>
+    <li>Receive and review personalised quotes from the Infinity Weekends team</li>
+    <li>Accept quotes and convert them into confirmed bookings</li>
+    <li>Browse pre-built Super Packages with transparent pricing</li>
+    <li>Use the price calculator to get instant pricing estimates</li>
+    <li>Track all your enquiries, quotes, and bookings in one place</li>
+</ul>
+
+<div class="info-box">
+    <strong>Note:</strong> You must have a valid ABTA or PTS number to register and use this platform. Only approved travel agencies can access the Agent Portal.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 2 -->
+<h1 id="section2">2. Getting Started — Registration</h1>
+<p>Before you can use the Agent Portal, you need to register your travel agency.</p>
+
+<h3>Registration Steps</h3>
+<div class="step"><span class="step-number">1</span> Navigate to the registration page at <strong>/auth/register</strong></div>
+<div class="step"><span class="step-number">2</span> Fill in your details:</div>
+
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>Full Name</td><td>Your name as the primary contact</td><td>Yes</td></tr>
+    <tr><td>Company Name</td><td>Your travel agency's registered name</td><td>Yes</td></tr>
+    <tr><td>ABTA/PTS Number</td><td>Must start with ABTA or PTS followed by 4-10 characters (e.g., ABTA12345)</td><td>Yes</td></tr>
+    <tr><td>Contact Email</td><td>Your business email address</td><td>Yes</td></tr>
+    <tr><td>Phone Number</td><td>Business phone (minimum 10 digits)</td><td>Yes</td></tr>
+    <tr><td>Website Address</td><td>Your agency's website URL</td><td>Yes</td></tr>
+    <tr><td>Consortia</td><td>If you belong to a travel consortia (e.g., Hays, Advantage)</td><td>No</td></tr>
+    <tr><td>Password</td><td>A secure password for your account</td><td>Yes</td></tr>
+</table>
+
+<div class="step"><span class="step-number">3</span> Submit your registration</div>
+<div class="step"><span class="step-number">4</span> You will receive a confirmation email</div>
+<div class="step"><span class="step-number">5</span> Wait for admin approval (you'll be notified by email)</div>
+<div class="step"><span class="step-number">6</span> Once approved, you may need to sign a partner contract</div>
+<div class="step"><span class="step-number">7</span> After contract signing, your account is fully active</div>
+
+<div class="warning-box">
+    <strong>Important:</strong> Your ABTA/PTS number must be valid and correctly formatted. Invalid numbers will result in registration rejection.
+</div>
+
+<h3>Registration Statuses</h3>
+<table>
+    <tr><th>Status</th><th>Meaning</th></tr>
+    <tr><td>Pending</td><td>Your registration is awaiting admin review</td></tr>
+    <tr><td>Approved</td><td>Your account has been approved — contract signing may be required</td></tr>
+    <tr><td>Contracted</td><td>Fully active — you can access all features</td></tr>
+    <tr><td>Rejected</td><td>Registration was declined (you'll receive a reason by email)</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<!-- SECTION 3 -->
+<h1 id="section3">3. Logging In</h1>
+
+<div class="step"><span class="step-number">1</span> Go to <strong>/auth/login</strong></div>
+<div class="step"><span class="step-number">2</span> Enter your registered email address</div>
+<div class="step"><span class="step-number">3</span> Enter your password</div>
+<div class="step"><span class="step-number">4</span> Click <strong>Sign In</strong></div>
+
+<p>You will be redirected to your Agent Dashboard upon successful login.</p>
+
+<div class="tip-box">
+    <strong>Tip:</strong> If you've forgotten your password, use the password reset link on the login page. A reset email will be sent to your registered address.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 4 -->
+<h1 id="section4">4. Your Agent Dashboard</h1>
+<p>The Agent Dashboard is your home base. It provides an at-a-glance overview of all your activity.</p>
+
+<h3>Dashboard Statistics</h3>
+<p>At the top of your dashboard, you'll see four key metrics:</p>
+<table>
+    <tr><th>Metric</th><th>Description</th></tr>
+    <tr><td>Enquiries</td><td>Total number of enquiries you've submitted</td></tr>
+    <tr><td>Quotes Received</td><td>Number of quotes sent back to you by the team</td></tr>
+    <tr><td>Confirmed Bookings</td><td>Quotes that have been accepted and confirmed</td></tr>
+    <tr><td>Awaiting Quote</td><td>Enquiries that haven't received a quote yet</td></tr>
+</table>
+
+<h3>Dashboard Sections</h3>
+<h4>My Enquiries</h4>
+<p>Shows your most recent enquiries with status indicators:</p>
+<ul>
+    <li><strong>Submitted</strong> (blue) — Enquiry received, awaiting processing</li>
+    <li><strong>In Progress</strong> (amber) — Team is working on your enquiry</li>
+    <li><strong>In Review</strong> (purple) — A quote has been drafted</li>
+    <li><strong>Quote Ready</strong> (green) — A quote is ready for you to view</li>
+    <li><strong>Completed</strong> (green) — Enquiry fully processed</li>
+</ul>
+
+<h4>My Quotes</h4>
+<p>Lists all quotes you've received, showing destination, hotel, number of guests, nights, and total price.</p>
+
+<h4>My Bookings</h4>
+<p>Shows confirmed bookings with their status (Confirmed or Awaiting Confirmation).</p>
+
+<h4>Super Packages</h4>
+<p>A preview of 6 featured pre-built packages. Click "Browse all packages" to see the full catalogue.</p>
+
+<h3>Navigation</h3>
+<ul>
+    <li><strong>+ New Enquiry</strong> button — Submit a new enquiry (top right of header)</li>
+    <li><strong>View all →</strong> links — See complete lists of enquiries, quotes, or bookings</li>
+    <li><strong>Browse all packages →</strong> — Access the full Super Packages catalogue</li>
+</ul>
+
+<div class="page-break"></div>
+
+<!-- SECTION 5 -->
+<h1 id="section5">5. Submitting Enquiries</h1>
+<p>Enquiries are how you request quotes for your clients. The more detail you provide, the more accurate the quote will be.</p>
+
+<h3>How to Submit an Enquiry</h3>
+<div class="step"><span class="step-number">1</span> Click <strong>+ New Enquiry</strong> from your dashboard (or navigate to <strong>/enquiries</strong>)</div>
+<div class="step"><span class="step-number">2</span> Complete the enquiry form (see fields below)</div>
+<div class="step"><span class="step-number">3</span> Review the summary at the bottom of the form</div>
+<div class="step"><span class="step-number">4</span> Click <strong>Submit Enquiry</strong></div>
+<div class="step"><span class="step-number">5</span> You'll be redirected to a confirmation page</div>
+
+<h3>Enquiry Form Fields</h3>
+
+<h4>Lead Information</h4>
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>Lead Name</td><td>Your client's name (the person organising the trip)</td><td>Yes</td></tr>
+    <tr><td>Trip Type</td><td>Stag Do, Hen Do, or Other</td><td>Yes</td></tr>
+</table>
+
+<h4>Trip Details</h4>
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>1st Choice Destination</td><td>Primary destination preference</td><td>Yes</td></tr>
+    <tr><td>2nd Choice Destination</td><td>Alternative destination</td><td>No</td></tr>
+    <tr><td>Travel Date</td><td>Desired departure date (must be in the future)</td><td>Yes</td></tr>
+    <tr><td>Arrival Airport</td><td>Preferred arrival airport (e.g., Alicante)</td><td>No</td></tr>
+    <tr><td>Number of Nights</td><td>Trip duration (1-30 nights)</td><td>Yes</td></tr>
+    <tr><td>Number of Guests</td><td>Total group size (1-50)</td><td>Yes</td></tr>
+    <tr><td>Budget per Person</td><td>Client's budget in GBP per person</td><td>Yes</td></tr>
+</table>
+
+<h4>Accommodation</h4>
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>Accommodation Type</td><td>Hotel or Apartments</td><td>Yes</td></tr>
+</table>
+
+<h4>Events & Activities</h4>
+<p>Select from available events/activities for the chosen destination. These are optional but help the team build a more tailored quote.</p>
+
+<h4>Additional Notes</h4>
+<p>Free-text field (up to 1,000 characters) for any special requirements, dietary needs, accessibility requirements, or other information.</p>
+
+<h3>Available Destinations</h3>
+<p>Albufeira, Amsterdam, Barcelona, Benidorm, Berlin, Budapest, Dublin, Ibiza, Krakow, Lisbon, Madrid, Magaluf, Marbella, Milan, Munich, Nice, Paris, Prague, Rome, Salou, Vienna</p>
+
+<div class="tip-box">
+    <strong>Tip:</strong> You can also submit an enquiry directly from a Super Package. The form will be pre-filled with the package details, saving you time.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 6 -->
+<h1 id="section6">6. Viewing & Managing Quotes</h1>
+<p>Once the Infinity Weekends team processes your enquiry, you'll receive a quote.</p>
+
+<h3>How Quotes Work</h3>
+<ol>
+    <li>You submit an enquiry</li>
+    <li>The team reviews it and creates a tailored quote</li>
+    <li>You receive an email notification when your quote is ready</li>
+    <li>The quote appears in your dashboard under "My Quotes"</li>
+    <li>Click on any quote to view full details</li>
+</ol>
+
+<h3>Quote Detail Page</h3>
+<p>Each quote includes:</p>
+<ul>
+    <li><strong>Quote Reference</strong> — Unique identifier for the quote</li>
+    <li><strong>Trip Overview</strong> — Destination, hotel name, arrival/departure dates</li>
+    <li><strong>Trip Statistics</strong> — Number of guests, nights, and rooms</li>
+    <li><strong>Pricing</strong> — Total price and per-person breakdown</li>
+    <li><strong>What's Included</strong> — List of inclusions (transfers, accommodation, etc.)</li>
+    <li><strong>Events & Activities</strong> — Scheduled activities with individual pricing</li>
+    <li><strong>Package Details</strong> — If linked to a Super Package</li>
+</ul>
+
+<h3>Quote Statuses</h3>
+<table>
+    <tr><th>Status</th><th>Meaning</th></tr>
+    <tr><td>Draft</td><td>Quote is being prepared (not yet visible to you)</td></tr>
+    <tr><td>Sent</td><td>Quote has been sent and is ready for your review</td></tr>
+    <tr><td>Updated</td><td>Quote has been revised — review the latest version</td></tr>
+    <tr><td>Accepted</td><td>You have accepted this quote</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<!-- SECTION 7 -->
+<h1 id="section7">7. Accepting Quotes & Bookings</h1>
+
+<h3>Accepting a Quote</h3>
+<div class="step"><span class="step-number">1</span> Navigate to the quote detail page</div>
+<div class="step"><span class="step-number">2</span> Review all details carefully (pricing, inclusions, dates)</div>
+<div class="step"><span class="step-number">3</span> Click the <strong>Accept Quote</strong> button</div>
+<div class="step"><span class="step-number">4</span> Confirm your acceptance</div>
+<div class="step"><span class="step-number">5</span> The quote converts to a booking</div>
+
+<div class="info-box">
+    <strong>Note:</strong> Once accepted, the Infinity Weekends team will confirm your booking shortly. You'll see the booking status change from "Awaiting Confirmation" to "Confirmed".
+</div>
+
+<h3>Managing Bookings</h3>
+<p>All accepted quotes appear in your <strong>My Bookings</strong> section. Each booking shows:</p>
+<ul>
+    <li>Booking reference and title</li>
+    <li>Destination and hotel</li>
+    <li>Number of guests and nights</li>
+    <li>Arrival date</li>
+    <li>Total price</li>
+    <li>Status (Confirmed or Awaiting Confirmation)</li>
+</ul>
+
+<p>Click on any booking to view full details or download itineraries.</p>
+
+<div class="page-break"></div>
+
+<!-- SECTION 8 -->
+<h1 id="section8">8. Browsing Super Packages</h1>
+<p>Super Packages are pre-built holiday packages with transparent, tiered pricing. They're a great way to quickly find options for your clients.</p>
+
+<h3>Accessing Super Packages</h3>
+<ul>
+    <li>From your dashboard, click <strong>Browse all packages →</strong></li>
+    <li>Or navigate directly to <strong>/dashboard/packages</strong></li>
+</ul>
+
+<h3>Package Information</h3>
+<p>Each Super Package includes:</p>
+<ul>
+    <li><strong>Package Name</strong> — Descriptive title</li>
+    <li><strong>Destination & Resort</strong> — Where the package is based</li>
+    <li><strong>Pricing Matrix</strong> — Prices vary by:
+        <ul>
+            <li>Travel period (month/season)</li>
+            <li>Group size tier (e.g., 8-12, 13-20, 21+ guests)</li>
+            <li>Duration (2, 3, or 4 nights)</li>
+        </ul>
+    </li>
+    <li><strong>Inclusions</strong> — What's included (transfers, accommodation, activities)</li>
+    <li><strong>Accommodation Examples</strong> — Sample hotels/apartments</li>
+    <li><strong>Sales Notes</strong> — Additional selling points</li>
+</ul>
+
+<h3>Enquiring from a Package</h3>
+<p>When you find a suitable package:</p>
+<div class="step"><span class="step-number">1</span> Select your preferred options (group size, nights, period)</div>
+<div class="step"><span class="step-number">2</span> Click <strong>Create Enquiry</strong> or <strong>Enquire Now</strong></div>
+<div class="step"><span class="step-number">3</span> The enquiry form opens pre-filled with the package details</div>
+<div class="step"><span class="step-number">4</span> Add your client's specific details and submit</div>
+
+<div class="tip-box">
+    <strong>Tip:</strong> Super Packages give you instant pricing visibility. Use them to provide quick estimates to clients before submitting a formal enquiry.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 9 -->
+<h1 id="section9">9. Using the Price Calculator</h1>
+<p>The Price Calculator lets you get instant pricing estimates from Super Packages without submitting an enquiry.</p>
+
+<h3>How to Use</h3>
+<div class="step"><span class="step-number">1</span> Open a Super Package</div>
+<div class="step"><span class="step-number">2</span> Select the <strong>travel month/period</strong></div>
+<div class="step"><span class="step-number">3</span> Choose the <strong>group size tier</strong></div>
+<div class="step"><span class="step-number">4</span> Select the <strong>number of nights</strong> (2, 3, or 4)</div>
+<div class="step"><span class="step-number">5</span> The per-person price updates automatically</div>
+
+<h3>Understanding Pricing Tiers</h3>
+<table>
+    <tr><th>Factor</th><th>How It Affects Price</th></tr>
+    <tr><td>Group Size</td><td>Larger groups typically get better per-person rates</td></tr>
+    <tr><td>Season</td><td>Peak months (summer) are more expensive than off-peak</td></tr>
+    <tr><td>Duration</td><td>More nights = higher total but often better nightly rate</td></tr>
+    <tr><td>Accommodation</td><td>Hotels vs self-catering have different price points</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<!-- SECTION 10 -->
+<h1 id="section10">10. Email Notifications</h1>
+<p>You'll receive email notifications at key points in the process:</p>
+
+<table>
+    <tr><th>Event</th><th>Email You Receive</th></tr>
+    <tr><td>Registration submitted</td><td>Confirmation of your registration</td></tr>
+    <tr><td>Account approved</td><td>Approval notification + contract signing link</td></tr>
+    <tr><td>Account rejected</td><td>Rejection notification with reason</td></tr>
+    <tr><td>Enquiry submitted</td><td>Confirmation with enquiry details and reference ID</td></tr>
+    <tr><td>Quote ready</td><td>Notification that a quote is available to view</td></tr>
+    <tr><td>Quote updated</td><td>Notification that a quote has been revised</td></tr>
+    <tr><td>Booking confirmed</td><td>Confirmation of your booking</td></tr>
+</table>
+
+<div class="tip-box">
+    <strong>Tip:</strong> Check your spam/junk folder if you're not receiving emails. Add the Infinity Weekends email address to your contacts to ensure delivery.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 11 -->
+<h1 id="section11">11. Troubleshooting & FAQs</h1>
+
+<h3>I can't log in</h3>
+<ul>
+    <li>Ensure you're using the correct email address (the one you registered with)</li>
+    <li>Check that your account has been approved — you'll receive an approval email</li>
+    <li>If your account is pending, you'll be redirected to a "Pending Approval" page</li>
+    <li>Try resetting your password using the "Forgot Password" link</li>
+</ul>
+
+<h3>My registration was rejected</h3>
+<ul>
+    <li>Check the rejection email for the specific reason</li>
+    <li>Common reasons: invalid ABTA/PTS number, incomplete information</li>
+    <li>You can re-register with corrected information</li>
+</ul>
+
+<h3>I submitted an enquiry but haven't received a quote</h3>
+<ul>
+    <li>Quotes are prepared manually by the team — allow 24-48 hours</li>
+    <li>Check your dashboard for status updates</li>
+    <li>Contact support if it's been more than 48 hours</li>
+</ul>
+
+<h3>The price on my quote differs from the Super Package</h3>
+<ul>
+    <li>Super Package prices are indicative and based on standard configurations</li>
+    <li>Final quotes account for specific dates, availability, and any custom requirements</li>
+    <li>Events and activities add to the base package price</li>
+</ul>
+
+<h3>I want to change my enquiry after submitting</h3>
+<ul>
+    <li>You cannot edit a submitted enquiry directly</li>
+    <li>Submit a new enquiry with the updated details</li>
+    <li>Add a note referencing the original enquiry</li>
+</ul>
+
+<h3>How do I update my account details?</h3>
+<ul>
+    <li>Contact the Infinity Weekends team to update your registered details</li>
+    <li>You can change your password from the login page</li>
+</ul>
+
+<div class="page-break"></div>
+
+<!-- SECTION 12 -->
+<h1 id="section12">12. Support & Contact</h1>
+<p>If you need assistance with the Agent Portal, the Infinity Weekends team is here to help.</p>
+
+<h3>Getting Help</h3>
+<ul>
+    <li><strong>Email:</strong> Contact the team via the platform's support channels</li>
+    <li><strong>Response Time:</strong> Typically within 24 hours on business days</li>
+    <li><strong>Training Materials:</strong> Additional resources may be available in the Training section</li>
+</ul>
+
+<h3>Best Practices</h3>
+<ul>
+    <li>Provide as much detail as possible in your enquiries</li>
+    <li>Include your client's flexibility on dates and destinations</li>
+    <li>Specify any special requirements (accessibility, dietary, etc.) in the notes</li>
+    <li>Check Super Packages first for quick pricing estimates</li>
+    <li>Review quotes promptly — availability can change</li>
+    <li>Keep your contact details up to date for email notifications</li>
+</ul>
+
+<div class="footer">
+    <p>&copy; 2026 Infinity Weekends. All rights reserved.</p>
+    <p>This manual is confidential and intended for registered Infinity Weekends partner agents only.</p>
+</div>
+
+</body>
+</html>

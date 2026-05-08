@@ -13,6 +13,14 @@ export const dynamic = 'force-dynamic';
 
 
 const createEnquirySchema = z.object({
+  agentName: z
+    .string()
+    .min(1, 'Agent name is required')
+    .max(100, 'Agent name too long'),
+  agentCompanyName: z
+    .string()
+    .min(1, 'Company name is required')
+    .max(200, 'Company name too long'),
   leadName: z
     .string()
     .min(1, 'Lead name is required')
@@ -69,7 +77,7 @@ const createEnquirySchema = z.object({
     .max(10000, 'Budget per person cannot exceed £10,000'),
   additionalNotes: z
     .string()
-    .max(1000, 'Additional notes cannot exceed 1000 characters')
+    .max(2000, 'Additional notes cannot exceed 2000 characters')
     .optional(),
 });
 
@@ -158,6 +166,21 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date(),
     });
 
+    // Check 8-week lead time rule for super package pricing
+    // If travel date is within 8 weeks and enquiry references a package, flag it
+    const travelDate = new Date(enquiryData.travelDate);
+    const eightWeeksFromNow = new Date();
+    eightWeeksFromNow.setDate(eightWeeksFromNow.getDate() + 56);
+    const hasPackageReference = enquiryData.additionalNotes?.includes('SELECTED PACKAGE');
+    if (hasPackageReference && travelDate < eightWeeksFromNow) {
+      // Append a note for admins that package pricing does not apply
+      const existingNotes = enquiry.additionalNotes || '';
+      if (!existingNotes.includes('Super Package prices DO NOT apply')) {
+        enquiry.additionalNotes = existingNotes + 
+          '\n\n⚠️ ADMIN NOTE: Travel date is within 8 weeks of booking. Super Package prices DO NOT apply. Please provide bespoke pricing for this enquiry.';
+      }
+    }
+
     await enquiry.save();
 
     // Populate submitter info and events for email
@@ -183,8 +206,8 @@ export async function POST(request: NextRequest) {
         boardType: enquiry.boardType,
         budgetPerPerson: enquiry.budgetPerPerson,
         additionalNotes: enquiry.additionalNotes,
-        agentName: (enquiry.submittedBy as any)?.name || 'Unknown',
-        agentCompany: (enquiry.submittedBy as any)?.companyName || 'Unknown',
+        agentName: enquiry.agentName || (enquiry.submittedBy as any)?.name || 'Unknown',
+        agentCompany: enquiry.agentCompanyName || (enquiry.submittedBy as any)?.companyName || 'Unknown',
         agentEmail: enquiry.agentEmail,
       });
     } catch (emailError) {
@@ -203,7 +226,7 @@ export async function POST(request: NextRequest) {
         thirdChoiceDestination: enquiry.thirdChoiceDestination,
         resort: enquiry.resort,
         travelDate: enquiry.travelDate,
-        agentName: (enquiry.submittedBy as any)?.name || 'Agent',
+        agentName: enquiry.agentName || (enquiry.submittedBy as any)?.name || 'Agent',
         agentEmail: enquiry.agentEmail,
       });
     } catch (emailError) {

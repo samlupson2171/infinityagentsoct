@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Weekends - Admin Training Manual</title>
+    <style>
+        @media print {
+            body { margin: 0; }
+            .page-break { page-break-before: always; }
+            .no-print { display: none; }
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+        .cover-page {
+            text-align: center;
+            padding: 100px 20px;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .cover-page h1 {
+            font-size: 42px;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+        .cover-page .subtitle {
+            font-size: 24px;
+            color: #f97316;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+        .cover-page .version {
+            font-size: 14px;
+            color: #666;
+            margin-top: 40px;
+        }
+        .brand-bar {
+            width: 80px;
+            height: 4px;
+            background: #f97316;
+            margin: 20px auto;
+        }
+        h1 { font-size: 28px; color: #1a1a2e; margin: 30px 0 15px; border-bottom: 2px solid #f97316; padding-bottom: 8px; }
+        h2 { font-size: 22px; color: #1a1a2e; margin: 25px 0 12px; }
+        h3 { font-size: 18px; color: #444; margin: 20px 0 10px; }
+        h4 { font-size: 16px; color: #555; margin: 15px 0 8px; }
+        p { margin-bottom: 12px; }
+        ul, ol { margin: 10px 0 15px 25px; }
+        li { margin-bottom: 8px; }
+        .tip-box {
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip-box strong { color: #c2410c; }
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .info-box strong { color: #1d4ed8; }
+        .warning-box {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .warning-box strong { color: #dc2626; }
+        .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: #f97316;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .step { margin: 15px 0; padding-left: 5px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 10px 14px;
+            text-align: left;
+        }
+        th { background: #f9fafb; font-weight: 600; color: #374151; }
+        .toc { margin: 20px 0; }
+        .toc a { color: #1a1a2e; text-decoration: none; display: block; padding: 6px 0; border-bottom: 1px dotted #ddd; }
+        .toc a:hover { color: #f97316; }
+        .footer { text-align: center; margin-top: 60px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #999; }
+    </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover-page">
+    <h1>Infinity Weekends</h1>
+    <div class="brand-bar"></div>
+    <div class="subtitle">Admin Training Manual</div>
+    <p style="font-size: 16px; color: #555; max-width: 500px;">
+        Your complete guide to managing the Infinity Weekends platform — from enquiries and quotes to destinations, packages, and user management.
+    </p>
+    <div class="version">
+        <p>Version 1.0</p>
+        <p>Last Updated: May 2026</p>
+        <p>&copy; Infinity Weekends. All rights reserved.</p>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- TABLE OF CONTENTS -->
+<h1>Table of Contents</h1>
+<div class="toc">
+    <a href="#section1">1. Introduction</a>
+    <a href="#section2">2. Accessing the Admin Dashboard</a>
+    <a href="#section3">3. Dashboard Overview</a>
+    <a href="#section4">4. Managing Enquiries</a>
+    <a href="#section5">5. Quote Management</a>
+    <a href="#section6">6. Bookings Management</a>
+    <a href="#section7">7. Destinations Management</a>
+    <a href="#section8">8. Offers Management</a>
+    <a href="#section9">9. Super Packages Management</a>
+    <a href="#section10">10. Events Management</a>
+    <a href="#section11">11. Training Materials</a>
+    <a href="#section12">12. User Approvals</a>
+    <a href="#section13">13. User Management</a>
+    <a href="#section14">14. Agency Management</a>
+    <a href="#section15">15. Settings</a>
+    <a href="#section16">16. Troubleshooting &amp; FAQs</a>
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 1 -->
+<h1 id="section1">1. Introduction</h1>
+<p>Welcome to the <strong>Infinity Weekends Admin Dashboard</strong> — the central management hub for the entire Infinity Weekends platform. As an administrator, you have full control over enquiries, quotes, bookings, destinations, packages, events, users, and system settings.</p>
+
+<h3>Admin Capabilities Overview</h3>
+<ul>
+    <li>View and manage all agent enquiries across the platform</li>
+    <li>Create, edit, and send professional quotes to agents</li>
+    <li>Track bookings and manage their lifecycle</li>
+    <li>Manage destinations, offers, and Super Packages</li>
+    <li>Create and manage events and activities</li>
+    <li>Approve or reject agent registrations</li>
+    <li>Manage users, roles, and permissions</li>
+    <li>Upload and organise training materials for agents</li>
+    <li>Configure email settings and system preferences</li>
+    <li>Monitor platform analytics and performance metrics</li>
+</ul>
+
+<h3>Admin Roles</h3>
+<table>
+    <tr><th>Role</th><th>Access Level</th><th>Description</th></tr>
+    <tr><td>Super Admin</td><td>Full Access</td><td>Complete control over all platform features, settings, and user management</td></tr>
+    <tr><td>Admin</td><td>Operational Access</td><td>Manage enquiries, quotes, bookings, content, and approve agents</td></tr>
+</table>
+
+<div class="info-box">
+    <strong>Note:</strong> This manual covers all admin features. Some features may be restricted based on your specific role and permissions.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 2 -->
+<h1 id="section2">2. Accessing the Admin Dashboard</h1>
+
+<h3>Logging In</h3>
+<div class="step"><span class="step-number">1</span> Navigate to <strong>/auth/login</strong> in your browser</div>
+<div class="step"><span class="step-number">2</span> Enter your admin email address</div>
+<div class="step"><span class="step-number">3</span> Enter your password</div>
+<div class="step"><span class="step-number">4</span> Click <strong>Sign In</strong></div>
+<div class="step"><span class="step-number">5</span> You will be automatically redirected to the Admin Dashboard</div>
+
+<div class="tip-box">
+    <strong>Tip:</strong> Admin accounts are identified by the "admin" or "super_admin" role. The system automatically routes you to the admin dashboard upon login.
+</div>
+
+<h3>Navigation Structure</h3>
+<p>The admin dashboard uses a sidebar navigation with the following sections:</p>
+<table>
+    <tr><th>Menu Item</th><th>Path</th><th>Description</th></tr>
+    <tr><td>Dashboard</td><td>/admin</td><td>Overview metrics and quick actions</td></tr>
+    <tr><td>Enquiries</td><td>/admin/enquiries</td><td>All agent enquiries</td></tr>
+    <tr><td>Quotes</td><td>/admin/quotes</td><td>Quote management</td></tr>
+    <tr><td>Bookings</td><td>/admin/bookings</td><td>Confirmed bookings</td></tr>
+    <tr><td>Destinations</td><td>/admin/destinations</td><td>Destination management</td></tr>
+    <tr><td>Offers</td><td>/admin/offers</td><td>Offer management</td></tr>
+    <tr><td>Super Packages</td><td>/admin/super-packages</td><td>Package management</td></tr>
+    <tr><td>Events</td><td>/admin/events</td><td>Events and activities</td></tr>
+    <tr><td>Training</td><td>/admin/training</td><td>Training materials</td></tr>
+    <tr><td>User Approvals</td><td>/admin/approvals</td><td>Pending registrations</td></tr>
+    <tr><td>Users</td><td>/admin/users</td><td>User management</td></tr>
+    <tr><td>Agencies</td><td>/admin/agencies</td><td>Agency management</td></tr>
+    <tr><td>Settings</td><td>/admin/settings</td><td>System configuration</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<!-- SECTION 3 -->
+<h1 id="section3">3. Dashboard Overview</h1>
+<p>The main admin dashboard provides an at-a-glance view of platform activity and key performance metrics.</p>
+
+<h3>Key Metrics</h3>
+<p>The dashboard displays summary cards with the following metrics:</p>
+<table>
+    <tr><th>Metric</th><th>Description</th></tr>
+    <tr><td>Total Enquiries</td><td>Total number of enquiries received across all agents</td></tr>
+    <tr><td>Active Quotes</td><td>Quotes currently in draft or sent status</td></tr>
+    <tr><td>Confirmed Bookings</td><td>Total bookings that have been confirmed</td></tr>
+    <tr><td>Pending Approvals</td><td>Agent registrations awaiting review</td></tr>
+    <tr><td>Revenue</td><td>Total revenue from confirmed bookings</td></tr>
+    <tr><td>Conversion Rate</td><td>Percentage of quotes converted to bookings</td></tr>
+</table>
+
+<h3>Recent Activity</h3>
+<p>Below the metrics, you'll find:</p>
+<ul>
+    <li><strong>Recent Enquiries</strong> — Latest enquiries submitted by agents with status indicators</li>
+    <li><strong>Recent Quotes</strong> — Quotes recently created or updated</li>
+    <li><strong>Pending Actions</strong> — Items requiring your attention (approvals, unanswered enquiries)</li>
+</ul>
+
+<h3>Quick Actions</h3>
+<ul>
+    <li><strong>Create Quote</strong> — Jump directly to quote creation</li>
+    <li><strong>Review Approvals</strong> — Go to pending agent approvals</li>
+    <li><strong>Add Destination</strong> — Create a new destination</li>
+    <li><strong>Add Package</strong> — Create a new Super Package</li>
+</ul>
+
+<div class="tip-box">
+    <strong>Tip:</strong> The dashboard refreshes data in real-time. Use it as your starting point each day to identify priority tasks.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 4 -->
+<h1 id="section4">4. Managing Enquiries</h1>
+<p>The Enquiries section is where you view, manage, and process all enquiries submitted by agents across the platform.</p>
+
+<h3>Viewing Enquiries</h3>
+<p>Navigate to <strong>/admin/enquiries</strong> to see all enquiries. The list displays:</p>
+<ul>
+    <li>Enquiry reference number</li>
+    <li>Lead name and trip type (Stag/Hen/Other)</li>
+    <li>Destination(s) requested</li>
+    <li>Travel date and number of guests</li>
+    <li>Agent name and agency</li>
+    <li>Current status</li>
+    <li>Date submitted</li>
+</ul>
+
+<h3>Filtering Enquiries</h3>
+<p>Use the filter controls at the top of the enquiries list:</p>
+<table>
+    <tr><th>Filter</th><th>Options</th><th>Description</th></tr>
+    <tr><td>Status</td><td>All, Submitted, In Progress, In Review, Quote Ready, Completed</td><td>Filter by current processing status</td></tr>
+    <tr><td>Trip Type</td><td>All, Stag Do, Hen Do, Other</td><td>Filter by type of trip</td></tr>
+    <tr><td>Destination</td><td>All available destinations</td><td>Filter by requested destination</td></tr>
+    <tr><td>Date Range</td><td>Custom date picker</td><td>Filter by submission date</td></tr>
+    <tr><td>Agent</td><td>All registered agents</td><td>Filter by submitting agent</td></tr>
+</table>
+
+<h3>Searching Enquiries</h3>
+<p>Use the search bar to find enquiries by:</p>
+<ul>
+    <li>Lead name</li>
+    <li>Enquiry reference number</li>
+    <li>Agent name or agency name</li>
+    <li>Destination</li>
+</ul>
+
+<h3>Enquiry Statuses</h3>
+<table>
+    <tr><th>Status</th><th>Colour</th><th>Meaning</th></tr>
+    <tr><td>Submitted</td><td>Blue</td><td>New enquiry received, not yet reviewed</td></tr>
+    <tr><td>In Progress</td><td>Amber</td><td>Admin is actively working on this enquiry</td></tr>
+    <tr><td>In Review</td><td>Purple</td><td>Quote has been drafted and is being reviewed</td></tr>
+    <tr><td>Quote Ready</td><td>Green</td><td>Quote has been sent to the agent</td></tr>
+    <tr><td>Completed</td><td>Green</td><td>Enquiry fully processed (booking confirmed or closed)</td></tr>
+</table>
+
+<h3>Updating Enquiry Status</h3>
+<div class="step"><span class="step-number">1</span> Click on an enquiry to open its detail view</div>
+<div class="step"><span class="step-number">2</span> Use the <strong>Status</strong> dropdown to change the status</div>
+<div class="step"><span class="step-number">3</span> The status updates immediately and the agent is notified if applicable</div>
+
+<h3>Creating a Quote from an Enquiry</h3>
+<div class="step"><span class="step-number">1</span> Open the enquiry detail page</div>
+<div class="step"><span class="step-number">2</span> Review all the client's requirements (destination, dates, guests, budget)</div>
+<div class="step"><span class="step-number">3</span> Click the <strong>Create Quote</strong> button</div>
+<div class="step"><span class="step-number">4</span> You will be redirected to the quote creation form, pre-populated with the enquiry details</div>
+<div class="step"><span class="step-number">5</span> Complete the quote (see Section 5 for full details)</div>
+<div class="step"><span class="step-number">6</span> The enquiry status automatically updates to "In Review" or "Quote Ready"</div>
+
+<div class="tip-box">
+    <strong>Tip:</strong> Always review the agent's notes and special requirements before creating a quote. This ensures you address all client needs in the first quote, reducing revision cycles.
+</div>
+
+<h3>Enquiry Detail View</h3>
+<p>Clicking on an enquiry shows the full detail page with:</p>
+<ul>
+    <li><strong>Client Information</strong> — Lead name, trip type</li>
+    <li><strong>Trip Requirements</strong> — Destinations, dates, guests, nights, budget</li>
+    <li><strong>Accommodation Preference</strong> — Hotel or apartments</li>
+    <li><strong>Selected Events</strong> — Activities the client is interested in</li>
+    <li><strong>Additional Notes</strong> — Special requirements or comments</li>
+    <li><strong>Agent Details</strong> — Who submitted the enquiry and their agency</li>
+    <li><strong>Linked Quotes</strong> — Any quotes already created for this enquiry</li>
+    <li><strong>Activity Timeline</strong> — History of status changes and actions</li>
+</ul>
+
+<div class="page-break"></div>
+
+<!-- SECTION 5 -->
+<h1 id="section5">5. Quote Management</h1>
+<p>The Quote Management system allows you to create professional, detailed quotes and send them directly to agents via email.</p>
+
+<h3>Accessing Quotes</h3>
+<p>Navigate to <strong>/admin/quotes</strong> to see all quotes. You can also access quotes from individual enquiry pages.</p>
+
+<h3>Creating a New Quote</h3>
+<div class="step"><span class="step-number">1</span> Click <strong>Create Quote</strong> from the quotes list or from an enquiry detail page</div>
+<div class="step"><span class="step-number">2</span> Fill in the quote details (see fields below)</div>
+<div class="step"><span class="step-number">3</span> Add inclusions and events/activities</div>
+<div class="step"><span class="step-number">4</span> Review the pricing summary</div>
+<div class="step"><span class="step-number">5</span> Click <strong>Save as Draft</strong> to save without sending, or <strong>Save &amp; Send</strong> to email directly</div>
+
+<h3>Quote Form Fields</h3>
+
+<h4>Basic Information</h4>
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>Quote Title</td><td>Descriptive title for the quote (e.g., "Prague Stag Weekend - 12 Guests")</td><td>Yes</td></tr>
+    <tr><td>Linked Enquiry</td><td>The enquiry this quote responds to</td><td>Yes</td></tr>
+    <tr><td>Agent</td><td>The agent who will receive the quote</td><td>Yes</td></tr>
+</table>
+
+<h4>Trip Details</h4>
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>Destination</td><td>The destination for the trip</td><td>Yes</td></tr>
+    <tr><td>Hotel/Accommodation</td><td>Name of the hotel or accommodation</td><td>Yes</td></tr>
+    <tr><td>Arrival Date</td><td>Check-in date</td><td>Yes</td></tr>
+    <tr><td>Departure Date</td><td>Check-out date</td><td>Yes</td></tr>
+    <tr><td>Number of Guests</td><td>Total group size</td><td>Yes</td></tr>
+    <tr><td>Number of Nights</td><td>Duration of stay</td><td>Yes</td></tr>
+    <tr><td>Number of Rooms</td><td>Rooms allocated</td><td>Yes</td></tr>
+</table>
+
+<h4>Pricing</h4>
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>Total Price</td><td>Total cost for the entire group (GBP)</td><td>Yes</td></tr>
+    <tr><td>Price Per Person</td><td>Auto-calculated from total ÷ guests</td><td>Auto</td></tr>
+</table>
+
+<h4>Inclusions</h4>
+<p>Add items that are included in the quote price. Common inclusions:</p>
+<ul>
+    <li>Return airport transfers</li>
+    <li>Accommodation (specify room type)</li>
+    <li>Welcome drinks/pack</li>
+    <li>Activity bookings</li>
+    <li>Event entry</li>
+    <li>Tour guide/rep service</li>
+</ul>
+
+<h4>Events &amp; Activities</h4>
+<p>Add specific events with individual pricing:</p>
+<table>
+    <tr><th>Field</th><th>Description</th></tr>
+    <tr><td>Event Name</td><td>Name of the activity</td></tr>
+    <tr><td>Description</td><td>Brief description of what's included</td></tr>
+    <tr><td>Price</td><td>Cost per person for this event</td></tr>
+    <tr><td>Date/Time</td><td>When the event takes place</td></tr>
+</table>
+
+<h3>Editing a Quote</h3>
+<div class="step"><span class="step-number">1</span> Navigate to the quote detail page</div>
+<div class="step"><span class="step-number">2</span> Click the <strong>Edit</strong> button</div>
+<div class="step"><span class="step-number">3</span> Make your changes to any fields</div>
+<div class="step"><span class="step-number">4</span> Click <strong>Save</strong> to update the quote</div>
+
+<div class="info-box">
+    <strong>Note:</strong> Editing a sent quote creates a new version. The agent will see the updated quote and receive a notification.
+</div>
+
+<h3>Sending Quotes via Email</h3>
+<div class="step"><span class="step-number">1</span> Open the quote you wish to send</div>
+<div class="step"><span class="step-number">2</span> Ensure all details are correct and complete</div>
+<div class="step"><span class="step-number">3</span> Click the <strong>Send Quote</strong> button</div>
+<div class="step"><span class="step-number">4</span> The system sends a professionally formatted email to the agent</div>
+<div class="step"><span class="step-number">5</span> The quote status changes to "Sent"</div>
+
+<h3>Test Emails</h3>
+<p>Before sending a quote to an agent, you can send a test email to yourself:</p>
+<div class="step"><span class="step-number">1</span> Open the quote</div>
+<div class="step"><span class="step-number">2</span> Click <strong>Send Test Email</strong></div>
+<div class="step"><span class="step-number">3</span> Enter your email address (or use the default admin email)</div>
+<div class="step"><span class="step-number">4</span> Review the email in your inbox to check formatting and content</div>
+
+<div class="tip-box">
+    <strong>Tip:</strong> Always send a test email for your first few quotes to ensure the formatting looks correct. This is especially important after making changes to email templates.
+</div>
+
+<h3>Retrying Failed Emails</h3>
+<p>If an email fails to send (due to server issues or invalid addresses):</p>
+<div class="step"><span class="step-number">1</span> The quote will show a "Failed" email status indicator</div>
+<div class="step"><span class="step-number">2</span> Click the <strong>Retry Send</strong> button</div>
+<div class="step"><span class="step-number">3</span> The system will attempt to resend the email</div>
+<div class="step"><span class="step-number">4</span> Check the email status updates to "Sent" on success</div>
+
+<div class="warning-box">
+    <strong>Important:</strong> If emails repeatedly fail, check the email configuration in Settings (Section 15) and verify the agent's email address is correct.
+</div>
+
+<h3>Version History</h3>
+<p>Every time a quote is edited and saved, a new version is created. To view version history:</p>
+<div class="step"><span class="step-number">1</span> Open the quote detail page</div>
+<div class="step"><span class="step-number">2</span> Click the <strong>Version History</strong> tab or section</div>
+<div class="step"><span class="step-number">3</span> View all previous versions with timestamps and changes</div>
+<div class="step"><span class="step-number">4</span> Click on any version to see what it contained</div>
+
+<h3>Email Analytics</h3>
+<p>Track the delivery and engagement of quote emails:</p>
+<table>
+    <tr><th>Metric</th><th>Description</th></tr>
+    <tr><td>Sent</td><td>Email was successfully dispatched</td></tr>
+    <tr><td>Delivered</td><td>Email reached the agent's inbox</td></tr>
+    <tr><td>Opened</td><td>Agent opened the email</td></tr>
+    <tr><td>Failed</td><td>Email could not be delivered</td></tr>
+</table>
+
+<h3>Booking Conversion Analytics</h3>
+<p>Monitor how effectively quotes convert to bookings:</p>
+<ul>
+    <li><strong>Quotes Sent</strong> — Total quotes dispatched to agents</li>
+    <li><strong>Quotes Accepted</strong> — Quotes that agents accepted</li>
+    <li><strong>Conversion Rate</strong> — Percentage of sent quotes that became bookings</li>
+    <li><strong>Average Time to Accept</strong> — How long agents take to accept quotes</li>
+    <li><strong>Revenue from Conversions</strong> — Total value of converted quotes</li>
+</ul>
+
+<h3>Quote Statuses</h3>
+<table>
+    <tr><th>Status</th><th>Description</th><th>Agent Visibility</th></tr>
+    <tr><td>Draft</td><td>Quote is being prepared</td><td>Not visible to agent</td></tr>
+    <tr><td>Sent</td><td>Quote emailed to agent</td><td>Visible and active</td></tr>
+    <tr><td>Updated</td><td>Quote revised after initial send</td><td>Visible — agent sees latest version</td></tr>
+    <tr><td>Accepted</td><td>Agent accepted the quote</td><td>Converted to booking</td></tr>
+    <tr><td>Expired</td><td>Quote validity period passed</td><td>Marked as expired</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<!-- SECTION 6 -->
+<h1 id="section6">6. Bookings Management</h1>
+<p>The Bookings section displays all confirmed bookings that have been converted from accepted quotes.</p>
+
+<h3>Viewing Bookings</h3>
+<p>Navigate to <strong>/admin/bookings</strong> to see all bookings. Each booking entry shows:</p>
+<table>
+    <tr><th>Column</th><th>Description</th></tr>
+    <tr><td>Booking Reference</td><td>Unique booking identifier</td></tr>
+    <tr><td>Title</td><td>Descriptive booking title</td></tr>
+    <tr><td>Agent</td><td>Agent who made the booking</td></tr>
+    <tr><td>Destination</td><td>Trip destination</td></tr>
+    <tr><td>Guests</td><td>Number of guests</td></tr>
+    <tr><td>Arrival Date</td><td>Check-in date</td></tr>
+    <tr><td>Total Price</td><td>Total booking value</td></tr>
+    <tr><td>Status</td><td>Current booking status</td></tr>
+</table>
+
+<h3>Booking Statuses</h3>
+<table>
+    <tr><th>Status</th><th>Colour</th><th>Description</th></tr>
+    <tr><td>Awaiting Confirmation</td><td>Amber</td><td>Quote accepted by agent, pending admin confirmation</td></tr>
+    <tr><td>Confirmed</td><td>Green</td><td>Booking fully confirmed and active</td></tr>
+    <tr><td>Cancelled</td><td>Red</td><td>Booking has been cancelled</td></tr>
+    <tr><td>Completed</td><td>Grey</td><td>Trip has taken place</td></tr>
+</table>
+
+<h3>Managing Booking Status</h3>
+<div class="step"><span class="step-number">1</span> Click on a booking to open its detail view</div>
+<div class="step"><span class="step-number">2</span> Review the booking details (linked quote, agent, trip info)</div>
+<div class="step"><span class="step-number">3</span> Use the <strong>Status</strong> dropdown to update the status</div>
+<div class="step"><span class="step-number">4</span> When changing to "Confirmed", the agent receives a confirmation email</div>
+
+<div class="info-box">
+    <strong>Note:</strong> Bookings are created automatically when an agent accepts a quote. You cannot manually create bookings — they must originate from an accepted quote.
+</div>
+
+<h3>Booking Detail View</h3>
+<p>The booking detail page includes:</p>
+<ul>
+    <li>Full trip details (destination, hotel, dates, guests)</li>
+    <li>Pricing breakdown (total and per-person)</li>
+    <li>Linked quote reference (click to view original quote)</li>
+    <li>Agent and agency information</li>
+    <li>Inclusions and events from the quote</li>
+    <li>Status history and timeline</li>
+</ul>
+
+<div class="tip-box">
+    <strong>Tip:</strong> Confirm bookings promptly after an agent accepts a quote. Delays can lead to availability issues with hotels and activities.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 7 -->
+<h1 id="section7">7. Destinations Management</h1>
+<p>Manage the destinations available on the platform. Destinations appear in enquiry forms, quote creation, and Super Packages.</p>
+
+<h3>Viewing Destinations</h3>
+<p>Navigate to <strong>/admin/destinations</strong> to see all destinations in a grid or list view.</p>
+
+<h3>Creating a New Destination</h3>
+<div class="step"><span class="step-number">1</span> Click <strong>Add Destination</strong></div>
+<div class="step"><span class="step-number">2</span> Fill in the destination details:</div>
+
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>Name</td><td>Destination name (e.g., "Prague")</td><td>Yes</td></tr>
+    <tr><td>Country</td><td>Country the destination is in</td><td>Yes</td></tr>
+    <tr><td>Description</td><td>Marketing description of the destination</td><td>Yes</td></tr>
+    <tr><td>Image</td><td>Hero image for the destination</td><td>No</td></tr>
+    <tr><td>Airport Code</td><td>Main airport code (e.g., "PRG")</td><td>No</td></tr>
+    <tr><td>Active</td><td>Whether the destination is available for selection</td><td>Yes</td></tr>
+</table>
+
+<div class="step"><span class="step-number">3</span> Click <strong>Save</strong> to create the destination</div>
+
+<h3>Editing a Destination</h3>
+<div class="step"><span class="step-number">1</span> Click on the destination card or the <strong>Edit</strong> button</div>
+<div class="step"><span class="step-number">2</span> Modify any fields as needed</div>
+<div class="step"><span class="step-number">3</span> Click <strong>Save Changes</strong></div>
+
+<h3>Deleting a Destination</h3>
+<div class="step"><span class="step-number">1</span> Click the <strong>Delete</strong> button on the destination</div>
+<div class="step"><span class="step-number">2</span> Confirm the deletion in the dialog</div>
+
+<div class="warning-box">
+    <strong>Important:</strong> Deleting a destination will not remove it from existing enquiries or quotes, but it will no longer appear as an option for new enquiries. Consider deactivating instead of deleting if the destination may be used again.
+</div>
+
+<h3>Bulk Operations</h3>
+<p>For managing multiple destinations at once:</p>
+<ul>
+    <li><strong>Bulk Activate/Deactivate</strong> — Select multiple destinations and toggle their active status</li>
+    <li><strong>Bulk Delete</strong> — Remove multiple destinations at once (use with caution)</li>
+    <li><strong>Export</strong> — Download destination data as CSV for external use</li>
+</ul>
+
+<h3>AI Content Generation</h3>
+<p>The platform includes AI-powered content generation for destination descriptions:</p>
+<div class="step"><span class="step-number">1</span> Open a destination for editing</div>
+<div class="step"><span class="step-number">2</span> Click the <strong>Generate Content</strong> button next to the description field</div>
+<div class="step"><span class="step-number">3</span> The AI generates a marketing-friendly description based on the destination name</div>
+<div class="step"><span class="step-number">4</span> Review and edit the generated content as needed</div>
+<div class="step"><span class="step-number">5</span> Click <strong>Save</strong> to apply the content</div>
+
+<div class="tip-box">
+    <strong>Tip:</strong> AI-generated content is a starting point. Always review and personalise it to match the Infinity Weekends brand voice and ensure accuracy.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 8 -->
+<h1 id="section8">8. Offers Management</h1>
+<p>Offers are promotional packages or deals that can be presented to agents. They differ from Super Packages in that they are typically time-limited or seasonal.</p>
+
+<h3>Viewing Offers</h3>
+<p>Navigate to <strong>/admin/offers</strong> to see all offers with their status, pricing, and validity dates.</p>
+
+<h3>Creating an Offer</h3>
+<div class="step"><span class="step-number">1</span> Click <strong>Create Offer</strong></div>
+<div class="step"><span class="step-number">2</span> Complete the offer form:</div>
+
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>Offer Title</td><td>Descriptive name for the offer</td><td>Yes</td></tr>
+    <tr><td>Destination</td><td>Which destination this offer applies to</td><td>Yes</td></tr>
+    <tr><td>Description</td><td>Details of what the offer includes</td><td>Yes</td></tr>
+    <tr><td>Price Per Person</td><td>Starting price per person</td><td>Yes</td></tr>
+    <tr><td>Valid From</td><td>Start date of the offer</td><td>Yes</td></tr>
+    <tr><td>Valid Until</td><td>Expiry date of the offer</td><td>Yes</td></tr>
+    <tr><td>Min Group Size</td><td>Minimum number of guests</td><td>No</td></tr>
+    <tr><td>Max Group Size</td><td>Maximum number of guests</td><td>No</td></tr>
+    <tr><td>Status</td><td>Active, Draft, or Expired</td><td>Yes</td></tr>
+</table>
+
+<div class="step"><span class="step-number">3</span> Add the pricing matrix (if applicable)</div>
+<div class="step"><span class="step-number">4</span> Click <strong>Save</strong></div>
+
+<h3>CSV Import</h3>
+<p>For bulk offer creation, you can import offers from a CSV file:</p>
+<div class="step"><span class="step-number">1</span> Click <strong>Import CSV</strong> on the offers page</div>
+<div class="step"><span class="step-number">2</span> Download the CSV template to see the required format</div>
+<div class="step"><span class="step-number">3</span> Prepare your CSV file with offer data</div>
+<div class="step"><span class="step-number">4</span> Upload the file</div>
+<div class="step"><span class="step-number">5</span> Review the import preview showing what will be created</div>
+<div class="step"><span class="step-number">6</span> Confirm the import</div>
+
+<div class="info-box">
+    <strong>CSV Format:</strong> The CSV must include columns for title, destination, description, price_per_person, valid_from, valid_until, and status. Download the template for the exact format.
+</div>
+
+<h3>Pricing Matrices</h3>
+<p>Offers can have tiered pricing based on group size and duration:</p>
+<table>
+    <tr><th>Group Size</th><th>2 Nights</th><th>3 Nights</th><th>4 Nights</th></tr>
+    <tr><td>8-12 guests</td><td>£199pp</td><td>£249pp</td><td>£299pp</td></tr>
+    <tr><td>13-20 guests</td><td>£179pp</td><td>£229pp</td><td>£279pp</td></tr>
+    <tr><td>21+ guests</td><td>£159pp</td><td>£209pp</td><td>£259pp</td></tr>
+</table>
+
+<h3>Offer Status Management</h3>
+<table>
+    <tr><th>Status</th><th>Description</th><th>Visibility</th></tr>
+    <tr><td>Draft</td><td>Offer is being prepared</td><td>Admin only</td></tr>
+    <tr><td>Active</td><td>Offer is live and available</td><td>Visible to agents</td></tr>
+    <tr><td>Expired</td><td>Offer validity period has passed</td><td>Hidden from agents</td></tr>
+    <tr><td>Archived</td><td>Manually archived by admin</td><td>Hidden from agents</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<!-- SECTION 9 -->
+<h1 id="section9">9. Super Packages Management</h1>
+<p>Super Packages are the core product offering — pre-built holiday packages with comprehensive pricing matrices. This is one of the most feature-rich sections of the admin dashboard.</p>
+
+<h3>Viewing Super Packages</h3>
+<p>Navigate to <strong>/admin/super-packages</strong> to see all packages. The list shows package name, destination, status, and pricing summary.</p>
+
+<h3>Creating a Super Package</h3>
+<div class="step"><span class="step-number">1</span> Click <strong>Create Package</strong></div>
+<div class="step"><span class="step-number">2</span> Fill in the basic information:</div>
+
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>Package Name</td><td>Descriptive title (e.g., "Prague Party Package")</td><td>Yes</td></tr>
+    <tr><td>Destination</td><td>Primary destination</td><td>Yes</td></tr>
+    <tr><td>Resort/Area</td><td>Specific area within the destination</td><td>No</td></tr>
+    <tr><td>Description</td><td>Full marketing description</td><td>Yes</td></tr>
+    <tr><td>Inclusions</td><td>What's included in the package</td><td>Yes</td></tr>
+    <tr><td>Accommodation Examples</td><td>Sample hotels/apartments</td><td>No</td></tr>
+    <tr><td>Sales Notes</td><td>Internal notes for sales team</td><td>No</td></tr>
+    <tr><td>Status</td><td>Active, Draft, or Archived</td><td>Yes</td></tr>
+</table>
+
+<div class="step"><span class="step-number">3</span> Configure the pricing matrix (see below)</div>
+<div class="step"><span class="step-number">4</span> Click <strong>Save</strong></div>
+
+<h3>Pricing Matrix Configuration</h3>
+<p>The pricing matrix is the heart of a Super Package. It defines per-person prices based on three dimensions:</p>
+
+<h4>1. Travel Period</h4>
+<p>Define pricing for different months or seasons:</p>
+<ul>
+    <li>Individual months (January, February, etc.)</li>
+    <li>Seasonal groupings (e.g., "Peak Summer: June-August")</li>
+    <li>Custom date ranges</li>
+</ul>
+
+<h4>2. Group Size Tiers</h4>
+<p>Set different prices for different group sizes:</p>
+<table>
+    <tr><th>Tier</th><th>Example Range</th><th>Rationale</th></tr>
+    <tr><td>Small</td><td>8-12 guests</td><td>Higher per-person cost due to fewer people sharing fixed costs</td></tr>
+    <tr><td>Medium</td><td>13-20 guests</td><td>Mid-range pricing with moderate group discounts</td></tr>
+    <tr><td>Large</td><td>21+ guests</td><td>Best per-person rate due to economies of scale</td></tr>
+</table>
+
+<h4>3. Duration</h4>
+<p>Prices for different trip lengths:</p>
+<ul>
+    <li>2 nights</li>
+    <li>3 nights</li>
+    <li>4 nights</li>
+</ul>
+
+<h4>Setting Up the Matrix</h4>
+<div class="step"><span class="step-number">1</span> In the package editor, navigate to the <strong>Pricing</strong> tab</div>
+<div class="step"><span class="step-number">2</span> Define your <strong>travel periods</strong> (add months or date ranges)</div>
+<div class="step"><span class="step-number">3</span> Define your <strong>group size tiers</strong> (set min/max for each tier)</div>
+<div class="step"><span class="step-number">4</span> For each combination of period × group size × duration, enter the per-person price</div>
+<div class="step"><span class="step-number">5</span> The matrix auto-generates a grid for easy data entry</div>
+
+<div class="tip-box">
+    <strong>Tip:</strong> Start with 3 group size tiers and 3 durations. This gives you a manageable 9-cell matrix per period. You can always add more granularity later.
+</div>
+
+<h3>CSV Import/Export</h3>
+
+<h4>Importing Packages from CSV</h4>
+<div class="step"><span class="step-number">1</span> Click <strong>Import CSV</strong> on the Super Packages page</div>
+<div class="step"><span class="step-number">2</span> Download the CSV template</div>
+<div class="step"><span class="step-number">3</span> Fill in your package data following the template format</div>
+<div class="step"><span class="step-number">4</span> Upload the completed CSV</div>
+<div class="step"><span class="step-number">5</span> Review the import preview — check for errors or warnings</div>
+<div class="step"><span class="step-number">6</span> Confirm to create the packages</div>
+
+<h4>Exporting Packages to CSV</h4>
+<div class="step"><span class="step-number">1</span> Select the packages you want to export (or select all)</div>
+<div class="step"><span class="step-number">2</span> Click <strong>Export CSV</strong></div>
+<div class="step"><span class="step-number">3</span> The file downloads with all package data including pricing matrices</div>
+
+<div class="info-box">
+    <strong>Note:</strong> CSV import supports both creating new packages and updating existing ones. Use the package ID column to update existing packages.
+</div>
+
+<h3>Duplicating a Package</h3>
+<p>To create a similar package without starting from scratch:</p>
+<div class="step"><span class="step-number">1</span> Open the package you want to duplicate</div>
+<div class="step"><span class="step-number">2</span> Click the <strong>Duplicate</strong> button</div>
+<div class="step"><span class="step-number">3</span> A new package is created with all the same details (name appended with "- Copy")</div>
+<div class="step"><span class="step-number">4</span> Edit the duplicated package to make your changes</div>
+<div class="step"><span class="step-number">5</span> Save the new package</div>
+
+<h3>Soft Delete vs Hard Delete</h3>
+<table>
+    <tr><th>Action</th><th>What Happens</th><th>Reversible?</th></tr>
+    <tr><td>Soft Delete (Archive)</td><td>Package is hidden from agents but retained in the system. Existing quotes referencing it remain valid.</td><td>Yes — can be restored</td></tr>
+    <tr><td>Hard Delete</td><td>Package is permanently removed from the database. Cannot be recovered.</td><td>No</td></tr>
+</table>
+
+<div class="warning-box">
+    <strong>Important:</strong> Always use soft delete unless you are certain the package should be permanently removed. Hard delete should only be used for test data or packages created in error.
+</div>
+
+<h3>Version History</h3>
+<p>Super Packages maintain a version history of all changes:</p>
+<ul>
+    <li>View when changes were made and by whom</li>
+    <li>See what fields were modified in each version</li>
+    <li>Compare pricing between versions</li>
+    <li>Revert to a previous version if needed</li>
+</ul>
+
+<h3>Price Calculator</h3>
+<p>Each Super Package has a built-in price calculator that agents use to get instant quotes:</p>
+<ul>
+    <li>Agents select travel period, group size, and duration</li>
+    <li>The calculator displays the per-person price from your pricing matrix</li>
+    <li>Ensure all matrix cells are filled to avoid "Price not available" messages</li>
+</ul>
+
+<h3>Linked Quotes</h3>
+<p>View all quotes that have been created from a specific Super Package:</p>
+<div class="step"><span class="step-number">1</span> Open the package detail page</div>
+<div class="step"><span class="step-number">2</span> Scroll to the <strong>Linked Quotes</strong> section</div>
+<div class="step"><span class="step-number">3</span> See all quotes referencing this package, their status, and conversion rates</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 10 -->
+<h1 id="section10">10. Events Management</h1>
+<p>Events are activities and experiences that can be added to quotes and packages. They represent the fun extras that make trips memorable — from bar crawls to go-karting.</p>
+
+<h3>Viewing Events</h3>
+<p>Navigate to <strong>/admin/events</strong> to see all events. Events are displayed with their name, category, destination, price, and availability status.</p>
+
+<h3>Creating an Event</h3>
+<div class="step"><span class="step-number">1</span> Click <strong>Create Event</strong></div>
+<div class="step"><span class="step-number">2</span> Fill in the event details:</div>
+
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>Event Name</td><td>Name of the activity (e.g., "Go-Karting Experience")</td><td>Yes</td></tr>
+    <tr><td>Category</td><td>Type of event (see categories below)</td><td>Yes</td></tr>
+    <tr><td>Destination</td><td>Which destination this event is available in</td><td>Yes</td></tr>
+    <tr><td>Description</td><td>Detailed description of the activity</td><td>Yes</td></tr>
+    <tr><td>Price Per Person</td><td>Cost per person (GBP)</td><td>Yes</td></tr>
+    <tr><td>Duration</td><td>How long the activity lasts</td><td>No</td></tr>
+    <tr><td>Min Participants</td><td>Minimum group size required</td><td>No</td></tr>
+    <tr><td>Max Participants</td><td>Maximum group size allowed</td><td>No</td></tr>
+    <tr><td>Available</td><td>Whether the event is currently bookable</td><td>Yes</td></tr>
+    <tr><td>Image</td><td>Photo of the activity</td><td>No</td></tr>
+</table>
+
+<div class="step"><span class="step-number">3</span> Click <strong>Save</strong> to create the event</div>
+
+<h3>Event Categories</h3>
+<table>
+    <tr><th>Category</th><th>Examples</th></tr>
+    <tr><td>Nightlife</td><td>Bar crawls, club entry, VIP packages</td></tr>
+    <tr><td>Adventure</td><td>Go-karting, paintball, quad biking, bungee jumping</td></tr>
+    <tr><td>Water Sports</td><td>Jet skiing, boat parties, kayaking</td></tr>
+    <tr><td>Relaxation</td><td>Spa days, wine tasting, cooking classes</td></tr>
+    <tr><td>Sports</td><td>Football, golf, bubble football</td></tr>
+    <tr><td>Cultural</td><td>City tours, museum visits, food tours</td></tr>
+    <tr><td>Entertainment</td><td>Comedy shows, escape rooms, casino nights</td></tr>
+</table>
+
+<h3>Editing Events</h3>
+<div class="step"><span class="step-number">1</span> Click on the event or the <strong>Edit</strong> button</div>
+<div class="step"><span class="step-number">2</span> Modify any fields</div>
+<div class="step"><span class="step-number">3</span> Click <strong>Save Changes</strong></div>
+
+<h3>Managing Pricing</h3>
+<p>Event pricing can be configured in several ways:</p>
+<ul>
+    <li><strong>Fixed per-person price</strong> — Same price regardless of group size</li>
+    <li><strong>Tiered pricing</strong> — Different prices for different group sizes</li>
+    <li><strong>Seasonal pricing</strong> — Different prices for peak/off-peak periods</li>
+</ul>
+
+<h3>Availability Management</h3>
+<p>Control when events are available:</p>
+<ul>
+    <li><strong>Active/Inactive toggle</strong> — Quickly enable or disable an event</li>
+    <li><strong>Seasonal availability</strong> — Set specific months when the event runs</li>
+    <li><strong>Day-of-week restrictions</strong> — Some events only run on certain days</li>
+</ul>
+
+<div class="tip-box">
+    <strong>Tip:</strong> Keep event descriptions engaging and informative. Agents use these descriptions to sell activities to their clients. Include what's included, what to expect, and any requirements (e.g., minimum age, fitness level).
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 11 -->
+<h1 id="section11">11. Training Materials</h1>
+<p>The Training section allows you to upload and organise educational materials for agents. This helps agents understand your products and sell more effectively.</p>
+
+<h3>Uploading Training Files</h3>
+<div class="step"><span class="step-number">1</span> Navigate to <strong>/admin/training</strong></div>
+<div class="step"><span class="step-number">2</span> Click <strong>Upload Material</strong></div>
+<div class="step"><span class="step-number">3</span> Fill in the material details:</div>
+
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>Title</td><td>Name of the training material</td><td>Yes</td></tr>
+    <tr><td>Category</td><td>Category for organisation (see below)</td><td>Yes</td></tr>
+    <tr><td>Description</td><td>Brief description of the content</td><td>No</td></tr>
+    <tr><td>File</td><td>The file to upload (PDF, DOCX, PPTX, MP4, etc.)</td><td>Yes</td></tr>
+    <tr><td>Visibility</td><td>Who can access this material</td><td>Yes</td></tr>
+</table>
+
+<div class="step"><span class="step-number">4</span> Click <strong>Upload</strong></div>
+
+<h3>Organising by Category</h3>
+<p>Training materials can be organised into categories:</p>
+<table>
+    <tr><th>Category</th><th>Content Examples</th></tr>
+    <tr><td>Getting Started</td><td>Platform guides, onboarding materials</td></tr>
+    <tr><td>Product Knowledge</td><td>Destination guides, package overviews</td></tr>
+    <tr><td>Sales Techniques</td><td>Selling tips, objection handling</td></tr>
+    <tr><td>Policies & Procedures</td><td>Booking terms, cancellation policies</td></tr>
+    <tr><td>Marketing</td><td>Brochures, social media assets</td></tr>
+    <tr><td>Updates</td><td>New features, seasonal updates</td></tr>
+</table>
+
+<h3>Tracking Access</h3>
+<p>Monitor how agents engage with training materials:</p>
+<ul>
+    <li><strong>View Count</strong> — How many times a material has been accessed</li>
+    <li><strong>Unique Views</strong> — Number of different agents who viewed it</li>
+    <li><strong>Last Accessed</strong> — When the material was last opened</li>
+    <li><strong>Download Count</strong> — Number of times the file was downloaded</li>
+</ul>
+
+<div class="info-box">
+    <strong>Note:</strong> Agents access training materials from their own dashboard under the "Training" section. Materials marked as "All Agents" are visible to everyone; those marked for specific agencies are restricted.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 12 -->
+<h1 id="section12">12. User Approvals</h1>
+<p>When new agents register on the platform, their accounts require admin approval before they can access the system. The User Approvals section is where you review and process these registrations.</p>
+
+<h3>Accessing Pending Approvals</h3>
+<p>Navigate to <strong>/admin/approvals</strong> to see all pending registrations. The dashboard also shows a count of pending approvals in the metrics section.</p>
+
+<h3>Reviewing a Registration</h3>
+<div class="step"><span class="step-number">1</span> Click on a pending registration to view full details</div>
+<div class="step"><span class="step-number">2</span> Review the agent's information:</div>
+
+<table>
+    <tr><th>Information</th><th>What to Check</th></tr>
+    <tr><td>Full Name</td><td>Is this a real person/contact?</td></tr>
+    <tr><td>Company Name</td><td>Is this a legitimate travel agency?</td></tr>
+    <tr><td>ABTA/PTS Number</td><td>Is the number valid and correctly formatted?</td></tr>
+    <tr><td>Email Address</td><td>Is this a business email (not generic Gmail/Yahoo)?</td></tr>
+    <tr><td>Phone Number</td><td>Is this a valid business phone number?</td></tr>
+    <tr><td>Website</td><td>Does the website exist and look legitimate?</td></tr>
+    <tr><td>Consortia</td><td>If specified, is this a recognised consortia?</td></tr>
+</table>
+
+<h3>Approving an Agent</h3>
+<div class="step"><span class="step-number">1</span> After reviewing the registration details</div>
+<div class="step"><span class="step-number">2</span> Click the <strong>Approve</strong> button</div>
+<div class="step"><span class="step-number">3</span> The agent receives an approval email with next steps</div>
+<div class="step"><span class="step-number">4</span> Their account status changes to "Approved"</div>
+<div class="step"><span class="step-number">5</span> They may need to sign a partner contract before full access is granted</div>
+
+<h3>Rejecting an Agent</h3>
+<div class="step"><span class="step-number">1</span> After reviewing the registration details</div>
+<div class="step"><span class="step-number">2</span> Click the <strong>Reject</strong> button</div>
+<div class="step"><span class="step-number">3</span> Select or enter a rejection reason:</div>
+
+<table>
+    <tr><th>Rejection Reason</th><th>When to Use</th></tr>
+    <tr><td>Invalid ABTA/PTS Number</td><td>The provided number doesn't match records or is incorrectly formatted</td></tr>
+    <tr><td>Unverifiable Business</td><td>Cannot confirm the agency exists or is legitimate</td></tr>
+    <tr><td>Incomplete Information</td><td>Critical fields are missing or clearly incorrect</td></tr>
+    <tr><td>Duplicate Registration</td><td>Agency already has an account on the platform</td></tr>
+    <tr><td>Does Not Meet Criteria</td><td>Agency doesn't meet partnership requirements</td></tr>
+    <tr><td>Other</td><td>Custom reason (must provide explanation)</td></tr>
+</table>
+
+<div class="step"><span class="step-number">4</span> Add any additional notes (optional but recommended)</div>
+<div class="step"><span class="step-number">5</span> Click <strong>Confirm Rejection</strong></div>
+<div class="step"><span class="step-number">6</span> The agent receives a rejection email with the reason</div>
+
+<div class="warning-box">
+    <strong>Important:</strong> Always provide a clear rejection reason. This helps the agent understand what went wrong and whether they can re-apply with corrected information.
+</div>
+
+<div class="tip-box">
+    <strong>Tip:</strong> Process approvals promptly — ideally within 24 hours. Delayed approvals can result in lost business as agents may seek alternative suppliers.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 13 -->
+<h1 id="section13">13. User Management</h1>
+<p>The User Management section gives you full control over all user accounts on the platform — both admin users and agent users.</p>
+
+<h3>Viewing Users</h3>
+<p>Navigate to <strong>/admin/users</strong> to see all registered users. The list displays:</p>
+<table>
+    <tr><th>Column</th><th>Description</th></tr>
+    <tr><td>Name</td><td>User's full name</td></tr>
+    <tr><td>Email</td><td>Login email address</td></tr>
+    <tr><td>Role</td><td>Admin, Super Admin, or Agent</td></tr>
+    <tr><td>Agency</td><td>Associated travel agency (for agents)</td></tr>
+    <tr><td>Status</td><td>Active, Pending, Approved, Rejected, Contracted</td></tr>
+    <tr><td>Created</td><td>Registration date</td></tr>
+    <tr><td>Last Login</td><td>Most recent login timestamp</td></tr>
+</table>
+
+<h3>Creating a New User</h3>
+<div class="step"><span class="step-number">1</span> Click <strong>Add User</strong></div>
+<div class="step"><span class="step-number">2</span> Fill in the user details:</div>
+
+<table>
+    <tr><th>Field</th><th>Description</th><th>Required</th></tr>
+    <tr><td>Full Name</td><td>User's name</td><td>Yes</td></tr>
+    <tr><td>Email</td><td>Login email (must be unique)</td><td>Yes</td></tr>
+    <tr><td>Password</td><td>Initial password (user should change on first login)</td><td>Yes</td></tr>
+    <tr><td>Role</td><td>Admin, Super Admin, or Agent</td><td>Yes</td></tr>
+    <tr><td>Company Name</td><td>Agency name (for agent accounts)</td><td>For agents</td></tr>
+    <tr><td>ABTA/PTS Number</td><td>Accreditation number (for agents)</td><td>For agents</td></tr>
+    <tr><td>Phone</td><td>Contact phone number</td><td>No</td></tr>
+    <tr><td>Approval Status</td><td>Set initial approval status</td><td>Yes</td></tr>
+</table>
+
+<div class="step"><span class="step-number">3</span> Click <strong>Create User</strong></div>
+
+<div class="info-box">
+    <strong>Note:</strong> When creating admin users manually, they bypass the registration approval process. Agent accounts created manually can be set to any approval status.
+</div>
+
+<h3>Editing a User</h3>
+<div class="step"><span class="step-number">1</span> Click on the user or the <strong>Edit</strong> button</div>
+<div class="step"><span class="step-number">2</span> Modify any fields as needed</div>
+<div class="step"><span class="step-number">3</span> Click <strong>Save Changes</strong></div>
+
+<h3>Role Assignment</h3>
+<p>Change a user's role to grant or restrict access:</p>
+<table>
+    <tr><th>Role</th><th>Access</th><th>Use Case</th></tr>
+    <tr><td>Agent</td><td>Agent dashboard, enquiries, quotes, packages</td><td>Travel agency staff</td></tr>
+    <tr><td>Admin</td><td>Full admin dashboard, content management, user approvals</td><td>Infinity Weekends staff</td></tr>
+    <tr><td>Super Admin</td><td>Everything including settings, user management, system config</td><td>Senior management/IT</td></tr>
+</table>
+
+<div class="warning-box">
+    <strong>Important:</strong> Be cautious when assigning the Super Admin role. This grants full system access including the ability to modify settings, delete data, and manage other admin accounts.
+</div>
+
+<h3>Approval Status Management</h3>
+<p>For agent accounts, you can manually change their approval status:</p>
+<table>
+    <tr><th>Status</th><th>Effect</th></tr>
+    <tr><td>Pending</td><td>Agent cannot access the dashboard — sees "Pending Approval" page</td></tr>
+    <tr><td>Approved</td><td>Agent can access the dashboard but may need to sign a contract</td></tr>
+    <tr><td>Contracted</td><td>Full access — agent has signed the partner contract</td></tr>
+    <tr><td>Rejected</td><td>Agent cannot access the platform</td></tr>
+</table>
+
+<h3>Deleting a User</h3>
+<div class="step"><span class="step-number">1</span> Click the <strong>Delete</strong> button on the user row</div>
+<div class="step"><span class="step-number">2</span> Confirm the deletion</div>
+<div class="step"><span class="step-number">3</span> The user account is permanently removed</div>
+
+<div class="warning-box">
+    <strong>Important:</strong> Deleting a user is permanent. Their enquiries and quotes will remain in the system but will show "Deleted User" as the agent. Consider deactivating instead of deleting if you may need to reference their history.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 14 -->
+<h1 id="section14">14. Agency Management</h1>
+<p>The Agency Management section provides an overview of all travel agencies registered on the platform, their status, and performance metrics.</p>
+
+<h3>Viewing Agencies</h3>
+<p>Navigate to <strong>/admin/agencies</strong> to see all registered agencies. The list includes:</p>
+<table>
+    <tr><th>Column</th><th>Description</th></tr>
+    <tr><td>Agency Name</td><td>Registered company name</td></tr>
+    <tr><td>ABTA/PTS Number</td><td>Accreditation number</td></tr>
+    <tr><td>Primary Contact</td><td>Main contact person</td></tr>
+    <tr><td>Email</td><td>Agency email address</td></tr>
+    <tr><td>Status</td><td>Current agency status</td></tr>
+    <tr><td>Registered</td><td>Date of registration</td></tr>
+    <tr><td>Enquiries</td><td>Total enquiries submitted</td></tr>
+    <tr><td>Bookings</td><td>Total confirmed bookings</td></tr>
+</table>
+
+<h3>Agency Statuses</h3>
+<table>
+    <tr><th>Status</th><th>Colour</th><th>Description</th></tr>
+    <tr><td>Pending</td><td>Amber</td><td>Agency has registered but not yet been reviewed</td></tr>
+    <tr><td>Approved</td><td>Blue</td><td>Agency approved but contract not yet signed</td></tr>
+    <tr><td>Contracted</td><td>Green</td><td>Fully active — contract signed and in place</td></tr>
+    <tr><td>Rejected</td><td>Red</td><td>Agency registration was declined</td></tr>
+</table>
+
+<h3>Agency Statistics</h3>
+<p>Click on an agency to view detailed statistics:</p>
+<ul>
+    <li><strong>Total Enquiries</strong> — Number of enquiries submitted by this agency</li>
+    <li><strong>Total Quotes</strong> — Quotes generated for this agency</li>
+    <li><strong>Confirmed Bookings</strong> — Bookings that were confirmed</li>
+    <li><strong>Total Revenue</strong> — Revenue generated from this agency's bookings</li>
+    <li><strong>Conversion Rate</strong> — Percentage of quotes that converted to bookings</li>
+    <li><strong>Average Booking Value</strong> — Mean value of confirmed bookings</li>
+    <li><strong>Last Activity</strong> — Date of most recent enquiry or booking</li>
+</ul>
+
+<h3>Contract Management</h3>
+<p>Managing the partner contract lifecycle:</p>
+<div class="step"><span class="step-number">1</span> After approving an agency, the system sends a contract signing invitation</div>
+<div class="step"><span class="step-number">2</span> The agency signs the partner contract electronically</div>
+<div class="step"><span class="step-number">3</span> Their status automatically updates to "Contracted"</div>
+<div class="step"><span class="step-number">4</span> You can view contract details and signing date in the agency profile</div>
+
+<p>To manually update contract status:</p>
+<div class="step"><span class="step-number">1</span> Open the agency detail page</div>
+<div class="step"><span class="step-number">2</span> Navigate to the <strong>Contract</strong> section</div>
+<div class="step"><span class="step-number">3</span> Update the contract status as needed</div>
+<div class="step"><span class="step-number">4</span> Add any notes about the contract (e.g., special terms, renewal dates)</div>
+
+<div class="tip-box">
+    <strong>Tip:</strong> Regularly review agency statistics to identify your top-performing partners. Consider offering preferential rates or exclusive packages to high-volume agencies.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 15 -->
+<h1 id="section15">15. Settings</h1>
+<p>The Settings section allows you to configure system-wide preferences and email settings.</p>
+
+<h3>Accessing Settings</h3>
+<p>Navigate to <strong>/admin/settings</strong>. Settings are typically restricted to Super Admin users.</p>
+
+<h3>Email Settings</h3>
+<p>Configure how the platform sends emails:</p>
+
+<table>
+    <tr><th>Setting</th><th>Description</th><th>Example</th></tr>
+    <tr><td>SMTP Host</td><td>Email server hostname</td><td>smtp.resend.com</td></tr>
+    <tr><td>SMTP Port</td><td>Server port number</td><td>587</td></tr>
+    <tr><td>From Email</td><td>Sender email address</td><td>quotes@infinityweekends.com</td></tr>
+    <tr><td>From Name</td><td>Sender display name</td><td>Infinity Weekends</td></tr>
+    <tr><td>Reply-To Email</td><td>Where replies are directed</td><td>info@infinityweekends.com</td></tr>
+    <tr><td>API Key</td><td>Email service API key (e.g., Resend)</td><td>re_xxxxxxxx</td></tr>
+</table>
+
+<h4>Testing Email Configuration</h4>
+<div class="step"><span class="step-number">1</span> After updating email settings, click <strong>Send Test Email</strong></div>
+<div class="step"><span class="step-number">2</span> Enter a recipient email address</div>
+<div class="step"><span class="step-number">3</span> Check that the test email arrives correctly</div>
+<div class="step"><span class="step-number">4</span> Verify the sender name, reply-to address, and formatting</div>
+
+<div class="warning-box">
+    <strong>Important:</strong> Incorrect email settings will prevent all platform emails from being sent — including quote emails, approval notifications, and registration confirmations. Always test after making changes.
+</div>
+
+<h3>System Preferences</h3>
+<table>
+    <tr><th>Setting</th><th>Description</th><th>Default</th></tr>
+    <tr><td>Default Currency</td><td>Currency for pricing display</td><td>GBP (£)</td></tr>
+    <tr><td>Quote Validity Period</td><td>How long quotes remain valid</td><td>14 days</td></tr>
+    <tr><td>Auto-expire Quotes</td><td>Automatically expire quotes after validity period</td><td>Enabled</td></tr>
+    <tr><td>Notification Emails</td><td>Send admin notifications for new enquiries</td><td>Enabled</td></tr>
+    <tr><td>Agent Self-Registration</td><td>Allow agents to register without invitation</td><td>Enabled</td></tr>
+    <tr><td>Require Contract</td><td>Require contract signing before full access</td><td>Enabled</td></tr>
+</table>
+
+<div class="tip-box">
+    <strong>Tip:</strong> Review your settings periodically, especially the quote validity period. Shorter validity periods create urgency but may frustrate agents who need more time to consult with clients.
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 16 -->
+<h1 id="section16">16. Troubleshooting &amp; FAQs</h1>
+
+<h3>Emails are not being sent</h3>
+<ul>
+    <li>Check email settings in <strong>/admin/settings</strong></li>
+    <li>Verify the API key is correct and active</li>
+    <li>Check the email service dashboard (e.g., Resend) for delivery errors</li>
+    <li>Ensure the "From" email domain is verified with your email provider</li>
+    <li>Send a test email to diagnose the issue</li>
+    <li>Check server logs for error messages</li>
+</ul>
+
+<h3>Agent cannot log in after approval</h3>
+<ul>
+    <li>Verify their account status is "Approved" or "Contracted" in User Management</li>
+    <li>Check if they need to sign a contract first (if contract requirement is enabled)</li>
+    <li>Ensure they're using the correct email address</li>
+    <li>Try resetting their password from the admin panel</li>
+    <li>Check if their account was accidentally set to "Rejected"</li>
+</ul>
+
+<h3>Quote prices showing incorrectly</h3>
+<ul>
+    <li>Verify the pricing in the quote editor — check total and per-person calculations</li>
+    <li>Ensure the number of guests is correct (price per person = total ÷ guests)</li>
+    <li>If linked to a Super Package, check the package's pricing matrix</li>
+    <li>Clear browser cache and refresh the page</li>
+</ul>
+
+<h3>Super Package prices showing "Not Available"</h3>
+<ul>
+    <li>Open the package and check the pricing matrix</li>
+    <li>Ensure all cells in the matrix have values (empty cells show "Not Available")</li>
+    <li>Verify the travel period, group size tier, and duration combination exists</li>
+    <li>Check that the package status is "Active"</li>
+</ul>
+
+<h3>CSV import failing</h3>
+<ul>
+    <li>Download and use the provided CSV template</li>
+    <li>Ensure all required columns are present</li>
+    <li>Check for special characters that may break parsing (commas in fields should be quoted)</li>
+    <li>Verify date formats match the expected format (YYYY-MM-DD)</li>
+    <li>Check file encoding is UTF-8</li>
+    <li>Ensure the file size doesn't exceed the upload limit</li>
+</ul>
+
+<h3>Dashboard metrics not updating</h3>
+<ul>
+    <li>Refresh the page (Ctrl+R or Cmd+R)</li>
+    <li>Clear browser cache</li>
+    <li>Check if there are any server errors in the browser console</li>
+    <li>Metrics update in real-time — if they're stale, there may be a database connection issue</li>
+</ul>
+
+<h3>Agent registration emails not arriving</h3>
+<ul>
+    <li>Check the agent's spam/junk folder</li>
+    <li>Verify the email address is correct in their registration</li>
+    <li>Check email settings and service status</li>
+    <li>Manually resend the notification from the approvals page</li>
+</ul>
+
+<h3>Cannot delete a destination/package</h3>
+<ul>
+    <li>Check if there are active quotes or enquiries referencing the item</li>
+    <li>Use soft delete (archive) instead of hard delete for items with references</li>
+    <li>Deactivate the item to hide it from agents without deleting</li>
+</ul>
+
+<h3>Frequently Asked Questions</h3>
+
+<h4>Q: Can I undo a rejected agent approval?</h4>
+<p>A: Yes. Go to User Management, find the agent, and change their status from "Rejected" to "Approved". They will need to be notified manually that their account is now active.</p>
+
+<h4>Q: How do I change the email template design?</h4>
+<p>A: Email templates are managed in the codebase. Contact your development team to make changes to email templates. Test thoroughly after any changes.</p>
+
+<h4>Q: Can multiple admins work on the same enquiry?</h4>
+<p>A: Yes, but be aware that simultaneous edits may overwrite each other. Communicate with your team about who is handling which enquiries.</p>
+
+<h4>Q: What happens when a quote expires?</h4>
+<p>A: If auto-expire is enabled, the quote status changes to "Expired" and the agent can no longer accept it. You can create a new quote or extend the validity by editing and resending.</p>
+
+<h4>Q: How do I add a new admin user?</h4>
+<p>A: Go to User Management → Add User → Set role to "Admin" or "Super Admin". The new admin can log in immediately with the credentials you set.</p>
+
+<h4>Q: Can agents see draft quotes?</h4>
+<p>A: No. Quotes in "Draft" status are only visible to admins. Agents can only see quotes that have been sent (status: "Sent" or "Updated").</p>
+
+<h4>Q: How do I handle a booking cancellation?</h4>
+<p>A: Open the booking, change the status to "Cancelled". The agent will be notified. Document the reason in the booking notes for your records.</p>
+
+<h4>Q: Is there a limit to how many Super Packages I can create?</h4>
+<p>A: No. You can create as many packages as needed. However, keep the catalogue manageable for agents — consider archiving outdated packages rather than keeping them all active.</p>
+
+<div class="page-break"></div>
+
+<!-- QUICK REFERENCE -->
+<h1>Quick Reference — Keyboard Shortcuts &amp; Tips</h1>
+
+<table>
+    <tr><th>Action</th><th>How To</th></tr>
+    <tr><td>Search anything</td><td>Use the search bar at the top of each section</td></tr>
+    <tr><td>Quick create quote</td><td>Click "Create Quote" from any enquiry detail page</td></tr>
+    <tr><td>Duplicate package</td><td>Open package → Click "Duplicate"</td></tr>
+    <tr><td>Bulk import</td><td>Use CSV import on Offers or Super Packages pages</td></tr>
+    <tr><td>Test email</td><td>Open any quote → "Send Test Email"</td></tr>
+    <tr><td>Check pending items</td><td>Dashboard shows pending approvals count</td></tr>
+    <tr><td>Export data</td><td>Use "Export CSV" buttons on list pages</td></tr>
+</table>
+
+<h3>Daily Admin Workflow</h3>
+<div class="step"><span class="step-number">1</span> Check the Dashboard for pending approvals and new enquiries</div>
+<div class="step"><span class="step-number">2</span> Process any pending agent approvals</div>
+<div class="step"><span class="step-number">3</span> Review new enquiries and begin creating quotes</div>
+<div class="step"><span class="step-number">4</span> Send completed quotes to agents</div>
+<div class="step"><span class="step-number">5</span> Confirm any bookings from accepted quotes</div>
+<div class="step"><span class="step-number">6</span> Check for failed emails and retry if needed</div>
+<div class="step"><span class="step-number">7</span> Update content (destinations, packages, events) as needed</div>
+
+<div class="footer">
+    <p>&copy; 2026 Infinity Weekends. All rights reserved.</p>
+    <p>This manual is confidential and intended for authorised Infinity Weekends administrators only.</p>
+    <p>For technical support, contact the development team.</p>
+</div>
+
+</body>
+</html>

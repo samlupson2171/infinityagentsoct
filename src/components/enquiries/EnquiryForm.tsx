@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import EventSelector from './EventSelector';
 
 interface EnquiryFormData {
+  agentName: string;
+  agentCompanyName: string;
   leadName: string;
   tripType: 'stag' | 'hen' | 'other';
   firstChoiceDestination: string;
@@ -22,6 +24,7 @@ interface EnquiryFormData {
   packageDetails?: {
     destination: string;
     month: string;
+    year: string;
     accommodation: string;
     packageTitle: string;
     pricing: {
@@ -42,6 +45,8 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
   const searchParams = useSearchParams();
 
   const [formData, setFormData] = useState<EnquiryFormData>({
+    agentName: '',
+    agentCompanyName: '',
     leadName: '',
     tripType: 'stag',
     firstChoiceDestination: '',
@@ -60,10 +65,22 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Pre-fill agent name and company from session
+  useEffect(() => {
+    if (session?.user) {
+      setFormData((prev) => ({
+        ...prev,
+        agentName: prev.agentName || session.user.name || '',
+        agentCompanyName: prev.agentCompanyName || session.user.companyName || '',
+      }));
+    }
+  }, [session]);
+
   // Load package details from URL parameters
   useEffect(() => {
     const destination = searchParams.get('destination');
     const month = searchParams.get('month');
+    const year = searchParams.get('year');
     const accommodation = searchParams.get('accommodation');
     const packageTitle = searchParams.get('packageTitle');
     const twoNights = searchParams.get('twoNights');
@@ -90,6 +107,7 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
       const packageDetails = {
         destination,
         month,
+        year: year || String(new Date().getFullYear()),
         accommodation,
         packageTitle,
         pricing: {
@@ -168,6 +186,16 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
     setError(null);
 
     try {
+      // Check 8-week lead time rule for super package pricing
+      const isWithin8Weeks = formData.travelDate && formData.packageDetails
+        ? (() => {
+            const travelDate = new Date(formData.travelDate);
+            const eightWeeksFromNow = new Date();
+            eightWeeksFromNow.setDate(eightWeeksFromNow.getDate() + 56); // 8 weeks = 56 days
+            return travelDate < eightWeeksFromNow;
+          })()
+        : false;
+
       const enquiryData = {
         ...formData,
         ...(formData.packageDetails && {
@@ -176,9 +204,12 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
             `\n\n--- SELECTED PACKAGE ---\n` +
             `Package: ${formData.packageDetails.packageTitle}\n` +
             `Destination: ${formData.packageDetails.destination}\n` +
+            `Year: ${formData.packageDetails.year}\n` +
             `Month: ${formData.packageDetails.month}\n` +
             `Accommodation: ${formData.packageDetails.accommodation === 'selfCatering' ? 'Self-Catering' : 'Hotel'}\n` +
-            `Pricing: 2N: €${formData.packageDetails.pricing.twoNights}, 3N: €${formData.packageDetails.pricing.threeNights}, 4N: €${formData.packageDetails.pricing.fourNights}`,
+            (isWithin8Weeks
+              ? `⚠️ TRAVEL DATE IS WITHIN 8 WEEKS — Super Package prices DO NOT apply. Bespoke pricing required.\n`
+              : `Pricing: 2N: €${formData.packageDetails.pricing.twoNights}, 3N: €${formData.packageDetails.pricing.threeNights}, 4N: €${formData.packageDetails.pricing.fourNights}\n`),
         }),
       };
 
@@ -213,6 +244,16 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
 
   const totalBudget = formData.budgetPerPerson * formData.numberOfGuests;
 
+  // Check if travel date is within 8 weeks (super package pricing doesn't apply)
+  const isTravelWithin8Weeks = formData.travelDate && formData.packageDetails
+    ? (() => {
+        const travelDate = new Date(formData.travelDate);
+        const eightWeeksFromNow = new Date();
+        eightWeeksFromNow.setDate(eightWeeksFromNow.getDate() + 56);
+        return travelDate < eightWeeksFromNow;
+      })()
+    : false;
+
   return (
     <div className={className}>
       <div className="bg-white shadow rounded-lg">
@@ -224,11 +265,10 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
             <p className="text-gray-600 mt-1">
               Complete the form below to submit an enquiry for your client
             </p>
-            {session?.user?.email && (
+            {session?.user && (
               <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                <p className="text-sm text-blue-800">
-                  <span className="font-medium">Agent Email:</span>{' '}
-                  {session.user.email}
+                <p className="text-xs text-blue-700 mb-0">
+                  Logged in as: {session.user.email}
                 </p>
               </div>
             )}
@@ -294,6 +334,12 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
                     </p>
                     <p>
                       <span className="font-medium text-orange-800">
+                        Year:
+                      </span>{' '}
+                      {formData.packageDetails.year}
+                    </p>
+                    <p>
+                      <span className="font-medium text-orange-800">
                         Month:
                       </span>{' '}
                       {formData.packageDetails.month}
@@ -329,8 +375,65 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
                     modify any details as needed.
                   </p>
                 </div>
+                {isTravelWithin8Weeks && (
+                  <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-md">
+                    <p className="text-sm text-red-800">
+                      <span className="font-medium">⚠️ 8-Week Lead Time Required:</span> Your selected travel date is within 8 weeks. Super Package prices do not apply for trips departing within 8 weeks of booking. A bespoke quote will be provided separately by the team.
+                    </p>
+                  </div>
+                )}
               </div>
             )}
+
+            {/* Agent Information */}
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Agent Information
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">
+                Pre-filled from your account. Change these if submitting on behalf of another agent.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="agentName"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Agent Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="agentName"
+                    name="agentName"
+                    value={formData.agentName}
+                    onChange={handleInputChange}
+                    required
+                    maxLength={100}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Enter agent name"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="agentCompanyName"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Company Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="agentCompanyName"
+                    name="agentCompanyName"
+                    value={formData.agentCompanyName}
+                    onChange={handleInputChange}
+                    required
+                    maxLength={200}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Enter company name"
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* Lead Information */}
             <div className="bg-gray-50 p-4 rounded-lg">

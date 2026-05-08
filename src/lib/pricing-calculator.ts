@@ -154,6 +154,17 @@ export class PricingCalculator {
   }
 
   /**
+   * Check if the arrival date meets the minimum 8-week lead time requirement
+   * for super package pricing to apply.
+   * Returns true if the date is at least 8 weeks (56 days) from now.
+   */
+  static meetsLeadTimeRequirement(arrivalDate: Date): boolean {
+    const eightWeeksFromNow = new Date();
+    eightWeeksFromNow.setDate(eightWeeksFromNow.getDate() + 56);
+    return arrivalDate >= eightWeeksFromNow;
+  }
+
+  /**
    * Calculate the price for a package based on parameters
    */
   static calculatePrice(
@@ -169,6 +180,13 @@ export class PricingCalculator {
 
     if (numberOfNights < 1) {
       return { error: 'Number of nights must be at least 1' };
+    }
+
+    // Check 8-week lead time requirement
+    if (!this.meetsLeadTimeRequirement(arrivalDate)) {
+      return {
+        error: 'Super Package pricing requires a minimum of 8 weeks notice. Trips departing within 8 weeks require a bespoke quote.',
+      };
     }
 
     // Determine tier
@@ -283,6 +301,13 @@ export class PricingCalculator {
 
     if (numberOfNights < 1) {
       errors.push('Number of nights must be at least 1');
+    }
+
+    // Check 8-week lead time requirement
+    if (!this.meetsLeadTimeRequirement(arrivalDate)) {
+      errors.push(
+        'Super Package pricing requires a minimum of 8 weeks notice. Trips departing within 8 weeks require a bespoke quote.'
+      );
     }
 
     const tierResult = this.determineTier(
