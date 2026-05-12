@@ -206,7 +206,6 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
             `Destination: ${formData.packageDetails.destination}\n` +
             `Year: ${formData.packageDetails.year}\n` +
             `Month: ${formData.packageDetails.month}\n` +
-            `Accommodation: ${formData.packageDetails.accommodation === 'selfCatering' ? 'Self-Catering' : 'Hotel'}\n` +
             (isWithin8Weeks
               ? `⚠️ TRAVEL DATE IS WITHIN 8 WEEKS — Super Package prices DO NOT apply. Bespoke pricing required.\n`
               : `Pricing: 2N: €${formData.packageDetails.pricing.twoNights}, 3N: €${formData.packageDetails.pricing.threeNights}, 4N: €${formData.packageDetails.pricing.fourNights}\n`),
@@ -343,14 +342,6 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
                         Month:
                       </span>{' '}
                       {formData.packageDetails.month}
-                    </p>
-                    <p>
-                      <span className="font-medium text-orange-800">
-                        Accommodation:
-                      </span>{' '}
-                      {formData.packageDetails.accommodation === 'selfCatering'
-                        ? 'Self-Catering'
-                        : 'Hotel'}
                     </p>
                   </div>
                   <div>

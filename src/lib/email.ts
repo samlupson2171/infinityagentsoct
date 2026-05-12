@@ -751,7 +751,7 @@ export async function sendEnquiryNotificationEmail(data: {
   agentCompany: string;
   agentEmail: string;
 }) {
-  const adminEmail = 'info@infinityweekends.co.uk';
+  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'nicky@infinityweekends.co.uk';
   const subject = `New Enquiry - ${data.leadName} (${data.tripType.toUpperCase()})`;
 
   const formatTripType = (type: string) => {
