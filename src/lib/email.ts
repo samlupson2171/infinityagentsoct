@@ -1,75 +1,32 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { Logger, EmailDeliveryError } from '@/lib/server-error-handling';
 
-// Email configuration with enhanced error handling
-let transporter: nodemailer.Transporter | null = null;
+// Resend client - initialised lazily so missing API key throws at send time, not module load
+let resendClient: Resend | null = null;
 
-function createTransporter(): nodemailer.Transporter {
-  if (
-    !process.env.SMTP_HOST ||
-    !process.env.SMTP_USER ||
-    !process.env.SMTP_PASS
-  ) {
-    throw new EmailDeliveryError(
-      'Email configuration is incomplete. Missing SMTP settings.'
-    );
+function getResendClient(): Resend {
+  if (!resendClient) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new EmailDeliveryError(
+        'Email configuration is incomplete. Missing RESEND_API_KEY.'
+      );
+    }
+    resendClient = new Resend(process.env.RESEND_API_KEY);
   }
-
-  const port = parseInt(process.env.SMTP_PORT || '587');
-  const isMicrosoft365 =
-    process.env.SMTP_HOST?.includes('office365.com') ||
-    process.env.SMTP_HOST?.includes('outlook.com');
-
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: port,
-    secure: port === 465, // true for 465, false for other ports
-    requireTLS: port === 587, // Force STARTTLS for port 587
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-    // Microsoft 365 specific configuration
-    tls: isMicrosoft365
-      ? {
-          rejectUnauthorized: false,
-          ciphers: 'SSLv3',
-        }
-      : undefined,
-    // Enhanced configuration for better reliability
-    pool: true,
-    maxConnections: 5,
-    maxMessages: 100,
-    rateDelta: 1000,
-    rateLimit: 5,
-    // Connection timeout
-    connectionTimeout: 60000,
-    greetingTimeout: 30000,
-    socketTimeout: 60000,
-  });
+  return resendClient;
 }
 
-function getTransporter(): nodemailer.Transporter {
-  if (!transporter) {
-    transporter = createTransporter();
-  }
-  return transporter;
-}
+// No-op kept for API compatibility — not needed with Resend
+export function resetTransporter(): void {}
 
-// Reset transporter (useful when credentials change or connection issues occur)
-export function resetTransporter(): void {
-  if (transporter) {
-    transporter.close();
-    transporter = null;
-  }
-}
-
-// Verify transporter configuration with enhanced logging
+// Verify Resend configuration is available
 export async function verifyEmailConfig(): Promise<boolean> {
   try {
-    const transporterInstance = getTransporter();
-    await transporterInstance.verify();
-    Logger.info('Email server configuration verified successfully');
+    if (!process.env.RESEND_API_KEY) {
+      Logger.error('Email configuration verification failed: missing RESEND_API_KEY', null);
+      return false;
+    }
+    Logger.info('Resend email configuration verified successfully');
     return true;
   } catch (error) {
     Logger.error('Email server configuration verification failed', error);
@@ -77,7 +34,7 @@ export async function verifyEmailConfig(): Promise<boolean> {
   }
 }
 
-// Enhanced email validation
+// Email validation helpers
 function validateEmailAddress(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -95,35 +52,38 @@ function validateEmailData(data: any): void {
   }
 }
 
-// Enhanced retry mechanism for email delivery
+const FROM_ADDRESS = `${process.env.EMAIL_FROM_NAME || 'Infinity Agents'} <${process.env.EMAIL_FROM_ADDRESS || 'onboarding@resend.dev'}>`;
+
+// Unified send helper — replaces sendEmailWithRetry + nodemailer
 async function sendEmailWithRetry(
-  mailOptions: any,
+  mailOptions: { from?: string; to: string; subject: string; html: string },
   maxRetries: number = 3,
   delay: number = 1000
-): Promise<any> {
+): Promise<{ messageId: string }> {
+  const client = getResendClient();
   let lastError: Error | null = null;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const transporterInstance = getTransporter();
-      const info = await transporterInstance.sendMail(mailOptions);
-      console.log(
-        `Email sent successfully on attempt ${attempt}:`,
-        info.messageId
-      );
-      return info;
+      const { data, error } = await client.emails.send({
+        from: mailOptions.from || FROM_ADDRESS,
+        to: mailOptions.to,
+        subject: mailOptions.subject,
+        html: mailOptions.html,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      const messageId = data?.id ?? 'unknown';
+      console.log(`Email sent successfully on attempt ${attempt}:`, messageId);
+      return { messageId };
     } catch (error) {
       lastError = error as Error;
       console.error(`Email delivery attempt ${attempt} failed:`, error);
 
-      // Reset transporter on authentication errors to force reconnection
-      if ((error as any).code === 'EAUTH' || (error as any).responseCode === 535) {
-        console.log('Authentication error detected, resetting transporter...');
-        resetTransporter();
-      }
-
       if (attempt < maxRetries) {
-        // Exponential backoff: wait longer between each retry
         const waitTime = delay * Math.pow(2, attempt - 1);
         console.log(`Retrying email delivery in ${waitTime}ms...`);
         await new Promise((resolve) => setTimeout(resolve, waitTime));
@@ -131,11 +91,7 @@ async function sendEmailWithRetry(
     }
   }
 
-  // All retries failed
-  console.error(
-    `Email delivery failed after ${maxRetries} attempts:`,
-    lastError
-  );
+  console.error(`Email delivery failed after ${maxRetries} attempts:`, lastError);
   throw lastError || new Error('Email delivery failed after all retries');
 }
 
@@ -294,7 +250,7 @@ export async function sendAdminNotificationEmail(data: {
     // Send email to all admin users
     const emailPromises = adminUsers.map(async (admin) => {
       const mailOptions = {
-        from: process.env.SMTP_USER,
+        from: FROM_ADDRESS,
         to: admin.contactEmail,
         subject,
         html,
@@ -468,7 +424,7 @@ export async function sendRegistrationConfirmationEmail(data: {
   `;
 
   const mailOptions = {
-    from: process.env.SMTP_USER,
+    from: FROM_ADDRESS,
     to: data.userEmail,
     subject,
     html,
@@ -646,7 +602,7 @@ export async function sendApprovalNotificationEmail(data: {
   `;
 
   const mailOptions = {
-    from: process.env.SMTP_USER,
+    from: FROM_ADDRESS,
     to: data.userEmail,
     subject,
     html,
@@ -713,7 +669,7 @@ export async function sendRejectionNotificationEmail(data: {
   `;
 
   const mailOptions = {
-    from: process.env.SMTP_USER,
+    from: FROM_ADDRESS,
     to: data.userEmail,
     subject,
     html,
@@ -900,7 +856,7 @@ export async function sendEnquiryNotificationEmail(data: {
   `;
 
   const mailOptions = {
-    from: process.env.SMTP_USER,
+    from: FROM_ADDRESS,
     to: adminEmail,
     subject,
     html,
@@ -1030,7 +986,7 @@ export async function sendEnquiryConfirmationEmail(data: {
   `;
 
   const mailOptions = {
-    from: process.env.SMTP_USER,
+    from: FROM_ADDRESS,
     to: data.agentEmail,
     subject,
     html,
@@ -1413,7 +1369,7 @@ export async function sendQuoteEmail(data: {
   `;
 
   const mailOptions = {
-    from: process.env.SMTP_USER,
+    from: FROM_ADDRESS,
     to: data.agentEmail,
     subject,
     html,
@@ -1651,7 +1607,7 @@ export async function sendQuoteAdminNotificationEmail(data: {
     // Send email to all admin users
     const emailPromises = adminUsers.map(async (admin) => {
       const mailOptions = {
-        from: process.env.SMTP_USER,
+        from: FROM_ADDRESS,
         to: admin.contactEmail,
         subject,
         html,
@@ -1835,7 +1791,7 @@ export async function sendQuoteUpdateEmail(data: {
   `;
 
   const mailOptions = {
-    from: process.env.SMTP_USER,
+    from: FROM_ADDRESS,
     to: data.agentEmail,
     subject,
     html,
@@ -1868,7 +1824,7 @@ export async function sendTestEmail(data: {
   fromEmail: string;
   fromName: string;
 }): Promise<any> {
-  const subject = 'Test Email - Infinity Weekends SMTP Configuration';
+  const subject = 'Test Email - Infinity Weekends Email Configuration';
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -1879,10 +1835,10 @@ export async function sendTestEmail(data: {
       
       <div style="background-color: #d4edda; border: 1px solid #c3e6cb; padding: 25px; border-radius: 8px; margin-bottom: 25px;">
         <h2 style="color: #155724; margin-top: 0; display: flex; align-items: center;">
-          <span style="margin-right: 10px;">✅</span> SMTP Configuration Test Successful
+          <span style="margin-right: 10px;">✅</span> Email Configuration Test Successful
         </h2>
         <p style="margin-bottom: 0; font-size: 16px; line-height: 1.6;">
-          Your email configuration is working correctly! This test email was sent successfully using Microsoft 365 SMTP.
+          Your email configuration is working correctly! This test email was sent successfully via Resend.
         </p>
       </div>
       
@@ -1890,12 +1846,12 @@ export async function sendTestEmail(data: {
         <h3 style="margin-top: 0; color: #495057;">📋 Configuration Details</h3>
         <table style="width: 100%; border-collapse: collapse;">
           <tr>
-            <td style="padding: 12px 0; font-weight: bold; width: 140px; color: #495057; border-bottom: 1px solid #e9ecef;">SMTP Host:</td>
-            <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">${process.env.SMTP_HOST || 'Not configured'}</td>
+            <td style="padding: 12px 0; font-weight: bold; width: 140px; color: #495057; border-bottom: 1px solid #e9ecef;">Email Provider:</td>
+            <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">Resend</td>
           </tr>
           <tr>
-            <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">SMTP Port:</td>
-            <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">${process.env.SMTP_PORT || 'Not configured'}</td>
+            <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">API Key:</td>
+            <td style="padding: 12px 0; color: #212529; border-bottom: 1px solid #e9ecef;">Configured ✅</td>
           </tr>
           <tr>
             <td style="padding: 12px 0; font-weight: bold; color: #495057; border-bottom: 1px solid #e9ecef;">From Name:</td>
@@ -1911,7 +1867,7 @@ export async function sendTestEmail(data: {
       <div style="background-color: #e7f3ff; border: 1px solid #b3d9ff; padding: 20px; border-radius: 8px; margin: 25px 0;">
         <h3 style="margin-top: 0; color: #0056b3;">✨ What This Means</h3>
         <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
-          <li>Your SMTP server connection is working properly</li>
+          <li>Your Resend API connection is working properly</li>
           <li>Email authentication is configured correctly</li>
           <li>The platform can send emails successfully</li>
           <li>All email notifications will be delivered</li>
@@ -1940,7 +1896,7 @@ export async function sendTestEmail(data: {
   `;
 
   const mailOptions = {
-    from: `"${data.fromName}" <${process.env.SMTP_USER}>`,
+    from: FROM_ADDRESS,
     to: data.toEmail,
     subject,
     html,
@@ -1948,7 +1904,6 @@ export async function sendTestEmail(data: {
 
   try {
     validateEmailData(mailOptions);
-    const transporterInstance = getTransporter();
     const info = await sendEmailWithRetry(mailOptions, 3, 1000);
     console.log(`Test email sent successfully to ${data.toEmail}:`, info.messageId);
     return {
