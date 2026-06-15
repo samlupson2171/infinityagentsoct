@@ -8,6 +8,7 @@ import EventSelector from './EventSelector';
 interface EnquiryFormData {
   agentName: string;
   agentCompanyName: string;
+  agentContactEmail: string;
   leadName: string;
   tripType: 'stag' | 'hen' | 'other';
   firstChoiceDestination: string;
@@ -47,6 +48,7 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
   const [formData, setFormData] = useState<EnquiryFormData>({
     agentName: '',
     agentCompanyName: '',
+    agentContactEmail: '',
     leadName: '',
     tripType: 'stag',
     firstChoiceDestination: '',
@@ -72,6 +74,7 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
         ...prev,
         agentName: prev.agentName || session.user.name || '',
         agentCompanyName: prev.agentCompanyName || session.user.companyName || '',
+        agentContactEmail: prev.agentContactEmail || session.user.email || '',
       }));
     }
   }, [session]);
@@ -198,6 +201,7 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
 
       const enquiryData = {
         ...formData,
+        agentEmail: formData.agentContactEmail || session?.user?.email,
         ...(formData.packageDetails && {
           additionalNotes:
             formData.additionalNotes +
@@ -422,6 +426,27 @@ export default function EnquiryForm({ className = '' }: EnquiryFormProps) {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Enter company name"
                   />
+                </div>
+                <div className="md:col-span-2">
+                  <label
+                    htmlFor="agentContactEmail"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Agent Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="agentContactEmail"
+                    name="agentContactEmail"
+                    value={formData.agentContactEmail}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Enter agent email address"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Quote responses will be sent to this address. Update if different from your login email.
+                  </p>
                 </div>
               </div>
             </div>

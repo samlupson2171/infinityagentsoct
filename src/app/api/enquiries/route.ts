@@ -75,6 +75,11 @@ const createEnquirySchema = z.object({
     .number()
     .min(0, 'Budget must be a positive number')
     .max(10000, 'Budget per person cannot exceed £10,000'),
+  agentEmail: z
+    .string()
+    .email('Invalid agent email address')
+    .max(200, 'Email too long')
+    .optional(),
   additionalNotes: z
     .string()
     .max(2000, 'Additional notes cannot exceed 2000 characters')
@@ -159,7 +164,7 @@ export async function POST(request: NextRequest) {
       ...enquiryData,
       eventsRequested: enquiryData.eventsRequested.map((id) => new mongoose.Types.ObjectId(id)),
       travelDate: new Date(enquiryData.travelDate),
-      agentEmail: token.email,
+      agentEmail: enquiryData.agentEmail || token.email, // use submitted email if provided, else session email
       submittedBy: new mongoose.Types.ObjectId(token.sub),
       status: 'new',
       createdAt: new Date(),
