@@ -707,7 +707,30 @@ export async function sendEnquiryNotificationEmail(data: {
   agentCompany: string;
   agentEmail: string;
 }) {
-  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'nicky@infinityweekends.co.uk';
+  // Get all admin users from DB, with ADMIN_NOTIFICATION_EMAIL as a fallback
+  const { default: User } = await import('@/models/User');
+  const { connectDB } = await import('@/lib/mongodb');
+  await connectDB();
+  const adminUsers = await User.find({ role: 'admin' }).select('contactEmail name');
+
+  // Build recipient list — always include the env var address, plus any DB admins
+  const envAdminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
+  const adminEmailsFromDB: string[] = adminUsers
+    .map((u: any) => u.contactEmail)
+    .filter(Boolean);
+
+  const allAdminEmails = Array.from(
+    new Set([
+      ...(envAdminEmail ? [envAdminEmail] : []),
+      ...adminEmailsFromDB,
+    ])
+  );
+
+  if (allAdminEmails.length === 0) {
+    console.warn('No admin emails found — skipping enquiry notification');
+    return null;
+  }
+
   const subject = `New Enquiry - ${data.leadName} (${data.tripType.toUpperCase()})`;
 
   const formatTripType = (type: string) => {
@@ -857,17 +880,25 @@ export async function sendEnquiryNotificationEmail(data: {
 
   const mailOptions = {
     from: FROM_ADDRESS,
-    to: adminEmail,
+    to: '', // set per recipient below
     subject,
     html,
   };
 
   try {
-    const info = await sendEmailWithRetry(mailOptions, 3, 1000);
-    console.log('Enquiry notification email sent:', info.messageId);
-    return info;
+    const results = await Promise.allSettled(
+      allAdminEmails.map((email) =>
+        sendEmailWithRetry({ ...mailOptions, to: email }, 3, 1000)
+      )
+    );
+
+    const successful = results.filter((r) => r.status === 'fulfilled').length;
+    const failed = results.length - successful;
+    console.log(`Enquiry notification: ${successful} sent, ${failed} failed. Recipients: ${allAdminEmails.join(', ')}`);
+
+    return { successful, failed, recipients: allAdminEmails };
   } catch (error) {
-    console.error('Failed to send enquiry notification email:', error);
+    console.error('Failed to send enquiry notification emails:', error);
     throw error;
   }
 }
